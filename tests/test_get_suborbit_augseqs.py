@@ -23,10 +23,10 @@ def test_get_suborbit_augseqs_custom_wildcard():
 
 def test_get_suborbit_augseqs_empty_alphabet():
     """Test with empty alphabet."""
-    with pytest.raises(ValueError, match="Alphabet must not be empty"):
+    with pytest.raises(AssertionError, match="Alphabet must not be empty"):
         get_suborbit_augseqs('*A**', [])
 
 def test_get_suborbit_augseqs_wildcard_in_alphabet():
     """Test with wildcard in alphabet."""
-    with pytest.raises(ValueError, match="Alphabet should not include the wildcard character"):
+    with pytest.raises(AssertionError, match="Alphabet should not include the wildcard character"):
         get_suborbit_augseqs('*A**', ['A', 'B', '*']) 

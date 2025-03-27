@@ -28,11 +28,14 @@ def get_suborbit_augseqs(
         >>> get_suborbit_augseqs('*A**', ['A', 'C', 'G', 'T'])
         ['****', '*A**', '*C**', '*G**', '*T**']
     """
+
+    assert len(alphabet)>0, 'Alphabet must not be empty'
+    assert not wildcard_char in alphabet, 'Alphabet should not include the wildcard character'
     
     # Get all possible augmented sequences in all the suborbits
     augalphabet = [wildcard_char] + alphabet
     char_lists = [augalphabet if c != wildcard_char else [wildcard_char] for c in augseq]
-    sp_s = [''.join(chars) for chars in product(*char_lists)]  # This is the computational bottleneck, as it probably should be.
+    sp_s = [''.join(chars) for chars in product(*char_lists)]  
     
     return sp_s 
 
