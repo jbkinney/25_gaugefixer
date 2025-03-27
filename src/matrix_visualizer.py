@@ -31,10 +31,10 @@ def visualize_matrix(matrix, zero_threshold=1e-10, show_grid=True, figsize=(12, 
     # Use modified start/end points to intensify colors and create abrupt transition
     
     # For red colors (negative values): Use a narrower range to get more intense reds
-    colors_r = plt.cm.Reds_r(np.linspace(0.0, 0.7, 127))  
+    colors_r = plt.cm.Reds_r(np.linspace(0.0, 0.8, 127))  
     
     # For blue colors (positive values): Use a narrower range to get more intense blues
-    colors_b = plt.cm.Blues(np.linspace(0.3, 1.0, 127))   
+    colors_b = plt.cm.Blues(np.linspace(0.2, 1.0, 127))   
     
     # Create multiple white points for a wider "zero" region in the colormap
     # This ensures values close to zero appear white

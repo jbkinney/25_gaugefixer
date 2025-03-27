@@ -40,6 +40,7 @@ def get_hg_projection_matrix(
     """
     nonzero_entries = []
     alpha = len(alphabet)
+    alpha_inv = 1.0/alpha
     L = len(augseqs[0])
     
     # Check wt_seq if bg_type is 'wildtype'
@@ -63,37 +64,39 @@ def get_hg_projection_matrix(
         if bg_df is not None:
             raise ValueError("bg_df is not used and must be None if bg_type is not 'custom'")
     
+    # Create a lookup dictionary relating augmented sequences to their indices
+    augseqs_to_index = {seq: idx for idx, seq in enumerate(augseqs)}
+    
     # For each column
-    for tp in augseqs:
+    for tp, tp_idx in augseqs_to_index.items():
         # Compute rows with nonzero elements
         sp_s = get_suborbit_augseqs(augseq=tp, alphabet=alphabet, wildcard_char=wildcard_char)
             
         # Compute nonzero elements
         for sp in sp_s:
-            v = 1.0
+            sp_idx = augseqs_to_index[sp]
+            value = 1.0
             for i, (s, t, wt) in enumerate(zip(sp, tp, wt_seq)):
                 if bg_type == 'uniform':
-                    pi_t = 1.0 if t == wildcard_char else 1/alpha
+                    pi_t = 1.0 if t == wildcard_char else alpha_inv
                 elif bg_type == 'wildtype':
                     pi_t = 1.0 if t == wildcard_char else int(t == wt)
                 elif bg_type == 'custom':
                     pi_t = 1.0 if t == wildcard_char else bg_df.at[i, t]
-                v *= pi_t if s == wildcard_char else float(s==t) - pi_t
+                value *= pi_t if s == wildcard_char else float(s==t) - pi_t
                     
-            if v != 0.0:
-                nonzero_entries.append((sp, tp, v))
+            if value != 0.0:
+                nonzero_entries.append((sp_idx, tp_idx, value))
         
     # If not sparse, return DataFrame
     if out_type == 'df':
         df = pd.DataFrame(index=augseqs, columns=augseqs, data=0.0)
-        for (sp, tp, v) in nonzero_entries:
-            df.at[sp, tp] = v
+        for (sp_idx, tp_idx, value) in nonzero_entries:
+            df.iloc[sp_idx, tp_idx] = value
         return df
     # If sparse, return sparse matrix
     elif out_type in ['sparse', 'array']:
-        rows = [augseqs.index(sp) for sp, tp, v in nonzero_entries]
-        cols = [augseqs.index(tp) for sp, tp, v in nonzero_entries]
-        values = [v for sp, tp, v in nonzero_entries]
+        rows, cols, values = zip(*nonzero_entries)
         N = len(augseqs)
         sparse_matrix = sparse.csr_matrix((values, (rows, cols)), shape=(N, N))
         if out_type == 'sparse':

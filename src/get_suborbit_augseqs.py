@@ -3,11 +3,12 @@ from itertools import chain
 
 from src.get_augseqs_in_orbit import get_augseqs_in_orbit
 from src.get_suborbits import get_suborbits
+from itertools import product
 
 def get_suborbit_augseqs(
     augseq: str,
     alphabet: List[str],
-    wildcard_char: str = '*'
+    wildcard_char: str = '*',
 ) -> List[str]:
     """
     Given an augmented sequence, returns a list of augmented sequences in the corresponding suborbits.
@@ -27,20 +28,11 @@ def get_suborbit_augseqs(
         >>> get_suborbit_augseqs('*A**', ['A', 'C', 'G', 'T'])
         ['****', '*A**', '*C**', '*G**', '*T**']
     """
-    # Get positions of non-wildcard characters
-    orbit = [p for p, c in enumerate(augseq) if c != wildcard_char]
-    L = len(augseq)
     
-    # Get all possible subsets of positions
-    suborbits = get_suborbits([orbit])
-    
-    # Generate augmented sequences for each suborbit
-    sp_s = list(chain.from_iterable(
-        get_augseqs_in_orbit(alphabet, orbit, L, wildcard_char=wildcard_char)
-        for orbit in suborbits
-    ))
-    
-    # Sort by length and lexicographically
-    sp_s.sort(key=lambda x: (len(x), x))
+    # Get all possible augmented sequences in all the suborbits
+    augalphabet = [wildcard_char] + alphabet
+    char_lists = [augalphabet if c != wildcard_char else [wildcard_char] for c in augseq]
+    sp_s = [''.join(chars) for chars in product(*char_lists)]  # This is the computational bottleneck, as it probably should be.
     
     return sp_s 
+
