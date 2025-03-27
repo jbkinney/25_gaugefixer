@@ -1,0 +1,761 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[top=0.85in,left=2.75in,footskip=0.75in]{geometry}
+
+% Template packages
+\usepackage{amsmath,amssymb}
+\usepackage{changepage}
+\usepackage{textcomp,marvosym}
+\usepackage{cite}
+\usepackage{nameref}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nopatch=eqnum]{microtype}
+\DisableLigatures[f]{encoding = *, family = * }
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{lastpage,fancyhdr,graphicx}
+\usepackage{epstopdf}
+\usepackage{upgreek}
+\usepackage{soul}
+
+% PLOS template settings
+\raggedright
+\setlength{\parindent}{0.5cm}
+\textwidth 5.25in 
+\textheight 8.75in
+
+% Caption settings
+\usepackage[aboveskip=1pt,labelfont=bf,labelsep=period,justification=raggedright,singlelinecheck=off]{caption}
+\renewcommand{\figurename}{Fig}
+
+% Bibliography style
+\bibliographystyle{plos2015}
+
+% Header and footer settings
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\thepage/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrule}{\hrule height 2pt \vspace{2mm}}
+\fancyheadoffset[L]{2.25in}
+\fancyfootoffset[L]{2.25in}
+\lfoot{\today}
+
+% Original commands
+\newcommand{\eq}[1]{Eq\ (\ref{#1})}
+\newcommand{\fig}[2]{Fig\ \ref{#1}#2}
+\newcommand{\diag}{{\rm diag}}
+\newcommand{\var}{{\rm var}}
+\newcommand{\cov}{{\rm cov}}
+\newcommand{\row}{\mathrm{row}}
+\newcommand{\const}{{\rm const}}
+\newcommand{\true}{\mathrm{true}}
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\ev}[1]{\left. #1 \right|} 
+\newcommand{\bra}[1]{\left\langle #1 \right|}
+\newcommand{\ket}[1]{\left| #1 \right\rangle}
+\newcommand{\braket}[1]{\left\langle #1 \right\rangle}
+\newcommand{\bbraket}[1]{\left\llangle #1 \right\rrangle}
+\newcommand{\mat}[2]{\left( \begin{array}{#1} #2 \end{array} \right)}
+\newcommand{\bracemat}[2]{\left{ \begin{array}{#1} #2 \end{array} \right}}
+\def\s{\sigma}
+\newcommand{\si}[1]{{S1 Text Sec #1}}
+\newcommand{\rev}[1]{#1}
+
+
+\newcommand{\myfixed}{\textrm{fixed}}
+\newcommand{\myhier}{\textrm{hier}}
+\newcommand{\mytriv}{\textrm{triv}}
+\newcommand{\myeucl}{\textrm{eucl}}
+\newcommand{\myequi}{\textrm{equi}}
+\newcommand{\myzs}{\textrm{zs}}
+\newcommand{\mywt}{\textrm{wt}}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\myvar}{\mathrm{var}}
+\DeclareMathOperator*{\mycov}{cov}
+
+%% Change Bibliography formatting style. 
+\makeatletter % Reference list option change
+\renewcommand\@biblabel[1]{\textbf{#1.}} % from [1] to 1
+\makeatother %
+
+% To address Latex error
+\usepackage{lastpage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Title, Authors, Keywords
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\vspace*{0.2in}
+
+% Title
+\begin{flushleft}
+{\Large
+\textbf{Gauge fixing for sequence-function relationships}
+}
+\newline
+\\
+Anna Posfai\textsuperscript{1},
+Juannan Zhou\textsuperscript{1,2},
+David M. McCandlish\textsuperscript{1*},
+Justin B. Kinney\textsuperscript{1*}
+\\
+\bigskip
+\textbf{1} 
+Simons Center for Quantitative Biology, Cold Spring Harbor Laboratory, Cold Spring Harbor, New York, United States of America
+\\
+\textbf{2} Department of Biology, University of Florida, Gainesville, Florida, United States of America
+\\
+\bigskip
+
+* \href{mailto:mccandlish@cshl.edu}{mccandlish@cshl.edu} (DMM), \href{mailto:jkinney@cshl.edu}{jkinney@cshl.edu} (JBK)
+
+\end{flushleft}
+
+% Abstract
+\section*{Abstract}
+Quantitative models of sequence-function relationships are ubiquitous in computational biology, e.g., for modeling the DNA binding of transcription factors or the fitness landscapes of proteins. Interpreting these models, however, is complicated by the fact that the values of model parameters can often be changed without affecting model predictions. Before the values of model parameters can be meaningfully interpreted, one must remove these degrees of freedom (called ``gauge freedoms'' in physics) by imposing additional constraints (a process called ``fixing the gauge''). However, strategies for fixing the gauge of sequence-function relationships have received little attention. Here we derive an analytically tractable family of gauges for a large class of sequence-function relationships. These gauges are derived in the context of models with all-order interactions, but an important subset of these gauges can be applied to diverse types of models, including additive models, pairwise-interaction models, and models with higher-order interactions. Many commonly used gauges are special cases of gauges within this family. We demonstrate the utility of this family of gauges by showing how different choices of gauge can be used both to explore complex activity landscapes and to reveal simplified models that are approximately correct within localized regions of sequence space. The results provide practical gauge-fixing strategies and demonstrate the utility of gauge-fixing for model exploration and interpretation. 
+
+% Author Summary  161 words
+\section*{Author summary}
+
+Biophysics and other areas of quantitative biology rely heavily on mathematical models that predict biological activities from DNA, RNA, or protein sequences. Interpreting the parameters of these models, however, is not trivial. Here we address a core challenge for model interpretation--the presence of ``gauge freedoms'', i.e., directions in parameter space that do not affect model predictions and therefore cannot be constrained by data. Our results provide an explicit mathematical method for removing these unconstrained degrees of freedom--a process called ``fixing the gauge''--that can be applied to a wide range of commonly use models of sequence-function relationships, including models that describe interactions of arbitrarily high order. These results unify diverse gauge fixing methods that have been previously described in the literature for specific types of models. We further show how our gauge-fixing approach can be used to simplify complex models in user-specified regions of sequence space. This work thus overcomes a major obstacle in the interpretation of quantitative sequence-function relationships.
+
+
+% Introduction
+\section*{Introduction}
+
+One of the central challenges of biology is to understand how functionally relevant information is encoded within the sequences of DNA, RNA, and proteins. Unlike the genetic code, most sequence-function relationships are quantitative in nature, and understanding them requires finding mathematical functions that, upon being fed unannotated sequences, return values that quantify sequence activity \cite{Kinney:2019jc}. Multiplex assays of variant effects (MAVEs), functional genomics methods, and other high-throughput techniques are rapidly increasing the ease with which sequence-function relationships can be experimentally studied. And while quantitative modeling efforts based on these high-throughput data are becoming increasingly successful, in that they yield models with ever-increasing predictive ability, major open questions remain about how to interpret both the parameters~\cite{weinberger1991fourier, stadler1996landscapes, weinreich2013should, poelwijk2016context, ferretti2016measuring, bank2016predictability, poelwijk2019learning, Tareen:2022dh, Brookes:2022aa, faure2023extension, Metzger:2024aa} and the predictions~\cite{novakovsky2023obtaining, koo2021global, Park:2023aa, seitz2023interpreting, Dupic2024:aa} of the resulting models. One major open question is how to deal with the presence of gauge freedoms. 
+
+Gauge freedoms are directions in parameter space along which changes in model parameters have no effect on model predictions~\cite{jackson2001historical}. Not only can the values of model parameters along gauge freedoms not be determined from data, differences in parameters along gauge freedoms have no biological meaning even in principle. Many commonly used models of sequence-function relationships exhibit numerous gauge freedoms~\cite{Kinney:2007dh, Weigt:2009th, Marks:2011aa, Stormo:2011jb, Ekeberg:2013bb, Ekeberg:2014aa, Stein:2015br, Barton:2016aa, Haldane:2018df, Cocco:2018aa, Haldane:2019di, Zamuner:2021gy, Feinauer:2022aa, Gerardos:2022aa, Hsu:2022ek, Feinauer:2022bb, Rube:2022ye}, and interpreting the parameters of these models requires imposing additional constraints on parameter values, a process called ``fixing the gauge''. 
+
+The gauge freedoms of sequence-function relationships are most completely understood in the context of additive models (commonly used to describe transcription factor binding to DNA \cite{Kinney:2007dh, Stormo:2011jb, Rube:2022ye}) and pairwise-interaction models (commonly used to describe proteins \cite{Weigt:2009th, Marks:2011aa, Ekeberg:2013bb, Ekeberg:2014aa, Stein:2015br, Barton:2016aa, Haldane:2018df, Cocco:2018aa, Haldane:2019di, Zamuner:2021gy, Feinauer:2022aa, Gerardos:2022aa, Hsu:2022ek, Feinauer:2022bb}). Recently, some gauge-fixing strategies have been described for all-order interaction models, again in the context of protein sequence-function relationships \cite{Zamuner:2021gy, Feinauer:2022aa, Feinauer:2022bb}. However, a unified gauge-fixing strategy applicable to diverse models of sequence-function relationships has yet to be developed. 
+
+Here we provide a general treatment of the gauge fixing problem for sequence-function relationships, focusing on the important case where the set of gauge-fixed parameters form a vector space. These ``linear gauges'' predominate in the literature (though there are exceptions \cite{Berg:1987wu, Kinney:2010tn}), and have the useful property that differences between vectors of gauge-fixed parameter values are directly interpretable. We first demonstrate the relationship between these linear gauges and $L_2$ regularization on parameter vectors, and then derive a mathematically tractable family of gauges for the all-order interaction model. Importantly, a subset of these gauges--the ``hierarchical gauges''--can be applied to diverse models beyond just the all-order interaction model (including additive models, pairwise-interaction models, and higher-order interaction models) and include as special cases two types of gauges that are commonly used in practice (``zero-sum gauges'' \cite{Ekeberg:2013bb, Cocco:2018aa} and ``wild-type gauges'' \cite{Ekeberg:2013bb, Hsu:2022ek, Tareen:2022dh}). We then illustrate the properties of this family of gauges by analyzing two example sequence-function relationships: a simulated all-order interaction landscape on short binary sequences, and an empirical pairwise-interaction landscape for the B1 domain of protein G (GB1). The GB1 analysis, in particular, shows how different hierarchical gauges can be used to explore, simplify, and interpret complex functional landscapes. A companion paper \cite{Posfai:2024bb} further explores the mathematical origins of gauge freedoms in models of sequence-function relationships, and shows how gauge freedoms arise as a consequence of the symmetries of sequence space.
+
+% Results
+\section*{Results}
+
+%%% Preliminaries
+\subsection*{Preliminaries and background}
+
+In this section we review how gauge freedoms arise in commonly used models of sequence-function relationships, as well as strategies commonly used to fix the gauge. In doing so, we establish notation and concepts that are used in subsequent sections, as well as in our companion paper \cite{Posfai:2024bb}.
+
+
+%%% Linear models
+\subsubsection*{Linear models} 
+
+We define quantitative models of sequence-function relationships as follows. Let $\mathcal{A}$ denote an alphabet comprising $\alpha$ distinct characters (written $c_1, \ldots, c_\alpha$), let $\mathcal{S}$ denote the set of sequences of length $L$ built from these characters, and let $N = \alpha^L$ denote the number of sequences in $\mathcal{S}$. A quantitative model of a sequence-function relationship (henceforth ``model'')  is a function $f(s; \vec{\theta})$ that maps each sequence $s$ in $\mathcal{S}$ to a real number. The vector $\vec{\theta}$ represents the parameters on which this function depends and is assumed to comprise $M$ real numbers. $s_l$ denotes the character at position $l$ of sequence $s$. We use $l$, $l'$, etc.\  to index positions (ranging from 1 to $L$) in a sequence and $c$, $c'$, etc.\ to index characters in $\mathcal{A}$. 
+
+A linear model is a model that is a linear function of $\vec{\theta}$. Linear models have the form
+\begin{equation}
+    f(s;\vec{\theta}) = \vec{\theta} \cdot \vec{x}(s) = \sum_{i=1}^M \theta_i x_i(s), \label{eq:dot}
+\end{equation}
+where $\vec{x}(\cdot)$ is a vector of $M$ distinct sequence features and each sequence feature $x_i(\cdot)$ is a function that maps sequences to the real numbers.  We refer to the space $\mathbb{R}^M$ in which $\vec{x}(\cdot)$ lives as feature space, and the specific vector $\vec{x}(s)$ as the embedding of sequence $s$ in feature space. We use $E$ to denote the vector space spanned by the set of embeddings $\vec{x}(s)$ for all sequences $s$ in $\mathcal{S}$. We emphasize that $E$ is often a proper subspace of $\mathbb{R}^M$ (i.e., has dimension less than $M$). Indeed, this is what causes $f$ to have gauge freedoms.
+
+
+%%% One-hot models
+\subsubsection*{One-hot models}
+
+One-hot models are linear models based on sequence features that indicate the presence or absence of specific characters at specific positions within a sequence \cite{Kinney:2019jc}. Such models play a central role in scientific reasoning concerning sequence-function relationships because their parameters can be interpreted as quantitative contributions to the measured function due to the presence of specific biochemical entities (e.g.~nucleotides or amino acids) at specific positions in the sequence. These one-hot models include additive models, pairwise-interaction models, all-order interaction models, and more. Additive models have the form 
+\begin{equation}
+    f_\mathrm{add}(s) = \theta_0 x_0(s) + \sum_l \sum_c \theta_l^c x_l^c(s), \label{eq:additive}
+\end{equation}
+where $x_0(s)$ is the constant feature (equal to one for every sequence $s$) and $x_l^c(s)$ is an additive feature (equal to one if sequence $s$ has character $c$ at position $l$ and equal to zero otherwise; note that $c$ is used here as a superscript and not a power). Pairwise interaction models have the form 
+\begin{equation}
+    f_\mathrm{pair}(s) = \theta_0 x_0(s) + \sum_l \sum_c \theta_l^c x_l^c(s) + \sum_{l < l'} \sum_{c, c'}  \theta_{ll'}^{cc'} x_{ll'}^{cc'}(s), \label{eq:pairwise}
+\end{equation}
+where $x_{ll'}^{cc'}(s)$ is a pairwise feature (equal to one if $s$ has character $c$ at position $l$ and character $c'$ at position $l'$, and equal to zero otherwise). All-order interaction models include interactions of all orders, and are written
+\begin{equation}
+    f_\mathrm{all}(s) = \sum_{K=0}^L ~~\sum_{l_1 < \ldots < l_K}~~\sum_{c_1, \ldots, c_K}\theta_{l_1 \ldots l_K}^{c_1 \ldots c_K} x_{l_1 \ldots l_K}^{c_1 \ldots c_K}(s), \label{eq:all_order}
+\end{equation}
+where $x_{l_1 l_2 \ldots l_K}^{c_1 c_2 \ldots c_K}(s)$ is a $K$-order feature (equal to one if $s$ has character $c_k$ at position $l_k$ for all $k$, and equal to zero otherwise; $K=0$ corresponds to the constant feature).
+
+
+%%% Gauge freedoms
+\subsubsection*{Gauge freedoms} 
+
+Gauge freedoms are transformations of model parameters that leave all model predictions (i.e., the values $f(s)$ at all sequences $s$) unchanged. The gauge freedoms of a general sequence-function relationship $f(\cdot, \cdot)$ are vectors $\vec{g}$ in $\mathbb{R}^M$ that satisfy
+\begin{equation}
+    f(s;\vec{\theta}) = f(s; \vec{\theta} + \vec{g})~~\textrm{for\ all}~~s\in \mathcal{S}. \label{eq:gauge_def}
+\end{equation}
+For linear models, gauge freedoms $\vec{g}$ satisfy
+\begin{equation}
+    X \vec{g} = \vec{0},
+\end{equation}
+where $X$ is the $N \times M$ design matrix having rows $\vec{x}(s)$ for $s \in \mathcal{S}$. In linear models, gauge freedoms thus arise when sequence features (i.e., the columns of $X$) are not linearly independent. In such cases, the space $E$ spanned by sequence embeddings is a proper subspace of $\mathbb{R}^M$, the space $G$ of gauge freedoms is also a proper subspace, and $G$ is orthogonal to $E$.
+
+
+%%%
+%%% Figure 1
+%%%
+\begin{figure*}[t]
+    \hspace*{-2.25in} 
+    \begin{minipage}{7.5in}
+    	\centering
+    	\includegraphics[width=\textwidth]{fig_1_1_tf}
+    	\caption{Choice of gauge impacts model parameters. (A-C) Parameters, expressed in three different gauges, for an additive model describing the (negative) binding energy of the \textit{E.\ coli} transcription factor CRP to DNA. Model parameters are from \cite{Kinney:2010tn}. In each panel, additive parameters $\theta^c_{l}$ are shown using both (top) a heat map and (bottom) a sequence logo \cite{Tareen:2019aa}. The value of the constant parameter $\theta_0$ is also shown. (A) The zero-sum gauge, in which the additive parameters at each position sum to zero. (B) The wild-type gauge, in which the additive parameters at each position quantify activity differences with respect to a wild-type sequence, $s^\textrm{wt}$. The wild-type sequence used here (indicated by dots on the heat map) is the CRP binding site present at the \textit{E.\ coli} lac promoter. (C) The maximum gauge, in which the additive parameters at each position quantify differences with respect to the optimal character at that position. Note that, while the value of each additive parameter $\theta_l^c$ varies between panels A-C, differences of the form $\theta_l^c - \theta_l^{c'}$ are preserved.}   \label{fig:tf}
+    \end{minipage}
+\end{figure*}
+
+
+Each linear relation between multiple columns of $X$ yields a gauge freedom. For example, additive models have $L$ gauge freedoms arising from the $L$ linear relations,
+\begin{equation}
+    x_0(s) = \sum_c x_l^c(s), \label{eq:additive_constraints}
+\end{equation}
+for all positions $l$. Pairwise models have $L$ gauge freedoms arising from the $L$ additive model linear relations in \eq{eq:additive_constraints}, and ${L \choose 2}(2\alpha-1)$ additional gauge freedoms arising from the linear relations
+\begin{equation}
+    x_l^c(s) = \sum_{c'} x_{l l'}^{c c'}(s)~~\textrm{and}~~x_{l'}^{c'}(s) = \sum_{c} x_{l l'}^{c c'}(s)
+\end{equation}
+for all characters $c, c'$ and all positions $l$ and $l'$, with $l < l'$ (see \si{2} for details). More generally, the gauge freedoms of one-hot models arise from the fact that summing any $K$-order feature $x_{l_1 \ldots l_K}^{c_1 \ldots c_K}$ over all characters $c_k$ at any chosen position $l_k$ yields a feature of order $K-1$. A proof that all gauge freedoms arise from such constraints is given in our companion paper \cite{Posfai:2024bb}.
+
+
+%%% Parameter values depend on choice of gauge
+\subsubsection*{Parameter values depend on choice of gauge}
+
+Gauge freedoms pose problems for the interpretation of model parameters (e.g., when interpreting attribution maps from genomic AI models \cite{majdandzic2023correcting}) because, when gauge freedoms are present, different choices of model parameters can give the exact same model predictions. Thus, unless constraints are placed on the values of allowable parameters, individual parameters will have little biological meaning when viewed in isolation. To interpret model parameters, one therefore needs to adopt constraints that eliminate gauge freedoms and, as a result, make the values of model parameters unique. Geometrically, this means restricting model parameters to a subspace $\Theta$, called ``the gauge'', on which these constraints are satisfied. This process of choosing constraints (i.e., choosing $\Theta$) is called ``fixing the gauge''. There are many different gauge-fixing strategies. For example, \fig{fig:tf}\ shows an additive model of the DNA binding energy of CRP (an important transcription factor in \textit{Escherichia coli} \cite{Busby:1999hb}) expressed in three different choices of gauge. 
+
+\fig{fig:tf}A shows parameters expressed in the ``zero-sum gauge'' \cite{Ekeberg:2013bb, Cocco:2018aa} (also called the ``Ising gauge'' \cite{Cocco:2018aa}, or the ``hierarchical gauge'' \cite{Tareen:2022dh}). In the zero-sum gauge, the constant parameter is the mean sequence activity and the additive parameters quantify deviations from this mean activity. The name of the gauge comes from the fact that the additive parameters at each position sum to zero. The zero-sum gauge is commonly used in additive models of protein-DNA binding \cite{Foat:2006tu, Rube:2018io, Rube:2022ye, Hu:2020aa, Chen:2018ew, Skalenko:2021aa, Pukhrambam:2022aa}. As we will see, zero-sum gauges are readily defined for models with pairwise and higher-order interactions as well. 
+
+
+%%%
+%%% Figure 2
+%%%
+\begin{figure*}[t]
+    \hspace*{-2.25in} 
+    \begin{minipage}{7.5in}
+    \centering
+    \includegraphics{fig_1_2_spaces}
+    \caption{Geometry of gauge spaces for additive one-hot models. (A-C) Geometric representation of the gauge space $\Theta$ to which the additive parameters at each position $l$ are restricted in the corresponding panel of \fig{fig:tf}. Each of the four sequence features ($\theta_l^\mathrm{A}$, $\theta_l^\mathrm{C}$, $\theta_l^\mathrm{G}$, and $\theta_l^\mathrm{T}$) corresponds to a different axis. Note that the two axes for $\theta_l^\mathrm{G}$ and $\theta_l^\mathrm{T}$ are shown as one axis to enable 3D visualization. Black and gray arrows respectively denote unit vectors pointing in the positive and negative directions along each axis. $G$ indicates the space of gauge transformations.} \label{fig:gauges}
+    \end{minipage}
+\end{figure*}
+
+
+\fig{fig:tf}B shows parameters expressed in the ``wild-type gauge'' \cite{Ekeberg:2013bb, Hsu:2022ek, Tareen:2022dh} (also called the ``lattice-gas gauge'' \cite{Cocco:2018aa} or the ``mismatch gauge'' \cite{Rube:2022ye}). In the wild-type gauge, the constant parameter is equal to the activity of a chosen wild-type sequence (denoted $s^\textrm{wt}$), and additive parameters are the changes in activity that result from mutations away from the wild-type sequence. The wild-type gauge is commonly used to visualize the results of mutational scanning experiments on proteins \cite{Fowler:2010gt, Olson:2014iq, Adams:2016dka, Esposito:2019ci, Starr:2020aa} or on long DNA regulatory sequences \cite{Patwardhan:2009cw, Patwardhan:2012hy, Kwasnieski:2012hu, Julien:2016kf, Kircher:2019de, Urtecho:2020aa}. As we will see, wild-type gauges are also readily defined for models with pairwise and higher-order interactions. 
+
+\fig{fig:tf}C shows parameters expressed in what we call the ``maximum gauge''. In the maximum gauge, the constant parameter is equal to the activity of the highest-activity sequence, and additive parameters are the changes in activity that result from mutations away from the highest-activity sequence. The maximum gauge is less common in the literature than the zero-sum and the wild-type gauge, but has been used in multiple publications \cite{Berg:1987wu, Kinney:2010tn}. 
+
+
+%%% Linear gauges
+\subsubsection*{Linear gauges} 
+
+Here and throughout the rest of this paper we focus on linear gauges, i.e., choices of $\Theta$ that are linear subspaces of feature space. For example, the zero-sum gauge and wild-type gauge (\fig{fig:gauges}A and \fig{fig:gauges}B) are two commonly used linear gauges, whereas the maximum gauge (\fig{fig:gauges}C) is not a linear gauge. Linear gauges are the most mathematically tractable family of gauges. Linear gauges also have the attractive property that the difference between any two parameter vectors in $\Theta$ is also in $\Theta$. This property makes the comparison of models within the same gauge straight-forward. 
+
+Parameters can be fixed to any chosen linear gauge via a corresponding linear projection. Formally, for any linear gauge $\Theta$ there exists an  $M \times M$ projection matrix $P$ that projects any vector $\vec{\theta}_\mathrm{init}$ along the gauge space $G$ to an equivalent vector $\vec{\theta}_\myfixed$ that lies in $\Theta$, i.e.
+\begin{equation}
+    \vec{\theta}_\myfixed = P\, \vec{\theta}_\mathrm{init}.
+\end{equation}
+See \si{3}\ for a proof. We emphasize that $P$ depends on the choice of $\Theta$, and that $P$ is an orthogonal projection only for the specific choice $\Theta = E$.
+
+Parameters can also be gauge-fixed through a process of constrained optimization. Let $\Lambda$ be any positive-definite $M \times M$ matrix, and let $\vec{y} = X \vec{\theta}_\mathrm{init}$ be the $N$-dimensional vector of model predictions on all sequences. Then $\Lambda$ specifies a unique gauge-fixed set of parameters that preserves $\vec{y}$ via
+\begin{equation}
+    \vec{\theta}_\myfixed = \argmin_{\vec{\theta}\,:\, X \vec{\theta} = \vec{y}}\,  \lVert  \vec{\theta}\rVert_\Lambda^2, 
+    ~~~\textrm{where}~~~
+    \lVert \vec{\theta} \rVert_\Lambda^2 = \vec{\theta}^\top \Lambda \vec{\theta}. \label{eq:constrained_minimization}
+\end{equation}
+We call $\Lambda$ the ``penalization matrix'' because it determines how much each direction in parameter space is penalized in \eq{eq:constrained_minimization}. The resulting gauge space comprises the set of vectors that minimize the $\Lambda$-norm $\lVert \vec{\theta} \rVert_\Lambda$ in each gauge orbit, where the gauge orbit of a parameter vector $\vec{\theta}$ is the set of equivalent vectors $\vec{\theta} + \vec{g}$ for all $g \in G$. The corresponding projection matrix is
+\begin{equation}
+    P = \Lambda^{-1/2} (X\Lambda^{-1/2})^+ X, \label{eq:P_Lambda}
+\end{equation}
+where `+' indicates the Moore-Penrose pseudoinverse. See \si{3} for a proof. In what follows, the connection between the penalization matrix $\Lambda$ and the projection matrix $P$ will be used to help interpret the constraints imposed by the gauge space $\Theta$.
+
+One consequence of \eq{eq:constrained_minimization} is that parameter inference carried out using a positive-definite $L_2$ regularizer $\Lambda$ on model parameters will result in gauge-fixed model parameters in the specific linear gauge determined by $\Lambda$  (see \si{3}). While it might then seem that $L_2$ regularizing parameter values during inference solves the gauge fixing problem, it is important to understand that regularizing during model inference will also change model predictions (i.e., the value of $f$), whereas gauge-fixing proper influences only the model parameters while keeping the model predictions fixed. In addition, we show in \si{3} that, for any desired positive-definite regularizer on model predictions and choice of linear gauge $\Theta$, we can construct a penalization matrix $\Lambda$ that imposes the desired regularization on model predictions and yields inferred parameters in the desired gauge. Thus while $L_2$ regularization during parameter inference can simultaneously fix the gauge and regularize model predictions, the regularization imposed on model predictions does not constrain the choice of gauge.
+
+%%%
+%%% Unified approach to gauge fixing
+%%%
+\subsection*{Unified approach to gauge fixing}
+We now derive strategies for fixing the gauge of the all-order interaction model. We first introduce a geometric formulation of the all-order interaction model embedding. We then construct a parametric family of gauges for the all-order interaction model, and derive formulae for the corresponding projection and penalization matrices. Next, we highlight specific gauges of interest in this parametric family. We focus in particular on the ``hierarchical gauges'', which can be applied to a variety of commonly used models in addition to the all-order interaction model. The results provide explicit gauge-fixing formulae that can be applied to diverse quantitative models of sequence-function relationships.  
+ 
+
+%%% All-order interaction models
+\subsubsection*{All-order interaction models}
+
+To aid in our discussion of the all-order interaction model [\eq{eq:all_order}], we define an augmented alphabet $\mathcal{A}' = \set{*, c_1, \ldots, c_\alpha}$, where $c_1, \ldots, c_\alpha$ are the characters in $\mathcal{A}$ and $*$ is a wild-card character that is interpreted as matching any character in $\mathcal{A}$. Let $\mathcal{S}'$ denote the set of sequences of length $L$ comprising characters from  $\mathcal{A}'$. For each augmented sequence $s' \in \mathcal{S}'$, we define the sequence feature $x_{s'}(s)$ to be 1 if a sequence $s$ matches the pattern described by $s'$ and to be 0 otherwise. In this way, each augmented sequence $s'$ serves as a regular expression against which bona fide sequences are compared.  
+
+Assigning one parameter $\theta_{s'}$ to each of the $M = (\alpha + 1)^L$ augmented sequences $s'$, the all-order interaction model can be expressed compactly as
+\begin{equation}
+    f_\textrm{all}(s; \vec{\theta}) = \sum_{s' \in \mathcal{S}'} \theta_{s'} x_{s'}(s). \label{eq:all_interaction_model_short}
+\end{equation}
+In this notation, the constant parameter $\theta_0$ is written $\theta_{*\cdots*}$, each additive parameter $\theta_l^c$ is written $\theta_{*\cdots c\cdots*}$, each pairwise-interaction parameter $\theta_{ll'}^{cc'}$ is written $\theta_{*\cdots c\cdots c'\cdots *}$, and so on. (Here $c$ occurs at position $l$, $c'$ occurs at position $l'$, and $\cdots$ denotes a run of $ * $ characters). We thus see that augmented sequences provide a convenient way to index the features and parameters of the all-order interaction model.
+
+Next we observe that $x_{s'}$ can be expressed in a form that factorizes across positions. For each position $l$, we define $x^*_l(s)=1$ for all sequences $s$ and take $x^{c_1}_l, \ldots, x^{c_\alpha}_l$ to be the standard one-hot sequence features. $x_{s'}$ can then be written in the factorized form,
+\begin{equation}
+    x_{s'}(s) = \prod_{l=1}^L x_l^{s'_l}(s).
+\end{equation}
+From this it is seen that the embedding for the all-order interaction model, $\vec{x}_\textrm{all}(s)$, can be formulated geometrically as a tensor product: 
+\begin{equation}
+\vec{x}_\textrm{all}(s) = \bigotimes_{l=1}^L \vec{x}'_l(s),
+\textrm{~~where~~} 
+    \vec{x}'_l(s) = \left(\!\! 
+    \begin{array}{c} 
+        x^*_l(s) \\ 
+        x_l^{c_1}(s) \\
+        \vdots \\
+        x_l^{c_\alpha}(s)
+    \end{array} \!\! \right).
+\end{equation}
+See \si{4}\ for details. 
+
+
+%%% 
+%%% Parametric family of gauges
+%%% 
+\subsubsection*{Parametric family of gauges}
+
+We now define a useful parametric family of gauges for the all-order interaction model. As we will show, this family includes all of the most commonly used gauges in the literature (but not some less commonly used gauges, e.g., the maximum gauge \cite{Berg:1987wu, Kinney:2010tn}). Each gauge in this family is defined by two parameters, $\lambda$ and $p$. $\lambda$ is a non-negative real number that governs how much higher-order versus lower-order sequence features are penalized [in the sense of \eq{eq:constrained_minimization}]. $p$ is a probability distribution on sequence space that governs how strongly the specific characters at each position are penalized. This distribution is assumed to have the form
+\begin{equation}
+    p(s) = p_1^{s_1} p_2^{s_2} \cdots p_L^{s_L}, \label{eq:p_of_s}
+\end{equation}
+where $p_l^c$ denotes the probability of character $c$ at position $l$. This assumption excludes distributions that have correlations between positions. But as we show below, choosing appropriate values for $\lambda$ and $p$ nevertheless recovers the most commonly used linear gauges, including the zero-sum gauge, the wild-type gauge, and more.
+
+Gauges in the parametric family have analytically tractable projection matrices because they can be expressed as tensor products of single-position gauge spaces. Let $\Theta^{\lambda,p}_l$ be the $\alpha$-dimensional subspace of $\mathbb{R}^{\alpha+1}$ defined by
+\begin{equation}
+    \Theta^{\lambda,p}_l = V_\lambda \oplus V_\perp^{p_l},
+\end{equation}
+where $V_\lambda$ (a 1-dimensional subspace) and $V_\perp^{p_l}$ [an $(\alpha-1)$-dimensional subspace] are defined by
+\begin{equation}
+    V_\lambda = \textrm{span} 
+        \left\{\!\!
+        \left(\!\!
+        \begin{array}{c} 
+            \lambda \\ 
+            1 \\
+            \vdots \\
+            1 
+        \end{array}
+        \!\!\right)\!\!
+        \right\},~~~
+    V_\perp^{p_l} = 
+        \left\{ \!\!
+        \left( \!\!\!
+        \begin{array}{c} 
+            0 \\ 
+            v_{c_1} \\
+            \vdots \\
+            v_{c_\alpha} 
+        \end{array}
+        \!\!\!\right)\!\!
+        : \! \sum_{i=1}^\alpha p_l^{c_i} v_{c_i} = 0
+        \! \right\}. 
+\end{equation}
+The full parametric gauge, denoted by $\Theta^{\lambda,p}$, is defined to be the tensor product of these single-position gauges:
+\begin{equation}
+    \Theta^{\lambda,p} = \bigotimes_{l=1}^L \Theta^{\lambda,p}_l. \label{eq:parametric_gauge_def}
+\end{equation}
+As detailed in \si{5}, the corresponding projection matrix $P^{\lambda,p}$ is found to have elements given by
+\begin{eqnarray}
+    P^{\lambda,p}_{s' t'} 
+        =\!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l \in \mathcal{A} \\ t'_l \in \mathcal{A}  } }\!\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \eta \right)\!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\  s'_l = * \\ t'_l\in \mathcal{A} } }\!\!\! \left(p^{t'_l}_l \eta \right) \!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l\in \mathcal{A} \\ t'_l = * } }\!\!\! \left(1 - \eta \right) \!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l = * \\ t'_l = *} } \!\! \eta,
+    \label{eq:projection_matrix}
+\end{eqnarray}
+where $\eta = \lambda/(1+\lambda)$ and where the augmented sequences $s'$ and $t'$ respectively index rows and columns. We thus obtain an explicit formula for the projection matrix needed to project any parameter vector into any gauge in the parametric family.
+
+Gauges in the parametric family also have penalization matrices of a simple diagonal form. Specifically, if $0 < \lambda < \infty$ and $p(s')>0$ everywhere, \eq{eq:constrained_minimization} is satisfied by the penalization matrix $\Lambda$ having elements 
+\begin{equation}
+    \Lambda_{s't'} = p(s') \lambda^{o(s')} \delta_{s't'}, \label{eq:lambda_hier}
+\end{equation}
+where $o(s')$ denotes the order of interaction described by $s'$ (i.e., the number of non-star characters in $s'$) and $p(s')$ is defined as in \eq{eq:p_of_s} but with $p_l^{s'_l}=1$ when $s'_l=*$. See \si{5}\ for a proof. Note that, although \eq{eq:lambda_hier} does not hold when $\lambda = 0$, when $\lambda = \infty$, or when $p_l^c = 0$ for any choice of $c$ and $l$, one can still interpret $\Theta^{\lambda,p}$ [which is well-defined in \eq{eq:parametric_gauge_def} and \eq{eq:projection_matrix}] as arising from \eq{eq:constrained_minimization} under a limiting series of penalization matrices $\Lambda$. 
+
+
+%%% Trivial gauge
+\subsubsection*{Trivial gauge}
+Choosing $\lambda = 0$ yields what we call the ``trivial gauge''. In the trivial gauge, $\theta_{s'} = 0$ if $s'$ contains one or more star characters (by \eq{eq:projection_matrix}), and so the only nonzero parameters correspond to interactions of order $L$. As a result, 
+\begin{equation}
+    f_\textrm{all}(s, \vec{\theta}) = \theta_{s}
+\end{equation}
+for every sequence $s \in \mathcal{S}$. Note in particular that the trivial gauge is unaffected by $p$. Thus, the trivial gauge essentially represents sequence-function relationships as catalogs of activity values, one value for every sequence. See \si{6}\ for details.
+
+
+%%% Euclidean gauge
+\subsubsection*{Euclidean gauge}
+Choosing $\lambda = \alpha$ and choosing $p$ to be the uniform distribution recovers what we call the ``euclidean gauge''. In the euclidean gauge, the penalizing norm in \eq{eq:constrained_minimization} is the standard euclidean norm, i.e.
+\begin{equation}
+    ||\vec{\theta}||^2_\Lambda = \sum_{s'} \theta_{s'}^2.
+\end{equation}
+In \si{6}\ we show that the euclidean gauge is equal to the embedding space $E$ and that parameter inference using standard $L_2$ regularization (i.e.~choosing $\Lambda$ to be a positive multiple of the identity matrix) will yield parameters in $E$.
+
+
+%%% Equitable gauges
+\subsubsection*{Equitable gauge}
+Choosing $\lambda = 1$ and letting $p$ vary recovers what we call the ``equitable gauge''. In the equitable gauge, the penalizing norm is
+\begin{eqnarray}
+    ||\vec{\theta}||^2_\Lambda  = \sum_{s'} p(s') \theta^2_{s'} \label{eq:equitable1} = \sum_{s'} \braket{f_{s'}^2}_p \label{eq:equitable2} = \sum_{s'} ||f_{s'}||^2_p,
+\end{eqnarray}
+where $f_{s'} = \theta_{s'} x_{s'}$ denotes the contribution to the activity landscape corresponding to the sequence feature $s'$, $\braket{\cdot}_p$ denotes an average over sequences drawn from $p$, and $||f||_p^2=\sum_{s \in \mathcal{S}} p(s) f(s)^2$ is the squared norm of a function $f$ on sequence space with respect to $p$. The equitable gauge thus penalizes each parameter $\theta_{s'}$ in proportion to the fraction of sequences that parameter applies to. Equivalently, the equitable gauge can be thought of as minimizing the sum of the squared norms of the landscape contributions $||f_{s'}||_p^2$ rather than the squared norm of the parameter values themselves. Unlike the euclidean gauge, the equitable gauge accounts for the fact that different model parameters can affect vastly different numbers of sequences and can thereby have vastly different impacts on the activity landscape. See \si{6}\ for details.
+
+
+%%% Hierarchical gauges
+\subsubsection*{Hierarchical gauge}
+
+Choosing arbitrary $p$ freely and taking $\lambda \rightarrow \infty$ yields what we call the ``hierarchical gauge''. When expressed in the hierarchical gauge, model parameters obey the marginalization property,
+\begin{equation}
+    \sum_{c_k} p_{l_k}^{c_k} \theta_{l_1 \ldots l_K}^{c_1 \ldots c_K} = 0, \label{eq:marginalization}
+\end{equation}
+for all interaction orders $K$, all choices of $K$ positions $l_1, \ldots, l_K$, all choices of characters $c_1,\ldots,c_K$ at these positions, and all choices of index $k=1,\ldots,K$. This marginalization property has important consequences that we now summarize. See \si{7}\ for proofs of these results.
+
+A first consequence of \eq{eq:marginalization} is that, when parameters are expressed in the hierarchical gauge, the mean activity among sequences matched by an augmented sequence $s'$ can be expressed as a simple sum of parameters. For example,
+\begin{eqnarray}
+    \braket{f_\mathrm{all}}_{p} &=& \theta_{0}, \\
+    \braket{f_\mathrm{all}\,|\,c\mathrm{~at~}l}_p &=& \theta_{0} + \theta_{l}^c, \\
+    \braket{f_\mathrm{all}\,|\,c\mathrm{~at~}l,c'\mathrm{~at~}l'}_p &=& \theta_{0} + \theta_{l}^c + \theta_{l'}^{c'} + \theta_{ll'}^{cc'},
+\end{eqnarray}
+and so on. Consequently, the parameters themselves can also be expressed in terms of differences of these average values. For instance, $\theta_{l}^c= \braket{f_\mathrm{all}\,|\,c\mathrm{~at~}l}_p-\braket{f_\mathrm{all}}_{p}$. Because $p$ factorizes by position, conditioning on having particular characters in a subset of positions is equivalent to the probability distribution produced by drawing sequences from $p$ and then fixing those positions in the drawn sequences to those specific characters. Thus, $\theta_{l}^c$ can also be interpreted as the average effect of mutating position $l$ to character $c$ when sequences are drawn from $p$. Similarly, $\theta_{ll'}^{cc'}$ is the average effect, when drawing sequences from $p$, of fixing the character at position $l$ to $c$ and the one at $l'$ to $c'$ beyond what would be expected based on the effects of changing $l$ to $c$ and $l'$ to $c'$ individually (i.e.,\ epistasis). Higher-order coefficients have a similar interpretation. The hierarchical gauge thus provides an ANOVA-like decomposition of activity landscapes.
+
+
+A second consequence of \eq{eq:marginalization} is that the activity landscape, when expressed in the hierarchical gauge, naturally decomposes into mutually orthogonal components. Let $\sigma$ denote a set comprising all augmented sequences that have the same pattern of star and non-star positions, and let $f_\sigma = \sum_{s' \in \sigma} \theta_{s'}\, x_{s'}$ be the corresponding component of $f_\mathrm{all}$. These landscape components are $p$-orthogonal when expressed in the hierarchical gauge: 
+\begin{equation}
+\braket{f_\sigma f_\tau}_p = \delta_{\sigma \tau}  \sum_{s' \in \sigma} p(s')\, \theta_{s'}^2, \label{eq:component_orthogonality}
+\end{equation}
+where $\sigma$ and $\tau$ represent any two such sets of augmented sequences. One implication of this orthogonality relation is that the variance of the landscape (with respect to $p$) is the sum of contributions from interactions of different orders:
+\begin{equation}
+    \myvar_p [f] = \sum_{k=0}^L \myvar_p[f_k],
+\end{equation}
+where $f_k$ denotes the sum of all $k$-order terms that contribute to $f_\mathrm{all}$. Another implication is that the hierarchical gauge minimizes the variance attributable to different orders of interaction in a hierarchical manner: higher-order terms are prioritized for variance minimization over lower-order terms, and within a given order parameters are penalized in proportion to the fraction of sequences they apply to.
+
+A third consequence of \eq{eq:marginalization} is that hierarchical gauges preserve the form of a large class of one-hot models that are equivalent to all-order interaction models with certain parameters fixed at zero (specifically, these models satisfy the condition that if a parameter for a sequence feature is fixed at zero, all higher-order sequence features contained within that sequence feature also have their parameters fixed at zero). These models, which we call the ``hierarchical models,'' include all-order interaction models in which the parameters above a specified order are zero (e.g., additive models and pairwise-interaction models), but also include other models, such as nearest-neighbor interaction models. Projecting onto the hierarchical gauge (but not other parametric family gauges) is guaranteed to produce a parameter vector where the appropriate entries are still fixed to be zero. 
+
+%%% Zero-sum gauges
+\subsubsection*{Zero-sum gauge}
+The zero-sum gauge (illustrated in Figs \ref{fig:tf}A and \ref{fig:gauges}A) is the hierarchical gauge for which $p$ is the uniform distribution. The name of this gauge comes from the fact that, when $p$ is uniform, \eq{eq:marginalization} becomes
+\begin{equation}
+	\sum_{c_k} \theta_{l_1 \ldots l_K}^{c_1 \ldots c_K} = 0.  
+\end{equation} 
+Prior studies~\cite{Park:2023aa,Metzger:2024aa}
+% DMM: Are there more to cite here?
+have characterized the zero-sum gauge for the all-order interaction model. Our formulation of the hierarchical gauge extends those findings and generalizes them to gauges defined by non-uniformly weighted sums of parameters.  
+
+
+%%% Wild-type gauges
+\subsubsection*{Wild-type and generalized wild-type gauges} 
+The wild-type gauge (illustrated in Figs \ref{fig:tf}B and \ref{fig:gauges}B) is a hierarchical gauge that arises in the limit as $p$ approaches an indicator function for some ``wild-type sequence'', $s^\mywt$. In the wild-type gauge, only the parameters $\theta_{s'}$ for which $s'$ matches $s^\mywt$ receive any penalization, and all these penalized $\theta_{s'}$ (except for $\theta_0$) are therefore driven to zero by minimization of the $\Lambda$-norm. Consequently, $\theta_{0}$ quantifies the activity of the wild-type sequence, each $\theta_{l}^c$ quantifies the effect of a single mutation to the wild-type sequence, each $\theta_{ll'}^{cc'}$ quantifies the epistatic effect of two mutations to the wild-type sequence, and so on. However, seeing the wild-type gauge as a special case of the hierarchical gauge provides the possibility of generalizing the wild-type gauge by using a $p$ that is not the indicator function on a single sequence but rather defines a distribution over one or more alleles per position that can be considered as being ``wild-type'' (equivalently, the frequencies of some subset of position-specific characters are set to zero). Examples illustrating the utility of different choices for $p$ are provided below. These gauges all inherit the property from the hierarchical gauge that their coefficients relate to the average effect of taking draws from the probability distribution defined by $p$ and setting a subset of positions to the characters specified by that coefficient. More rigorously, these gauges are defined by considering the limit as ${\epsilon\rightarrow 0^+}$ of the hierarchical gauge with factorizable distribution
+\begin{equation}
+p_\epsilon(s) = \prod_l \left[ (1-\epsilon) p_l^{s_l} + \frac{\epsilon}{\alpha} \right], 
+\end{equation}
+where the $p_l^{s_l}\geq 0$ are the position-specific factors of the desired nonnegative vector of probabilities $p$. 
+
+
+%%% Figure 3: Binary toy model
+\begin{figure}[t!]
+    \centering  
+    \includegraphics{fig_1_3_binary}
+    \caption{Binary landscape expressed in various parametric family gauges. (A) Simulated random activity landscape for binary sequences of length $L=3$. (B) Parameters of the all-order interaction model for the binary landscape as functions of $\eta = \lambda/(1+\lambda)$. Values of $\eta$ corresponding to different named gauges are indicated. Note: because the uniform distribution is assumed in all these gauges, the hierarchical gauge is also the zero-sum gauge. \label{fig:binary}}
+\end{figure}
+
+%%%
+%%% Applications
+%%%
+\subsection*{Applications} We now demonstrate the utility of our results on two example models of complex sequence-function relationships. First, we study how the parameters of the all-order interaction model behave under different parametric gauges in the context of a simulated landscape on short binary sequences. Although a number of studies have reported combinatorially complete landscapes in diverse biological systems (e.g., \cite{Podgornaia:2015ki, Wu:2016kp, Winkelman:2016kj, Wong:2018ho, BaezaCenturion:2019cy, Zhou:2020re, Skalenko:2021aa, Zhou:2022aa, Pukhrambam:2022aa}, focusing on this small simulated landscape allows us to better observe the nontrivial collective behavior that model parameters exhibit across different choices of gauge. Second, we examine the parameters of an empirical pairwise-interaction model for protein GB1 using the zero-sum and multiple generalized wild-type gauges. We observe how these different hierarchical gauges enable different interpretations of model parameters and facilitate the derivation of simplified models that are approximately correct in different localized regions of sequence space. The results provide intuition for the behavior of the various parametric gauges, and show in particular how hierarchical gauges can be used to explore and interpret real sequence-function relationships. 
+
+%%% Gauge-fixing a simulated landscape on short binary sequences
+\subsubsection*{Gauge-fixing a simulated landscape on short binary sequences}
+
+To illustrate the consequences of choosing gauges in the parametric family, we consider a simulated random landscape on short binary sequences. Consider sequences of length $L = 3$ built from the alphabet $\mathcal{A} = \set{0,1}$, and assume that the activities of these sequences are as shown in \fig{fig:binary}A. The corresponding all-order interaction model has $(\alpha+1)^L=27$ parameters, which we index using augmented sequences: 1 constant parameter ($\theta_{***}$), 6 additive parameters ($\theta_{0**}$, $\theta_{1**}$, $\theta_{*0*}$, $\theta_{*1*}$, $\theta_{**0}$, $\theta_{**1}$), 12 pairwise parameters ($\theta_{00*}$, $\theta_{01*}$, $\theta_{10*}$, $\theta_{11*}$,  $\theta_{0*0}$, $\theta_{0*1}$, $\theta_{1*0}$, $\theta_{1*1}$, $\theta_{*00}$, $\theta_{*01}$, $\theta_{*10}$, $\theta_{*11}$), and 8 third-order parameters ($\theta_{000}$, $\theta_{001}$, $\theta_{010}$, $\theta_{011}$, $\theta_{100}$, $\theta_{101}$, $\theta_{110}$, $\theta_{111}$). 
+
+We now consider what happens to the values of these 27 parameters when they are expressed in different parametric gauges, $\Theta^{\lambda,p}$. Specifically, we assume that $p$ is the uniform distribution (though analogous results hold for other choices of $p$) and vary the parameter $\lambda$ from $0$ to $\infty$ (equivalently $\eta$ varies from 0 to 1). Note that each entry in the projection matrix $P^{\lambda,p}$ (Eq \ref{eq:projection_matrix}) is a cubic function of $\eta$ due to $L=3$. Consequently,  each of the 27 gauge-fixed model parameters is a cubic function of $\eta$ (\fig{fig:binary}B). In the trivial gauge ($\lambda = 0,\ \eta = 0$), only the 8 third-order parameters are nonzero, and the values of the 8 third-order parameters correspond to the values of the landscape at the 8 corresponding sequences. In the equitable gauge ($\lambda = 1,\ \eta = 1/2$), the spread of the 8 third-order parameters about zero is larger than that of the 12 pairwise parameters, which is larger than that of the 6 additive parameters, which is larger than that of the constant parameter. In the euclidean gauge ($\lambda=2, \eta=2/3$), the parameters of all orders exhibit a similar spread about zero. In the hierarchical gauge ($\lambda = \infty,\ \eta = 1$), the spread of the 8 third-order parameters about zero is smaller than that of the 12 pairwise parameters, which is smaller than that of the 6 additive parameters, which is smaller than that of the constant parameter. Moreover, the marginalization and orthogonality properties of the hierarchical gauge fix certain parameters to be equal or opposite to each other, e.g., $\theta_{1**}=-\theta_{0**}$ and the third order parameters are all equal up to their sign, which depends only on whether the corresponding sequence feature has an even or odd number of ``1''s.
+
+
+This example illustrates generic features of the parametric gauges. For any all-order interaction model on sequences of length $L$, the entries of the projection matrix $P^{\lambda,p}$ will be $L$-order polynomials in $\eta$. Consequently, the values of model parameters, when expressed in the gauge $\Theta^{\lambda,p}$, will also be $L$-order polynomials in $\eta$. In the trivial gauge, only the highest-order parameters will be nonzero. In the equitable gauge, the spread about zero will tend to be smaller for lower-order parameters relative to higher-order parameters. In the euclidean gauge, parameters of all orders will exhibit similar spread about zero. In the zero-sum gauge, the spread about zero will tend to be minimized for higher-order parameters relative to lower-order parameters. The nontrivial quantitative behavior of model parameters in different parametric gauges thus underscores the importance of choosing a specific gauge before quantitatively interpreting parameter values. 
+
+%%%
+%%% Figure 4: GB1 params
+%%%
+\begin{figure*}[ht!]
+    \hspace*{-2.25in} 
+    \begin{minipage}{7.5in}
+    \centering
+    \includegraphics[width=5.8in]{fig_1_4_gb1params}
+    \caption{Landscape exploration using hierarchical gauges. (A) NMR structure of GB1, with residues V39, D40, G41, and V54 shown (PDB: 3GB1, from \cite{Kuszewski:1999ne}). (B) Distribution of $\log_2$ enrichment relative to wild-type measured by \cite{Wu:2016kp} for nearly all 160,000 GB1 variants having mutations at positions 39, 40, 41, and 54. (C) Pairwise interaction model parameters inferred from the data of \cite{Wu:2016kp}, expressed in the uniform hierarchical gauge (i.e., the zero-sum gauge). Boxes indicate parameters contributing to the wild-type sequence, VDGV. (D) Performance of pairwise-interaction model. Axes reflect $\log_2$ enrichment values relative to wild-type. Each dot represents a randomly chosen variant GB1 protein assayed by \cite{Wu:2016kp}. For clarity, only 5,000 of the $\sim$160,000 assayed GB1 variants are shown. (E) Probability logos \cite{Tareen:2019aa} for uniform, region 1, region 2, and region 3 sequence distributions. Distributions of pairwise interaction model predictions for each region are also shown. (F) Model parameters expressed in the region 1, region 2, and region 3 hierarchical gauges. Dots and tick marks indicate region-specific constraints. Probability densities (panels B and D) were estimated using DEFT \cite{Chen:2018ew}. Pairwise interaction model parameters were inferred by least-squares regression using MAVE-NN \cite{Tareen:2019aa}. Regions 1, 2, and 3 were defined based on \cite{Zhou:2020re}. NMR: nuclear magnetic resonance. GB1: domain B1 of protein G.} \label{fig:gb1_params} 
+    \end{minipage}
+\end{figure*}
+
+
+%%% Hierarchical gauges of an empirical landscape for protein GB1
+\subsubsection*{Hierarchical gauges of an empirical landscape for protein GB1}
+
+Projecting model parameters onto different hierarchical gauges can facilitate the exploration and interpretation of sequence-function relationships.  To demonstrate this application of gauge fixing, we consider an empirical sequence-function relationship describing the binding of the GB1 protein to immunoglobulin G (IgG). Wu et al.\ \cite{Wu:2016kp} performed a deep mutational scanning experiment that measured how nearly all $20^4 = 160,000$ amino acid combinations at positions 39, 40, 41, and 54 of GB1 affect GB1 binding to IgG. These data report $\log_2$ enrichment values for each assayed sequence relative to the wild-type sequence at these positions, VDGV (\fig{fig:gb1_params}A and \fig{fig:gb1_params}B). Using these data and least-squares regression, we inferred a pairwise-interaction model for $\log_2$ enrichment as a function of protein sequence at these $L=4$ variable positions. The resulting model comprises 1 constant parameter, 80 additive parameters, and 2400 pairwise parameters (\fig{fig:gb1_params}C). While the model fits the data reasonably well (\fig{fig:gb1_params}D; $R^2 = 0.82$), the deviation from measurements is still greater than that expected by experimental uncertainty and can be further reduced by using a more complex model (e.g., one that includes a global epistasis nonlinearity \cite{Otwinowski:2018jj,Tareen:2022dh}). Nevertheless, the pairwise-interaction model serves well to illuminate the utility of different gauge-fixing strategies. To understand the structure of the activity landscape described by the pairwise interaction model, we now examine the values of model parameters in multiple hierarchical gauges. Explicit formulae for implementing hierarchical gauges for pairwise-interaction models are given in \si{8}.
+
+\fig{fig:gb1_params}C shows the parameters of the pairwise interaction model expressed in the hierarchical gauge corresponding to a uniform probability distribution on sequence space (i.e., the zero-sum gauge). In the zero-sum gauge, the constant parameter $\theta_0$ equals the average activity of all sequences. We observe $\theta_0=-4.68$, indicating that a typical random sequence is depleted approximately 20-fold relative to the wild-type sequence, which the pairwise interaction model assigns a score of $-.21$. This finding confirms the expectation that a random sequence should be substantially less functional than the wild-type sequence. 
+
+The additive parameters in the zero-sum gauge are shown in the rectangular heat map in \fig{fig:gb1_params}C, and each additive parameter is equal to the difference between the mean activity of the set of sequences containing the corresponding amino acid at the relevant position relative to the mean activity of random sequences. We observe that the wild-type sequence receives positive or near-zero contributions at every position, including a contribution from the most positive additive parameter, corresponding to G at position 41. The additive parameters at positions 39, 40, and 54 that contribute to the wild-type sequence, however, are not the largest additive parameters at these positions. Moreover, the additive parameters that contribute to the wild-type sequence only sum to 2.32, meaning that even in the zero-sum gauge which minimizes the variance due to pairwise parameters, of the total difference (4.47) between the wild-type score and the average sequence score, almost half (2.15) is due to contributions from pairwise parameters.
+
+The pairwise parameters in the zero-sum gauge are shown in the triangular heat map in \fig{fig:gb1_params}C. Here, each pairwise parameter is equal to the difference between (i) the observed mean of the sequences containing the specified pair of characters at the specified pair of positions, and (ii) the expected mean activity based on the mean activity of sequences containing the individual characters at those positions together with the grand mean activity. We observe that the three largest-magnitude pairwise contributions to the wildtype sequence are from the pair G41V54 (1.25), V39G41 (0.91), and D40G41 (-0.44), indicating that position 41 is a major hub of epistatic interactions contributing to the wild-type sequence. Moving to the landscape as a whole, we observe that the largest magnitude pairwise interactions link positions 41 and 54. Moreover, the strongest positive pairwise contributions are obtained when a small amino acid (G or A) is present at position 54, and a G, C, A, L, or P is present at position 41 (see also~\cite{Olson:2014iq}). This finding provides insight into the chemical nature of the epistatic interactions that facilitate wild-type GB1 binding to IgG. 
+
+Previous work \cite{Zhou:2020re,rozhonova2023protein} identified three disjoint regions of sequence space (region 1, region 2, and region 3) that contain high-activity sequences as judged by the GB1 measurements of Wu et al.\ \cite{Wu:2016kp}. Region 1 comprises sequences with G at 41; region 2 comprises sequences with L or F at position 41 and G at position 54; and region 3 comprises sequences with C or A at position 41 and A at position 54. To investigate the structure of the GB1 landscape within the three regions, we defined probability distributions that were uniform in each region of sequence space and zero outside (\fig{fig:gb1_params}E; see \si{8}\ for formal definitions of these regions). We then examined the values of the parameters of the pairwise-interaction model, with the parameters expressed in the hierarchical gauges corresponding to the probability distribution $p(s)$ for each of the three regions (the ``region 1 hierarchical gauge'', ``region 2 hierarchical gauge'', and ``region 3 hierarchical gauge''). Since some characters at positions 41 and 54 have had their frequencies set to zero, these hierarchical gauges are in fact generalized wild-type gauges, and the additive and pairwise parameters can be interpreted in terms of the mean effects of introducing mutations to these specific regions of sequences space.
+
+In the region 1 hierarchical gauge (\fig{fig:gb1_params}F, top), the additive parameters for position 41 quantify the effect of mutations away from G, and the additive parameters for positions 39, 40, and 54 quantify the average effect of mutations conditional on G at position 41. From the additive parameters at position 54, we observe that cysteine (C) and hydrophobic residues (A, V, I, L, M, or F) increase binding, and that proline (P) and charged residues (E, D, R, K) decrease binding. From the additive parameters at position 40, we observe that amino acids with a 5-carbon or 6-carbon ring (H, F, Y, W) increase binding, suggesting the presence of structural constraints on side chain shape, rather than constraints on hydrophobicity or charge. The largest pairwise parameters all involve mutations from G at position 41 to another amino acid, and careful inspection of these pairwise parameters show that the pairwise parameters are roughly equal and opposite to the additive effects of mutations at the other three positions. This indicates a classical form of masking epistasis, where the typical effect of a mutation at position 41 results in a more or less complete loss of function, after which mutations at the remaining three positions no longer have a substantial effect.
+
+In the region 2 hierarchical gauge (\fig{fig:gb1_params}F, middle), the additive parameters at position 54 quantify the average effect of mutations away from G contingent on L or F at position 41, the additive parameters at position 41 quantify the average effects of mutations away from L or F contingent on G at position 54, and the additive parameters at positions 39 and 40 quantify the average effects of mutations contingent on L or F at position 41 and on G at position 54. From the values of the additive parameters, we observe that mutations away from L or F at position 41 in the presence of G at position 54 are typically strongly deleterious (mean effect -3.39), and that mutations away from G at position 54 in the presence of L or F at position 41 are also strongly deleterious (mean effect -3.75). However, the pairwise parameters linking positions 41 and 54 are strongly positive (mean effect 2.85), again indicating a masking effect where the first deleterious mutation at position 41 or 54 results in a more or less complete loss of function, so that an additional mutation at the other position has little effect (note the similar but less extreme pattern of masking between the large effect mutations at positions 41 and 54 with the milder mutations at positions 40 and 41, whose interaction coefficients are of the opposite sign of the additive effects at positions 40 and 41). 
+Similar results hold for the region 3 hierarchical gauge, where mutations at positions 41 and 54 have masking effects on each other as well as on mutations in the other two positions (\fig{fig:gb1_params}F, bottom). However, we can also contrast patterns of mutational effects between these regions. For example, mutating position 54 to G (a mutation leading towards region 2) on average has little effect in region 1 but would be deleterious in region 3. Similarly, if we consider mutations leading from region 2 to region 3, we can see that mutating 41 to C in region 2 typically has little effect whereas mutating 41 to A is more deleterious.
+
+%%%
+%%% Figure 5: Coarse-graining
+%%%
+\begin{figure*}[t]
+    \hspace*{-2.25in} 
+    \begin{minipage}{7.5in}
+    \centering 
+    \includegraphics{fig_1_5_gb1approx}
+    \caption{Model coarse-graining using hierarchical gauges. Shown are data for 500 random 4 aa sequences generated using each of the four distributions listed in \fig{fig:gb1_params}E (i.e., uniform, region 1, region 2, and region 3). Vertical axes show $\log_2$ enrichment (relative to wild-type) as predicted by additive models of GB1 derived by model truncation using region-specific zero-sum gauges (from \fig{fig:gb1_params}C and \fig{fig:gb1_params}F). Horizontal axes show predictions of the full pairwise-interaction model. Diagonals indicate equality. GB1: domain B1 of protein G.} \label{fig:gb1_approx}
+    \end{minipage}   
+\end{figure*}
+
+Besides using the interpretation of hierarchical gauge parameters as average effects of mutations to understand how mutational effects differ in different regions of sequence space, we hypothesized that by applying different hierarchical gauges to the pairwise interaction model, one might be able to obtain simple additive models that are accurate in different regions of sequence space. Our hypothesis was motivated by the fact that the parameters of all-order interaction models in the zero-sum gauge are chosen to maximize the fraction of variance in the sequence-function relationship that is explained by lower-order parameters. To test our hypothesis, we defined an additive model for each of the four hierarchical gauges described above (uniform, region 1, region 2, and region 3) by projecting pairwise interaction model parameters onto the hierarchical gauge for that region, then setting all the pairwise parameters to zero. We then evaluated the predictions of each additive model on sequences randomly drawn from each of the four corresponding probability distributions (uniform, region 1, region 2, and region 3). The results (\fig{fig:gb1_approx}) show that the activities of sequences sampled uniformly from the sequence space are best explained by the additive model derived from the zero-sum gauge, that the activities of region 1 sequences are best explained by the additive model derived from the region 1 hierarchical gauge, and so on for regions 2 and 3. In particular, additive models derived using region-specific gauges are far more accurate in their respective regions than is the additive model derived using the uniform (i.e., zero-sum) gauge. This shows that projecting a pairwise interaction model (or other hierarchical one-hot model) onto the hierarchical gauge corresponding to a specific region of sequence space can sometimes be used to obtain simplified models that approximate predictions by the original model in that region. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Discussion 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Discussion}
+
+Here we report a unified strategy for fixing the gauge of commonly used models of sequence-function relationships. First we defined a family of analytically tractable gauges for the all-order interaction model. We then derived explicit formulae for imposing any of these gauges on model parameters, and used these formulae to investigate the mathematical properties of these gauges. The results show that these linear gauges include all of the most commonly used gauges in the literature (even though most possible gauges, both linear and nonlinear, are not members of this family). We also find that a subset of these gauges (the hierarchical gauges) can be applied to diverse lower-order models including additive models, pairwise-interaction models, and higher-order interaction models.
+
+Next, we demonstrated the family of gauges in two contexts: a simulated all-order interaction landscape on short binary sequences, and an empirical pairwise-interaction landscape for the protein GB1.  The GB1 results, in particular, show how applying different hierarchical gauges can facilitate the biological interpretation of complex models of sequence-function relationships and to derive simplified models that are approximately correct in localized regions of sequence space.
+
+Our study was limited to linear models of sequence-function relationships. Although linear models are used in many computational biology applications, more complex models are becoming increasingly common. For example, linear-nonlinear models (which include global epistasis models \cite{Sarkisyan:2016fy, Sailer:2017ku, Otwinowski:2018jj, Tareen:2022dh} and thermodynamic models \cite{Kinney:2010tn, Mogno:2013cf, Otwinowski:2018jb, Belliveau:2018kr, Tareen:2019aa, Faure:2022aa}) are commonly used to describe fitness landscapes and/or sequence-dependent biochemical activities. The gauge-fixing strategies described here remain applicable to the linear part of linear-nonlinear models. We note, however, that such models often have additional gauge freedoms, such as diffeomorphic modes \cite{Kinney:2014ge, Atwal:2015dj}, that also need to be fixed before parameter values can be meaningfully interpreted.
+
+Sloppy modes are another important issue to address when interpreting quantitative models of sequence-function relationships. Sloppy modes are directions in parameter space that (unlike gauge freedoms) do affect model predictions but are nevertheless poorly constrained by data \cite{Machta:2013ga, Transtrum:2015hm}. Understanding the mathematical structure of sloppy modes, and developing systematic methods for fixing these modes, is likely to be more challenging than understanding gauge freedoms. This is because sloppy modes arise from a confluence of multiple factors: the mathematical structure of a model, the distribution of data in feature space, and measurement uncertainty. Nevertheless, understanding sloppy modes is likely to be as important in many applications as understanding gauge freedoms. We believe the study of sloppy modes in quantitative models of sequence-function relationships is an important direction for future research. 
+
+Deep neural network (DNN) models present perhaps the biggest challenge  for parameter interpretation. DNN models have had remarkable success in  quantitatively modeling biological sequence-function relationships, most notably in  the context of protein structure prediction \cite{jumper2021highly, lin2023evolutionary}, but also in the  context of other processes including transcriptional regulation \cite{avsec2021effective, karbalayghareh2022chromatin, de2022deepstarr},  epigenetics \cite{avsec2021base, chen2022sequence, toneyan2022evaluating}, and mRNA splicing \cite{jaganathan2019predicting, cheng2021mtsplice}. It remains unclear,  however, how researchers might gain insights into the molecular mechanisms of biological  processes from inferred DNN models. DNNs are by nature highly  over-parameterized \cite{raghu2017expressive, kaplan2020scaling, nakkiran2021deep}, making the direct interpretation of DNN  parameters infeasible. Instead, a variety of attribution methods have  been developed to facilitate DNN model interpretations \cite{simonyan2013deep, shrikumar2017learning, lundberg2017unified, jha2020enhanced}. Existing  attribution methods can often be thought of as providing additive models  that approximate DNN models in localized regions of sequence space \cite{han2022explanation}, and  the presence of gauge freedoms in these additive models needs to be addressed when interpreting attribution method output (as in \cite{majdandzic2023correcting,sasse2023quick}). We  anticipate that, as DNN models become more widely adopted for mechanistic  studies in biology, there will be a growing need for attribution methods  that provide more complex quantitative models that approximate DNN models in localized regions of sequence space~\cite{seitz2023interpreting}. If so, a  comprehensive mathematical understanding of gauge freedoms in parametric  models of sequence-function relationships will be needed to aid  in these DNN model interpretations. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Methods 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Methods}
+
+See S1 Text for detailed derivations of mathematical results. All data and Python scripts used to generate the figures are available on GitHub at \url{https://github.com/jbkinney/24_posfai1} and on Zenodo at \url{https://doi.org/10.5281/zenodo.14811498}. \\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Author Contributions 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Author Contributions}
+
+Conceptualization: AP, DMM, JBK; Investigation: AP, JZ, DMM, JBK; Formal Analysis: AP, JZ, DMM, JBK, Software: AP, JBK; Writing -- Original Draft Preparation: AP, DMM, JBK, Writing -- Review \& Editing: AP, JZ, DMM, JBK; Funding Acquisition: JZ, DMM, JBK. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Acknowledgement 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgments}
+We thank Peter Koo for helpful conversations and Samantha Petti for helpful comments on the manuscript. %This work was supported by NIH grant R35 GM133613 (AP, JZ, DMM), NIH grant R35 GM133777 (AP, JBK), NIH grant R01 HG011787 (DMM, JBK), NIH grant R35 GM154908 (JZ), the Alfred P. Sloan Foundation (DMM), as well as additional funding from the Simons Center for Quantitative Biology at CSHL (DMM, JBK) and the College of Liberal Arts and Sciences at the University of Florida (JZ). The funders had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript.
+
+%% Bibliography
+
+
+\begin{thebibliography}{10}
+
+\bibitem{Kinney:2019jc} Kinney JB, McCandlish DM. Massively parallel assays and quantitative sequence-function relationships. Annu Rev Genomics Hum Genet. 2019;20: 99-127. 
+
+\bibitem{weinberger1991fourier} Weinberger ED. Fourier and Taylor series on fitness landscapes. Biol Cybern. 1991;65: 321-330.
+
+\bibitem{stadler1996landscapes} Stadler PF. Landscapes and their correlation functions. J Math Chem. 1996;20: 1-45.
+
+\bibitem{weinreich2013should} Weinreich DM, Lan Y, Wylie CS, Heckendorn RB. Should evolutionary geneticists worry about higher-order epistasis? Curr Opin Genet Dev. 2013;23: 700-707.
+
+\bibitem{poelwijk2016context} Poelwijk FJ, Krishna V, Ranganathan R. The context-dependence of mutations: a linkage of formalisms. PLoS Comput Biol. 2016;12: e1004771.
+
+\bibitem{ferretti2016measuring} Ferretti L, Schmiegelt B, Weinreich D, Yamauchi A, Kobayashi Y, Tajima F, et al. Measuring epistasis in fitness landscapes: The correlation of fitness effects of mutations. J Theor Biol. 2016;396: 132-143.
+
+\bibitem{bank2016predictability} Bank C, Matuszewski S, Hietpas RT, Jensen JD. On the (un) predictability of a large intragenic fitness landscape. Proc Natl Acad Sci USA. 2016;113: 14085-14090.
+
+\bibitem{poelwijk2019learning} Poelwijk FJ, Socolich M, Ranganathan R. Learning the pattern of epistasis linking genotype and phenotype in a protein. Nat Commun. 2019;10: 4213.
+
+\bibitem{Tareen:2022dh} Tareen A, Kooshkbaghi M, Posfai A, Ireland WT, McCandlish DM, Kinney JB. MAVE-NN: learning genotype-phenotype maps from multiplex assays of variant effect. Genome Biol. 2022;23: 98. 
+
+\bibitem{Brookes:2022aa} Brookes DH, Aghazadeh A, Listgarten J. On the sparsity of fitness functions and implications for learning. Proc Natl Acad Sci USA. 2022;119: e2109649118. 
+
+\bibitem{faure2023extension} Faure AJ, Lehner B, Mir\'{o} Pina V, Colome CS, Weghorn D. An extension of the Walsh-Hadamard transform to calculate and model epistasis in genetic landscapes of arbitrary shape and complexity. PLoS Comput Biol 2024;20: e1012132.
+
+\bibitem{Metzger:2024aa} Metzger BPH, Park Y, Starr TN, Thornton JW. Epistasis facilitates functional evolution in an ancient transcription factor. eLife 2023;12:RP88737.
+
+\bibitem{novakovsky2023obtaining} Novakovsky G, Dexter N, Libbrecht MW, Wasserman WW, Mostafavi S. Obtaining genetics insights from deep learning via explainable artificial intelligence. Nat Rev Genet. 2023;24: 125-137.
+
+\bibitem{koo2021global} Koo PK, Majdandzic A, Ploenzke M, Anand P, Paul SB. Global importance analysis: An interpretability method to quantify importance of genomic features in deep neural networks. PLoS Comput Biol. 2021;17: e1008925.
+
+\bibitem{Park:2023aa} Park Y, Metzger BPH, Thornton JW. The simplicity of protein sequence-function relationships. Nat Comm 2024;15;7953.
+
+\bibitem{seitz2023interpreting} Seitz EE, McCandlish DM, Kinney JB, Koo PK. Interpreting cis-regulatory mechanisms from genomic deep neural networks using surrogate models. Nat Mach Intell. 2024; 6:701-013.
+
+\bibitem{Dupic2024:aa} Dupic T, Phillips AM, Desai MM. Protein sequence landscapes are not so simple: on reference-free versus reference-based inference. bioRxiv [Preprint] 2024; doi: 10.1101/2024.01.29.577800. % Still a preprint
+
+\bibitem{jackson2001historical} Jackson JD, Okun LB. Historical roots of gauge invariance. Rev Mod Phys. 2001;73: 663-693.
+
+\bibitem{Kinney:2007dh} Kinney JB, Tka\v{c}ik G, Callan CG. Precise physical models of protein-DNA interaction from high-throughput data. Proc Natl Acad Sci USA. 2007;104: 501-506. 
+
+\bibitem{Weigt:2009th} Weigt M, White RA, Szurmant H, Hoch JA, Hwa T. Identification of direct residue contacts in protein-protein interaction by message passing. Proc Natl Acad Sci USA. 2009;106: 67-72. 
+
+\bibitem{Marks:2011aa} Marks DS, Colwell LJ, Sheridan R, Hopf TA, Pagnani A, Zecchina R, et al. Protein 3D structure computed from evolutionary sequence variation. PLoS ONE. 2011;6: e28766. 
+
+\bibitem{Stormo:2011jb} Stormo GD. Maximally efficient modeling of DNA sequence motifs at all levels of complexity. Genetics. 2011;187: 1219-1224.
+
+\bibitem{Ekeberg:2013bb} Ekeberg M, L\"{o}vkvist C, Lan Y, Weigt M, Aurell E. Improved contact prediction in proteins: Using pseudolikelihoods to infer Potts models. Phys Rev E. 2013;87: 012707. 
+
+\bibitem{Ekeberg:2014aa} Ekeberg M, Hartonen T, Aurell E. Fast pseudolikelihood maximization for direct-coupling analysis of protein structure from many homologous amino-acid sequences. J Comput Phys. 2014;276: 341-356. 
+
+\bibitem{Stein:2015br} Stein RR, Marks DS, Sander C. Inferring pairwise interactions from biological data using maximum-entropy probability models. PLoS Comput Biol. 2015;11: e1004182. 
+
+\bibitem{Barton:2016aa} Barton JP, Leonardis ED, Coucke A, Cocco S. ACE: adaptive cluster expansion for maximum entropy graphical model inference. Bioinformatics. 2016;32: 3089-3097. 
+
+\bibitem{Haldane:2018df} Haldane A, Flynn WF, He P, Levy RM. Coevolutionary landscape of kinase family proteins: Sequence probabilities and functional motifs. Biophys J. 2018;114: 21-31.
+
+\bibitem{Cocco:2018aa} Cocco S, Feinauer C, Figliuzzi M, Monasson R, Weigt M. Inverse statistical physics of protein sequences: A key issues review. Rep Prog Phys. 2018;81: 032601. 
+
+\bibitem{Haldane:2019di} Haldane A, Levy RM. Influence of multiple-sequence-alignment depth on Potts statistical models of protein covariation. Phys Rev E. 2019;99: 032405. 
+
+\bibitem{Zamuner:2021gy} Zamuner S, Rios PDL. Interpretable neural networks based classifiers for categorical inputs. arXiv:2102.03202 [cs.LG] 2021. 
+
+\bibitem{Feinauer:2022aa} Feinauer C, Meynard-Piganeau B, Lucibello C. Interpretable pairwise distillations for generative protein sequence models. PLoS Comput Biol. 2022;18: e1010219. 
+
+\bibitem{Gerardos:2022aa} Gerardos A, Dietler N, Bitbol AF. Correlations from structure and phylogeny combine constructively in the inference of protein partners from sequences. PLoS Comput Biol. 2022;18: e1010147. 
+
+\bibitem{Hsu:2022ek} Hsu C, Nisonoff H, Fannjiang C, Listgarten J. Learning protein fitness models from evolutionary and assay-labeled data. Nat Biotechnol. 2022;40: 1114-1122. 
+
+\bibitem{Feinauer:2022bb} Feinauer C, Borgonovo E. Mean dimension of generative models for protein sequences. bioRxiv [Preprint] 2022; doi: 10.1101/2022.12.12.520028. % Still a preprint
+
+\bibitem{Rube:2022ye} Rube HT, Rastogi C, Feng S, Kribelbauer JF, Li A, Becerra B, et al. Prediction of protein-ligand binding affinity from sequencing data with interpretable machine learning. Nat Biotechnol. 2022;40: 1520-1527. 
+
+\bibitem{Berg:1987wu} Berg O, von Hippel P. Selection of DNA binding sites by regulatory proteins: Statistical-mechanical theory and application to operators and promoters. J Mol Biol. 1987;193: 723-750.
+
+\bibitem{Kinney:2010tn} Kinney JB, Murugan A, Callan CG, Cox EC. Using deep sequencing to characterize the biophysical mechanism of a transcriptional regulatory sequence. Proc Natl Acad Sci USA. 2010;107: 9158-9163. 
+
+\bibitem{Posfai:2024bb} Posfai A, McCandlish DM, Kinney JB. Symmetry, gauge freedoms, and the interpretability of sequence-function relationships. bioRxiv [Preprint] 2024; doi: 10.1101/2024.05.12.593774. % Still a preprint
+
+\bibitem{Tareen:2019aa} Tareen A, Kinney JB. Logomaker: beautiful sequence logos in Python. Bioinformatics. 2020;36: 2272-2274.
+
+\bibitem{majdandzic2023correcting} Majdandzic A, Rajesh C, Koo PK. Correcting gradient-based interpretations of deep neural networks for genomics. Genome Biol. 2023;24: 109.
+
+\bibitem{Busby:1999hb} Busby S, Ebright RH. Transcription activation by catabolite activator protein (CAP). J Mol Biol. 1999;293: 199-213. 
+
+\bibitem{Foat:2006tu} Foat B, Morozov A, Bussemaker H. Statistical mechanical modeling of genome-wide transcription factor occupancy data by MatrixREDUCE. Bioinformatics. 2006;22: e141-149. 
+
+\bibitem{Rube:2018io} Rube HT, Rastogi C, Kribelbauer JF, Bussemaker HJ. A unified approach for quantifying and interpreting DNA shape readout by transcription factors. Mol Syst Biol. 2018;14: e7902. 
+
+\bibitem{Hu:2020aa} Hu Y, Tareen A, Sheu YJ, Ireland WT, Speck C, Li H, et al. Evolution of DNA replication origin specification and gene silencing mechanisms. Nat Commun. 2020;11: 5175. 
+
+\bibitem{Chen:2018ew} Chen WC, Tareen A, Kinney JB. Density estimation on small data sets. Phys Rev Lett. 2018;121: 160605.
+
+\bibitem{Skalenko:2021aa} Skalenko KS, Li L, Zhang Y, Vvedenskaya IO, Winkelman JT, Cope AL, et al. Promoter-sequence determinants and structural basis of primer-dependent transcription initiation in \textit{Escherichia coli}. Proc Natl Acad Sci USA. 2021;118: e2106388118. 
+
+\bibitem{Pukhrambam:2022aa} Pukhrambam C, Molodtsov V, Kooshbaghi M, Tareen A, Vu H, Skalenko KS, et al. Structural and mechanistic basis of $\upsigma$-dependent transcriptional pausing. Proc Natl Acad Sci USA 2022;119: e2201301119.
+
+\bibitem{Fowler:2010gt} Fowler DM, Araya CL, Fleishman SJ, Kellogg EH, Stephany JJ, Baker D, et al. High-resolution mapping of protein sequence-function relationships. Nat Methods. 2010;7: 741-746.
+
+\bibitem{Olson:2014iq} Olson CA, Wu NC, Sun R. A comprehensive biophysical description of pairwise epistasis throughout an entire protein domain. Curr Biol. 2014;24: 2643-2651. 
+
+\bibitem{Adams:2016dka} Adams RM, Mora T, Walczak AM, Kinney JB. Measuring the sequence-affinity landscape of antibodies with massively parallel titration curves. eLife. 2016;5: e23156. 
+
+\bibitem{Esposito:2019ci} Esposito D, Weile J, Shendure J, Starita LM, Papenfuss AT, Roth FP, et al. MaveDB: an open-source platform to distribute and interpret data from multiplexed assays of variant effect. Genome Biol. 2019;20: 223. 
+
+\bibitem{Starr:2020aa} Starr TN, Greaney AJ, Hilton SK, Ellis D, Crawford KHD, Dingens AS, et al. Deep mutational scanning of SARS-CoV-2 receptor binding domain reveals constraints on folding and ACE2 binding. Cell. 2020;182: 1295-1310.
+
+\bibitem{Patwardhan:2009cw} Patwardhan RP, Lee C, Litvin O, Young DL, Pe'er D, Shendure J. High-resolution analysis of DNA regulatory elements by synthetic saturation mutagenesis. Nat Biotechnol. 2009;27: 1173-1175.
+
+\bibitem{Patwardhan:2012hy} Patwardhan RP, Hiatt JB, Witten DM, Kim MJ, Smith RP, May D, et al. Massively parallel functional dissection of mammalian enhancers in vivo. Nat Biotechnol. 2012;30: 265-270. 
+
+\bibitem{Kwasnieski:2012hu} Kwasnieski JC, Mogno I, Myers CA, Corbo JC, Cohen BA. Complex effects of nucleotide variants in a mammalian cis-regulatory element. Proc Natl Acad Sci USA. 2012;109: 19498-19503. 
+
+\bibitem{Julien:2016kf} Julien P, Mi\~{n}ana B, Baeza-Centurion P, Valc\'{a}rcel J, Lehner B. The complete local genotype-phenotype landscape for the alternative splicing of a human exon. Nat Commun. 2016;7: 11558. 
+
+\bibitem{Kircher:2019de} Kircher M, Xiong C, Martin B, Schubach M, Inoue F, Bell RJA, et al. Saturation mutagenesis of twenty disease-associated regulatory elements at single base-pair resolution. Nat Commun. 2019;10: 3583. 
+
+\bibitem{Urtecho:2020aa} Urtecho G, Insigne K, Tripp AD, Brinck M, Lubock NB, Kim H, et al. Genome-wide functional characterization of \textit{Escherichia coli} promoters and regulatory elements responsible for their function. eLife 2023;12: RP92558.
+
+\bibitem{Podgornaia:2015ki} Podgornaia AI, Laub MT. Pervasive degeneracy and epistasis in a protein-protein interface. Science. 2015;347: 673-677. 
+
+\bibitem{Wu:2016kp} Wu NC, Dai L, Olson CA, Lloyd-Smith JO, Sun R. Adaptation in protein fitness landscapes is facilitated by indirect paths. eLife. 2016;5: e16965. 
+
+\bibitem{Winkelman:2016kj} Winkelman JT, Vvedenskaya IO, Zhang Y, Zhang Y, Bird JG, Taylor DM, et al. Multiplexed protein-DNA cross-linking: Scrunching in transcription start site selection. Science. 2016;351: 1090-1093. 
+
+\bibitem{Wong:2018ho} Wong MS, Kinney JB, Krainer AR. Quantitative activity profile and context dependence of all human 5' splice sites. Mol Cell. 2018;71: 1012-1026. 
+
+\bibitem{BaezaCenturion:2019cy} Baeza-Centurion P, Mi\~{n}ana B, Schmiedel JM, Valc\'{a}rcel J, Lehner B. Combinatorial genetics reveals a scaling law for the effects of mutations on splicing. Cell. 2019;176: 1015-1028. 
+
+\bibitem{Zhou:2020re} Zhou J, McCandlish DM. Minimum epistasis interpolation for sequence-function relationships. Nat Commun. 2020;11: 1782. 
+
+\bibitem{Zhou:2022aa} Zhou J, Wong MS, Chen WC, Krainer AR, Kinney JB, McCandlish DM. Higher-order epistasis and phenotypic prediction. Proc Natl Acad Sci USA. 2022;119: e2204233119.
+
+\bibitem{Kuszewski:1999ne} Kuszewski J, Gronenborn AM, Clore GM. Improving the packing and accuracy of NMR structures with a pseudopotential for the radius of gyration. J Am Chem Soc. 1999;121: 2337-2338. 
+
+\bibitem{Otwinowski:2018jj} Otwinowski J, McCandlish DM, Plotkin JB. Inferring the shape of global epistasis. Proc Natl Acad Sci USA. 2018;115: E7550-E7558. 
+
+\bibitem{rozhonova2023protein} Rozho\v{n}ov\'{a} H, Mart\'{i}-G\'{o}mez C, McCandlish DM, Payne JL. Protein evolvability under rewired genetic codes. PLoS Biol 22(5): e3002594.
+
+\bibitem{Sarkisyan:2016fy} Sarkisyan KS, Bolotin DA, Meer MV, Usmanova DR, Mishin AS, Sharonov GV, et al. Local fitness landscape of the green fluorescent protein. Nature. 2016;533: 397-401. 
+
+\bibitem{Sailer:2017ku} Sailer ZR, Harms MJ. Detecting high-order epistasis in nonlinear genotype-phenotype maps. Genetics. 2017;205: 1079-1088.
+
+\bibitem{Mogno:2013cf} Mogno I, Kwasnieski JC, Cohen BA. Massively parallel synthetic promoter assays reveal the in vivo effects of binding site variants. Genome Res. 2013;23: 1908-1915.
+
+\bibitem{Otwinowski:2018jb} Otwinowski J. Biophysical Inference of Epistasis and the Effects of Mutations on Protein Stability and Function. Mol Biol Evol. 2018;35: 2345-2354.
+
+\bibitem{Belliveau:2018kr} Belliveau NM, Barnes SL, Ireland WT, Jones DL, Sweredoski MJ, Moradian A, et al. Systematic approach for dissecting the molecular mechanisms of transcriptional regulation in bacteria. Proc Natl Acad Sci USA. 2018;115: e1722055. 
+
+\bibitem{Faure:2022aa} Faure AJ, Domingo J, Schmiedel JM, Hidalgo-Carcedo C, Diss G, Lehner B. Mapping the energetic and allosteric landscapes of protein binding domains. Nature. 2022;604: 175-183. doi: 10.1038/s41586-022-04586-4.
+
+\bibitem{Kinney:2014ge} Kinney JB, Atwal GS. Parametric inference in the large data limit using maximally informative models. Neural Comput. 2014;26: 637-653. 
+
+\bibitem{Atwal:2015dj} Atwal GS, Kinney JB. Learning quantitative sequence-function relationships from massively parallel experiments. J Stat Phys. 2016;162: 1203-1243. 
+
+\bibitem{Machta:2013ga} Machta BB, Chachra R, Transtrum MK, Sethna JP. Parameter space compression underlies emergent theories and predictive models. Science. 2013;342: 604-607. 
+
+\bibitem{Transtrum:2015hm} Transtrum MK, Machta BB, Brown KS, Daniels BC, Myers CR, Sethna JP. Perspective: Sloppiness and emergent theories in physics, biology, and beyond. J Chem Phys. 2015;143: 010901. 
+
+\bibitem{jumper2021highly} Jumper J, Evans R, Pritzel A, Green T, Figurnov M, Ronneberger O, et al. Highly accurate protein structure prediction with AlphaFold. Nature. 2021;596: 583-589.
+
+\bibitem{lin2023evolutionary} Lin Z, Akin H, Rao R, Hie B, Zhu Z, Lu W, et al. Evolutionary-scale prediction of atomic-level protein structure with a language model. Science. 2023;379: 1123-1130.
+
+\bibitem{avsec2021effective} Avsec {\v{Z}}, Agarwal V, Visentin D, Ledsam JR, Grabska-Barwinska A, Taylor KR, et al. Effective gene expression prediction from sequence by integrating long-range interactions. Nat Methods. 2021;18: 1196-1203.
+
+\bibitem{karbalayghareh2022chromatin} Karbalayghareh A, Sahin M, Leslie CS. Chromatin interaction-aware gene regulatory modeling with graph attention networks. Genome Res. 2022;32: 930-944.
+
+\bibitem{de2022deepstarr} de Almeida BP, Reiter F, Pagani M, Stark A. DeepSTARR predicts enhancer activity from DNA sequence and enables the de novo design of synthetic enhancers. Nat Genet. 2022;54: 613-624.
+
+\bibitem{avsec2021base} Avsec {\v{Z}}, Weilert M, Shrikumar A, Krueger S, Alexandari A, Dalal K, et al. Base-resolution models of transcription-factor binding reveal soft motif syntax. Nat Genet. 2021;53: 354-366.
+
+\bibitem{chen2022sequence} Chen KM, Wong AK, Troyanskaya OG, Zhou J. A sequence-based global map of regulatory activity for deciphering human genetics. Nat Genet. 2022;54: 940-949.
+
+\bibitem{toneyan2022evaluating} Toneyan S, Tang Z, Koo PK. Evaluating deep learning for predicting epigenomic profiles. Nat Mach Intell. 2022;4: 438-450.
+
+\bibitem{jaganathan2019predicting} Jaganathan K, Panagiotopoulou SK, McRae JF, Darbandi SF, Knowles D, Li YI, et al. Predicting splicing from primary sequence with deep learning. Cell. 2019;176: 535-548.
+
+\bibitem{cheng2021mtsplice} Cheng J, {\c{C}}elik MH, Kundaje A, Gagneur J. MTSplice predicts effects of genetic variants on tissue-specific splicing. Genome Biol. 2021;22: 1-19.
+
+\bibitem{raghu2017expressive} Raghu M, Poole B, Kleinberg J, Ganguli S, Dickstein JS. On the expressive power of deep neural networks. Proc Mach Learn Res. 2017;70: 2847-2854.
+
+\bibitem{kaplan2020scaling} Kaplan J, McCandlish S, Henighan T, Brown TB, Chess B, Child R, et al. Scaling laws for neural language models. arXiv:2001.08361 [cs.LG]. 2020.
+
+\bibitem{nakkiran2021deep} Nakkiran P, Kaplun G, Bansal Y, Yang T, Barak B, Sutskever I. Deep double descent: Where bigger models and more data hurt. J Stat Mech. 2021;2021: 124003.
+
+\bibitem{simonyan2013deep} Simonyan K, Vedaldi A, Zisserman A. Deep inside convolutional networks: Visualising image classification models and saliency maps. arXiv:1312.6034 [cs.CV] 2013.
+
+\bibitem{shrikumar2017learning} Shrikumar A, Greenside P, Kundaje A. Learning important features through propagating activation differences. Proc Mach Learn Res. 2017;70: 3145-3153.
+
+\bibitem{lundberg2017unified} Lundberg SM, Lee SI. A unified approach to interpreting model predictions. Adv Neural Inf Process Syst. 2017;30: 4768-4777.
+
+\bibitem{jha2020enhanced} Jha A, Aicher JK, Gazzara MR, Singh D, Barash Y. Enhanced integrated gradients: improving interpretability of deep learning models using splicing codes as a case study. Genome Biol. 2020;21: 149
+
+\bibitem{han2022explanation} Han T, Srinivas S, Lakkaraju H. Which explanation should i choose? a function approximation perspective to characterizing post hoc explanations. arXiv:2206.01254 [cs.LG]. 2022.
+
+\bibitem{sasse2023quick} Sasse A, Chikina M, Mostafavi S. Quick and effective approximation of in silico saturation mutagenesis experiments with first-order Taylor expansion. iScience 2024;20: 110807. 
+
+\end{thebibliography}
+
+
+
+\section*{Supplemental Files}
+\begin{itemize}
+\item \textbf{S1 Text}: Supplemental information text.
+\end{itemize}
+\end{document}
+
+
+
+

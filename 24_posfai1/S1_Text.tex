@@ -1,0 +1,1405 @@
+\documentclass{article}
+
+\usepackage[colorlinks=true,
+            linkcolor=blue,
+            urlcolor=blue,
+            citecolor=blue]{hyperref}
+\usepackage{graphicx}
+\usepackage[english]{babel} 
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{outlines}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{amsthm}
+\usepackage{lineno}
+\allowdisplaybreaks
+
+\newtheorem{myclaim}{Claim}
+\numberwithin{myclaim}{section}
+
+\newcommand{\eq}[1]{Eq.\ \ref{#1}}
+\newcommand{\fig}[2]{Fig.\ \ref{#1}#2}
+\newcommand{\mysec}[1]{Sec. \ref{#1}}
+
+\newcommand{\diag}{{\rm diag}}
+\newcommand{\var}{{\rm var}}
+\newcommand{\cov}{{\rm cov}}
+\newcommand{\row}{\mathrm{row}}
+\newcommand{\const}{{\rm const}}
+\newcommand{\true}{\mathrm{true}}
+\newcommand{\myspan}{\mathrm{span}}
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\ev}[1]{\left. #1 \right|} 
+\newcommand{\bra}[1]{\left\langle #1 \right|}
+\newcommand{\ket}[1]{\left| #1 \right\rangle}
+\newcommand{\braket}[1]{\left\langle #1 \right\rangle}
+\newcommand{\bbraket}[1]{\left\llangle #1 \right\rrangle}
+\newcommand{\mat}[2]{\left( \begin{array}{#1} #2 \end{array} \right)}
+\newcommand{\bracemat}[2]{\left{ \begin{array}{#1} #2 \end{array} \right}}
+\def\s{\sigma}
+
+
+\newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\new}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\myinit}{\mathrm{init}}
+\newcommand{\myfixed}{\mathrm{fixed}}
+\newcommand{\myhier}{\textrm{hier}}
+\newcommand{\mytriv}{\textrm{triv}}
+\newcommand{\myeucl}{\textrm{eucl}}
+\newcommand{\myequi}{\textrm{equi}}
+\newcommand{\myzs}{\textrm{zs}}
+\newcommand{\mywt}{\textrm{wt}}
+
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\myvar}{\mathrm{var}}
+
+\newtheorem{claim}{Claim}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\renewcommand\thefigure{S\arabic{figure}}    
+
+
+\geometry{letterpaper,hmargin=15mm,vmargin=15mm}
+
+\title{Gauge fixing for sequence-function relationships:\\supplemental text (S1 Text)}
+
+\author{Anna Posfai, Juannan Zhou, David M. McCandlish, Justin B. Kinney}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+%%%
+%%% Sequences and embeddings
+%%%
+\section{Sequences and embeddings}
+
+% Definition: Alphabet
+\begin{definition} \label{def:alphabet}
+    The alphabet $\mathcal{A}$ is an ordered set of $\alpha$ characters $(c_1, \ldots, c_\alpha)$.
+\end{definition}
+
+% Definition: Sequence space
+\begin{definition} \label{def:sequence_space}
+    Sequence space $\mathcal{S}$ is the set of all sequences of length $L$ built from characters in the alphabet $\mathcal{A}$. We use $N$ to denote the number of sequences in $\mathcal{S}$, and $s_l$ to denote the character at position $l$ in sequence $s$.
+\end{definition}
+
+% Definition: Embedding
+\begin{definition} \label{def:embedding}
+An embedding $\vec{x}$ is a mapping from $\mathcal{S}$ to a real vector space $V = \mathbb{R}^M$. We use $M$ throughout to denote the dimension of $V$. 
+\end{definition}
+
+%\noindent Note: Choosing $V = \mathbb{R}^M$ limits our discussion to real sequence-function relationships. We make this choice because the vast majority of sequence-function relationships discussed in the literature are real. However, all of our results readily generalize to $V = \mathbb{C}^M$ if appropriate modifications are made to the claims and proofs (e.g., transposes are replaced with Hermitian conjugates where appropriate). 
+
+% D the choice efinition: Embedding space
+\begin{definition} \label{def:embedding_space}
+The embedding space $E$ of an embedding $\vec{x}:\mathcal{S} \to V$ is a vector space defined by $E \equiv \mathrm{span}(\set{\vec{x}(s): s \in \mathcal{S}})$. $E$ is also called the span of $\vec{x}$.
+\end{definition}
+
+% Definition: Design matrix
+\begin{definition}
+The design matrix $X$ of an embedding $\vec{x}:\mathcal{S} \to V$ is an $N \times M$ matrix having elements $X_{ij} = [\vec{x}(s_i)]_j$, where $i = 1, \ldots, N$ indexes all sequences in $\mathcal{S}$ (the specific order does not matter) and $j = 1, \ldots, M$ indexes the dimensions of $V$.    
+\end{definition}
+
+%%%
+%%% Gauge freedoms
+%%%
+\section{Gauge freedoms}
+
+% Definition: Freedom space
+\begin{definition} \label{def:freedom_space}
+The space of gauge freedoms (a.k.a.\ freedom space) $G$ of an embedding $\vec{x}:\mathcal{S} \to V$ is a vector space defined by
+\begin{equation}G \equiv \set{\vec{g} \in V: \vec{g}^\top \vec{x}(s) = 0\ \forall\ s \in \mathcal{S}}.    
+\end{equation}
+We use $\gamma$ to denote the dimension of $G$.
+\end{definition}
+
+% Claim: G and S are orthogonal
+\begin{claim}
+    Let $\vec{x}$ be an embedding, $E$ be the embedding space of $\vec{x}$, and $G$ be the freedom space of $\vec{x}$. Then $G$ is the orthogonal complement of $E$, i.e., $G = E^\perp$.
+\end{claim}
+\begin{proof}
+First we show that $G \subseteq E^\perp$. Consider any $\vec{g} \in G$. By Definition \ref{def:freedom_space}, $\vec{g}^\top \vec{x}(s) = 0$ for every $s \in \mathcal{S}$, and so $\vec{g}$ is orthogonal to $E$, and thus $\vec{g} \in E^\perp$. This establishes that $G \subseteq E^\perp$.  Next we show that $E^\perp \subseteq G$. If $\vec{v} \in E^\perp$, then $\vec{v}^\top \vec{w} = 0$ for every $\vec{w} \in S$. In particular, $\vec{v}^\top \vec{x}(s) = 0$ for every $s \in \mathcal{S}$, implying that $\vec{v} \in G$. This establishes that $E^\perp \subseteq G$, proving the claim. 
+\end{proof}
+
+\paragraph*{Gauge freedoms of pairwise-interaction models.}
+Eq.\ 7 in the main text appears to gives $2 \alpha$ linear relations for every pair of positions $l < l'$, namely
+\begin{eqnarray}
+    x_l^c(s) &=& \sum_{c' \in \mathcal{A}} x_{l l'}^{c c'}(s) ~~\textrm{($\alpha$ linear relations)} \label{eq:pairwise_constraints_1}, \\
+    x_{l'}^{c'}(s) &=& \sum_{c \in \mathcal{A}} x_{l l'}^{c c'}(s)~~\textrm{($\alpha$ linear relations)} \label{eq:pairwise_constraints_2}.
+\end{eqnarray}
+However, these linear relations are not independent, as summing \eq{eq:pairwise_constraints_1} over all $c \in \mathcal{A}$ gives the same linear relation as summing \eq{eq:pairwise_constraints_2} over all $c' \in \mathcal{A}$:
+\begin{equation}
+   1 = \sum_{c,c' \in \mathcal{A}} x_{l l'}^{c c'}(s). \label{eq:pairwise_constraints_dependency}
+\end{equation}
+\eq{eq:pairwise_constraints_dependency} is in fact the only dependency between the $2 \alpha$ linear relations in \eq{eq:pairwise_constraints_1} and \eq{eq:pairwise_constraints_2}. Therefore, there are actually $2 \alpha - 1$ independent gauge freedoms per pair of positions $l < l'$, and there are ${L \choose 2}$ such pairs of positions. We thus find a total of 
+\begin{equation}
+    \gamma_\textrm{pairwise} = L + {L \choose 2} (2 \alpha - 1)
+\end{equation}
+gauge freedoms for the pairwise-interaction model.
+
+%%%
+%%% Linear gauges
+%%%
+\section{Linear gauges}
+
+% Definition: Gauge space
+\begin{definition} \label{def:gauge_space}
+A linear gauge space $\Theta$ for an embedding $\vec{x}:\mathcal{S} \to V$ having freedom space $G$ is a vector space such that, for all $\vec{v} \in V$, there is a unique decomposition $\vec{v} = \vec{\theta} + \vec{g}$ where $\vec{\theta} \in \Theta$ and $\vec{g} \in G$. All gauge spaces discussed in what follows are assumed to be linear. Note that $\dim \Theta = M - \gamma$.
+\end{definition}
+
+% Definition: Projection matrix
+\begin{definition} \label{def:projection}
+A projection matrix $P$ that projects from a vector space $V$ into a vector space $V_1$ along a vector space $V_2$ is a matrix such that, for all $\vec{v} \in V$, $P \vec{v} \in V_1$ and $\vec{v} - P \vec{v} \in V_2$.     
+\end{definition}
+
+% Claim: P exists
+\begin{claim}
+Let $\vec{x}:\mathcal{S} \to V$ be an embedding, let $G$ be the freedom space of $\vec{x}$, and let $\Theta$ be a gauge space of $\vec{x}$. Then there is a unique a projection matrix $P$ that projects $V$ into $\Theta$ along $G$. Moreover, the matrix $Q \equiv I_M - P$ is the unique matrix that projects $V$ into $G$ along $\Theta$.  
+\end{claim}
+\begin{proof}
+Let $\vec{e}_1, \ldots, \vec{e}_\gamma$ be a basis for $G$, and $\vec{f}_1, \ldots, \vec{f}_{M-\gamma}$ be a basis for $\Theta$. Using these basis vectors as columns, define the $M \times \gamma$ matrix $E \equiv (\vec{e}_1, \ldots, \vec{e}_\gamma)$ and the $M \times (M-\gamma)$ matrix $F \equiv (\vec{f}_1, \ldots, \vec{f}_{M-\gamma})$. Choose any $\vec{v} \in V$. By Definition \ref{def:gauge_space}, $\vec{v}$ can be uniquely decomposed as
+\begin{equation}
+    \vec{v} = \vec{\theta} + \vec{g}
+\end{equation}
+where $\vec{\theta} \in \Theta$ and $\vec{g} \in G$. Because the columns of $E$ and $F$ provide bases for $G$ and $\Theta$, respectively, there is a $\gamma$-dimensional vector $\vec{a}$ and an $(M-\gamma)$-dimensional vector $\vec{b}$ such that $\vec{g} = E \vec{a}$ and $\vec{\theta} = F \vec{b}$. Therefore,
+\begin{eqnarray}
+    \vec{v} &=& E \vec{a} + F \vec{b} \\
+    &=& \left( E~~F \right) \left( \begin{array}{c} \vec{a} \\ \vec{b} \end{array} \right) \\
+    \Rightarrow \left( \begin{array}{c} \vec{a} \\ \vec{b} \end{array} \right)  &=& \left( E~~F \right)^{-1} \vec{v} \\
+    \Rightarrow \vec{\theta} &=& \left( 0_{M \times \gamma}~F \right) \left( \begin{array}{c} \vec{a} \\ \vec{b} \end{array} \right) \\
+    &=& (0_{M \times \gamma}~F)\left( E~~F \right)^{-1} \vec{v},
+\end{eqnarray}
+where $\left( E~~F \right)$ is the $M \times M$ matrix given by horizontally concatenating $E$ and $F$, and $0_{M \times \gamma}$ is an $M \times \gamma$ matrix of zeros. A projection matrix $P$ from $V$ into $\Theta$ along $G$ therefore exists and is given by
+\begin{equation}
+    P = (0_{M \times \gamma}~F)\left( E~~F \right)^{-1}.
+\end{equation}
+To see that $Q$ projects $V$ into $G$ along $\Theta$, simply note that, for any $\vec{v} \in V$, $Q \vec{v} = \vec{v} - P \vec{v} \in G$ and $\vec{v} - Q \vec{v} = P\vec{v} \in \Theta$. To prove that $P$ is unique, assume that there is another matrix $P' \neq P$ that projects into $\Theta$ along $G$. There must therefore be a $\vec{v} \in V$ such that $P' \vec{v} \neq P \vec{v}$. By Definition \ref{def:projection}, $P' \vec{v} \in \Theta$ and $\vec{v} - P' \vec{v} \in G$. But $P \vec{v} \in \Theta$ and $\vec{v} - P \vec{v} \in G$ as well, and by Definition \ref{def:gauge_space}, the decomposition of $\vec{v}$ into a component in $\Theta$ and a component in $G$ is unique, implying that $P \vec{v} = P' \vec{v}$, which is a contradiction. An analogous proof shows that $Q$ is unique. 
+\end{proof}
+
+% Definition: Metric
+\begin{definition}
+A metric $\Lambda$ on an $M$-dimensional vector space $V$ is a symmetric positive-definite $M \times M$ matrix. The $\Lambda$-inner product of two vectors $\vec{v},\vec{w} \in V$ is defined to be 
+\begin{equation}
+    \braket{\vec{v}, \vec{w}}_\Lambda \equiv \vec{v}^\top \Lambda \vec{w}.
+\end{equation}    
+The $\Lambda$-norm of a vector $\vec{v}\in V$ is defined to be
+\begin{equation}
+    ||\vec{v}||_\Lambda \equiv \sqrt{\braket{\vec{v},\vec{v}}_\Lambda} = \sqrt{\vec{v}^\top \Lambda \vec{w}}.
+\end{equation}
+$\vec{v}$ and $\vec{w}$ are $\Lambda$-orthogonal if and only if $\braket{\vec{v}, \vec{w}}_\Lambda = 0$.
+\end{definition}
+
+% Definition: Orthogonalizing metric
+\begin{definition}
+An orthogonalizing metric, $\Lambda$, for a gauge space $\Theta$ and freedom space $G$ is a metric for which  all $\vec{g} \in G$ are $\Lambda$-orthogonal to all $\vec{\theta} \in \Theta$.
+\end{definition}
+
+% Claim: Lambda exists
+\begin{claim}
+Let $\vec{x}:\mathcal{S} \to V$ be an embedding, $G$ be the freedom space of $\vec{x}$, and $\Theta$ be a gauge space of $\vec{x}$. Then there exists an orthogonalizing metric $\Lambda$ for $\Theta$ and $G$. 
+\end{claim}
+\begin{proof}
+Let $P$ be the projection matrix from $V$ into $\Theta$ along $G$, let $Q = I_M - P$, and define the matrix $\Lambda \equiv P^\top P + Q^\top Q$. It is a simple matter to show that $\Lambda$ is symmetric and positive-definite, and is thus a metric. Using $P^2 = P$, $Q^2 = Q$ and $Q = I_M - P$, it is readily shown that $PQ$ are both equal to the zero matrix and hence $\Lambda$ satisfies $\Lambda = P^\top \Lambda P + Q^\top \Lambda Q.$ Therefore, by Claim \ref{claim:appendix} in the Appendix, $\Lambda$ orthogonalizes $\Theta$ and $G$.
+\end{proof}
+
+% Claim: Gauge minimizes Lambda norm
+\begin{claim}
+Let $\vec{x}:\mathcal{S} \to V$ be an embedding, $X$ be the design matrix of $\vec{x}$, $G$ be the freedom space of $\vec{x}$, $\Theta$ be a gauge space of $\vec{x}$, and $\Lambda$ be a metric that orthogonalizes $\Theta$ and $G$. Then for any vector $\vec{\theta}_\myinit \in V$, the vector $\vec{\theta}^*$ in the gauge orbit of $\vec{\theta}_\myinit$ that has minimal $\Lambda$-norm lies in $\Theta$. 
+\end{claim}
+
+\begin{proof}
+Let $\theta^*$ be the unique element of $\Theta$ that lies in the gauge orbit of $\vec{\theta}_\myinit$. Because $\Lambda$ orthogonalizes $\Theta$ and $G$, $\vec{g}^\top \Lambda \vec{\theta}^* = 0$ for all $\vec{g} \in G$. By Claim \ref{claim:appendix}, 
+\begin{equation}
+    ||\vec{\theta}^* + \vec{g}||^2_\Lambda \geq ||\vec{\theta}^*||^2_\Lambda,
+\end{equation}
+with equality obtaining only when $\vec{g} = \vec{0}$. This proves that $\vec{\theta}^*$ is the unique vector with the smallest $\Lambda$-norm of any vector in the gauge orbit of $\vec{\theta}_\myinit$.
+\end{proof}
+
+% Claim: Formula for projection matrix
+\begin{claim}
+Let $\vec{x}:\mathcal{S} \to V$ be an embedding, $X$ be the design matrix of $\vec{x}$, $G$ be the freedom space of $\vec{x}$, $\Theta$ be a gauge space of $\vec{x}$, and $\Lambda$ be a metric that orthogonalizes $\Theta$ and $G$. Then the matrix $P$ that projects along $G$ into $\Theta$ is given by $P = \Lambda^{-1/2} (X \Lambda^{-1/2})^+ X$.
+\end{claim}
+
+\begin{proof}
+Consider the transformed embedding $\vec{x}' = \Lambda^{-1/2} \vec{x}$, which corresponds to the transformed design matrix $X' = X \Lambda^{-1/2}$ as well as the transformed embedding space $E' = \Lambda^{-1/2} E$. If a parameter vector $\vec{\theta} \in V$ yields model predictions $X \vec{\theta})$, then $\vec{\theta}' = \Lambda^{1/2} \vec{\theta}$ yields the same model predictions $X'\vec{\theta}'$. Consequently,  $G' = \Lambda^{1/2} G$ is the transformed freedom space and $\Theta' = \Lambda^{-1/2} \Theta$ is the transformed gauge space. Because $\Theta$ and $G$ are $\Lambda$-orthogonal, $\Theta'$ and $G'$ are orthogonal in the Euclidean sense. The transformed embedding space $E'$ is also orthogonal to $G'$, and so $\Theta' = E'$ The matrix $P'$ that projects along $G'$ and onto $\Theta'$ is therefore the orthogonal projection matrix onto the space spanned by the rows of $X'$, and is given by $P' = (X')^+ X$. Now consider an initial parameter $\vec{\theta}_\myinit \in V$, its gauge-fixed counterpart $\vec{\theta}_\myfixed = P \vec{\theta}_\myinit \in \Theta$ as well as the transformed versions of these vectors, $\vec{\theta}'_\myinit = \Lambda^{-1/2} \vec{\theta}_\myinit$ and $\vec{\theta}'_\myfixed = \Lambda^{-1/2} \vec{\theta}_\myfixed \in \Theta'$. One can readily verify that
+\begin{equation}
+    X \vec{\theta}_\myinit = X \vec{\theta}_\myfixed =  X' \vec{\theta}'_\myinit = X' \vec{\theta}'_\myfixed.
+\end{equation}
+Therefore,
+\begin{eqnarray}
+    \vec{\theta}_\myfixed &=& \Lambda^{-1/2} \vec{\theta}'_\myfixed, \\
+    %DMM: Fixed typo above, should have been theta' on RHS
+    &=& \Lambda^{-1/2} P' \vec{\theta}'_\myinit, \\
+    &=& \Lambda^{-1/2} (X')^+ X' \vec{\theta}'_\myinit, \\
+    &=& \Lambda^{-1/2} (X \Lambda^{-1/2})^+ X \Lambda^{-1/2} \Lambda^{1/2} \vec{\theta}_\myinit, \\
+    &=& P \vec{\theta}_\myinit
+\end{eqnarray}
+where $P = \Lambda^{-1/2} (X \Lambda^{-1/2})^+ X$. This proves the claim. 
+\end{proof}
+
+% Regularized loss function
+\begin{definition}
+A loss function $\mathcal{L}$ is said to be $L_2$-regularized by a metric $\Lambda$ iff it has the form 
+\begin{equation}
+    \mathcal{L}(\vec{\theta}) = \mathcal{L}_\mathrm{data}(X\vec{\theta}) + \frac{\beta}{2} \vec{\theta}^\top \Lambda \vec{\theta},
+\end{equation}
+where $X$ is the design matrix of an embedding $\vec{x}$, $\mathcal{L}_\mathrm{data}$ is a data-dependent loss function that depends only on model predictions $X \vec{\theta}$, and $\beta$ is a positive scalar.
+\end{definition}
+
+%% L_2 regularization yields gauge-fixed parameters
+\begin{claim} \label{claim:L_2}
+    Let $\vec{x}:\mathcal{S} \to V$ be an embedding, $G$ be the freedom space of $\vec{x}$, $\Theta$ be a gauge space of $\vec{x}$, $\Lambda$ be a metric that orthogonalizes $\Theta$ and $G$, $\mathcal{L}$ be a loss function that is $L_2$-regularized by $\Lambda$, and $\vec{\theta}^*$ be a minimum of $\mathcal{L}$. Then $\vec{\theta}^* \in \Theta$.
+\end{claim}
+\begin{proof}
+\begin{eqnarray}
+    \vec{\theta}^* &=& \mathrm{argmin}_{\vec{v} \in V}~\mathcal{L}(\vec{v}) \\
+    &=& \mathrm{argmin}_{\vec{v} \in V} ~\left[ \mathcal{L}_\mathrm{data}(X \vec{v}) + \frac{\beta}{2} \vec{v}^\top \Lambda \vec{v} \right] \\
+    &=& \mathrm{argmin}_{\set{\vec{v} = \vec{\theta} + \vec{g}:\vec{\theta} \in \Theta,\,\vec{g} \in G}}~\left[ \mathcal{L}_\mathrm{data}(X (\vec{\theta} + \vec{g})) + \frac{\beta}{2} (\vec{\theta} + \vec{g})^\top \Lambda (\vec{\theta} + \vec{g}) \right] \label{eq:use_decomp} \\
+    &=& \mathrm{argmin}_{\vec{\theta} \in \Theta}~\left[ \mathcal{L}_\mathrm{data}(X \vec{\theta}) + \frac{\beta}{2} \vec{\theta}^\top \Lambda \vec{\theta} \right] + \mathrm{argmin}_{\vec{g} \in G}~\left[ \frac{\beta}{2} \vec{g}^\top \Lambda \vec{g} \right] \label{eq:use_orthog} \\
+    &=& \mathrm{argmin}_{\vec{\theta} \in \Theta}~\left[ \mathcal{L}_\mathrm{data}(X \vec{\theta}) + \frac{\beta}{2} \vec{\theta}^\top \Lambda \vec{\theta} \right].
+\end{eqnarray}
+In \eq{eq:use_decomp} we used the fact that $\vec{v} \in V$ can be expressed uniquely as $\vec{v} = \vec{\theta} + \vec{g}$ for $\vec{\theta} \in \Theta$ and $\vec{g} \in G$ (by Definition \ref{def:gauge_space}), and in \eq{eq:use_orthog} we used the fact that $X \vec{g} = \vec{0}$ for any $\vec{g} \in G$ (by Definition \ref{def:freedom_space}), together with the assumption that $\Lambda$ orthogonalizes $\Theta$ and $G$. We thus find that $ \vec{\theta}^* \in \Theta$.
+\end{proof}
+\begin{claim} \label{claim:Delta}
+    Let $\vec{x}:\mathcal{S} \to V$ be an embedding, $G$ be the freedom space of $\vec{x}$, $\Theta$ be a gauge space of $\vec{x}$, $\mathcal{L}_\mathrm{data}$ be a data-dependent loss function that depends only on model predictions $X \vec{\theta}$, and $\Delta$ be an $N \times N$ positive definite matrix. Then there exists a metric $\Lambda$ defining a loss $\mathcal{L}$ that is $L_2$-regularized by $\Lambda$ that has the following property: every minimum $\vec{\theta}^* $ of $\mathcal{L}$ lies within $\Theta$ and satisfies
+    \begin{equation} \label{eq:SL_2}
+    \mathcal{L}(\theta^*)=\mathcal{L}_\mathrm{data}(X\vec{\theta}^*) + \frac{\beta}{2} \left(X \vec{\theta^* }\right) ^\top \Delta \left(X \vec{\theta}^*\right).
+    \end{equation}
+\end{claim}
+\begin{proof}
+By Claim~\ref{claim:L_2} it suffices to construct a $\Lambda$ that is an orthogonalizing metric for $\Theta$ and $G$ and which satisfies Equation~\ref{eq:SL_2}. Let $P$ be the projection matrix from $V$ into $\Theta$ along $G$, let $Q = I_M - P$, and define the matrix $\Lambda \equiv P^\top X^\top \Delta X P + Q^\top Q$. It is a simple matter to show that $\Lambda$ is symmetric and positive-definite, and is thus a metric. Using $P^2 = P$ and $Q^2 = Q$, and $Q = I_M - P$, it is readily shown that $PQ$ are both equal to the zero matrix and hence $\Lambda$ satisfies $\Lambda = P^\top \Lambda P + Q^\top \Lambda Q$. Therefore, by Claim \ref{claim:appendix} in the Appendix, $\Lambda$ orthogonalizes $\Theta$ and $G$. Then by Claim~\ref{claim:L_2}, we have $\vec{\theta}^*  \in \Theta$ and hence $P\vec{\theta}^*=\vec{\theta}^*$ and $\vec{\theta}^*$ is in the null space of $Q$. Consequently, 
+\begin{eqnarray}
+\mathcal{L}(\theta^*) &=& \mathcal{L}_\mathrm{data}(X\vec{\theta}^*)+\frac{\beta}{2} \vec{\theta}^{*\top }\left(P^\top X^\top \Delta X P + Q^\top Q \right) \vec{\theta}^* \\
+ &=& \mathcal{L}_\mathrm{data}(X\vec{\theta}^*)+\frac{\beta}{2} \left(\vec{\theta}^{*\top }P^\top X^\top \Delta X P  \vec{\theta}^* + \vec{\theta}^{*\top }Q^\top Q  \vec{\theta}^* \right)\\
+  &=& \mathcal{L}_\mathrm{data}(X\vec{\theta}^*) + \frac{\beta}{2} \left(X \vec{\theta^* }\right) ^\top \Delta \left(X \vec{\theta}^*\right)
+\end{eqnarray}
+as required.
+\end{proof}
+
+\paragraph*{Practical recipe for fixing a linear gauge using $L_2$ regularization.}
+Claim~\ref{claim:Delta} shows that for any choice of linear gauge $\Theta$ and any desired positive definite $L_2$ regularizer $\Delta$ on model predictions, we can construct a positive definite $L_2$ regularizer $\Lambda$ on model parameters that penalizes the vector of predictions according to $\Delta$ and results in an inferred parameter vector $\vec{\theta}^*$ that is guaranteed to be a member of our desired gauge $\Theta$.  Practically, the steps to calculate $\Lambda$ are:
+\begin{enumerate}
+\item Find a basis $\vec{e}_1, \ldots, \vec{e}_\gamma$ for the null space of the design matrix $X$. This can be done, for instance, by using Gaussian elimination to column reduce the block matrix $\left( \begin{array}{c} X \\ I_M \end{array}\right)$, where the resulting matrix will have $\gamma$ non-zero columns whose top $N$ entries are 0 and whose bottom $N$ entries will each serve as one vector in the desired basis. See see ref.\ \cite{Posfai:2024bb} for analytical methods to determine this basis for the all-order interaction model and related models.
+\item Find a basis $\vec{f}_1, \ldots, \vec{f}_{M-\gamma}$ for the desired linear gauge space $\Theta$. Any linearly independent set of $M-\gamma$ vectors that are members of $\Theta$ will suffice.
+\item Using these basis vectors as columns, define the $M \times \gamma$ matrix $E \equiv (\vec{e}_1, \ldots, \vec{e}_\gamma)$ and the $M \times (M-\gamma)$ matrix $F \equiv (\vec{f}_1, \ldots, \vec{f}_{M-\gamma})$. Then calculate the projection matricies $P = (0_{M \times \gamma}~F)\left( E~~F \right)^{-1}$ and $Q=I_M-P$.
+\item Set $\Lambda \equiv P^\top X^\top \Delta X P + Q^\top Q$.
+\item Minimize $ \mathcal{L}(\vec{\theta}) \equiv \mathcal{L}_\mathrm{data}(X\vec{\theta}) + \frac{\beta}{2} \vec{\theta}^\top \Lambda \vec{\theta}$ for some choice of regularization parameter $\beta>0$.
+\end{enumerate}
+Note similarly that given a specified $L_2$ regularizer $\Lambda$ on model parameters, the induced $L_2$ regularizer on model predictions is given by $\Delta \equiv \left(PX^+\right)^\top\Lambda \left(P X^+\right)$ which satisfies $x^\top\Delta x>0$ for all nonzero $x$ in the column space of $X$.
+% DMM: We could expand the above into an additional claim, but I don't think it is needed.
+
+
+
+%%%
+%%% All-order interaction models
+%%%
+\section{All-order interaction models}
+
+% Position-specific augmented embedding
+\begin{definition} 
+The position-specific augmented embedding $\vec{x}'_l:\mathcal{S} \to V_l$, where $V_l = \mathbb{R}^{\alpha+1}$, is given by
+\begin{equation}
+    \vec{x}'_l(s) = \left( \begin{array}{c} x^*_l(s) \\ x^{c_1}_l(s) \\ \cdots \\ x^{c_\alpha}_l(s) \end{array} \right)~~\textrm{for all}~~s \in \mathcal{S},
+\end{equation} 
+where, as in the main text, $x^*_l(s) = 1$ for all $s \in \mathcal{S}$ and, for all $c \in \mathcal{A}$, $x^c_l(s)$ is one if $s_l = c$ and is zero otherwise. In what follows, we use $G_l$ to denote the freedom space of $\vec{x}'_l$ and $E_l$ to denote the embedding space of $\vec{x}'_l$. 
+\end{definition}
+
+% Position-specific hierarchical gauge freedom space
+\begin{claim} \label{claim:E_l_and_G_l}
+$E_l$ has dimension $\alpha$ and is given by $\set{(\beta^*, \beta^{c_1}, \ldots, \beta^{c_\alpha})^\top: \beta^* = \sum_{c \in \mathcal{A}} \beta^c }$; $G_l$ has dimension $1$ and is spanned by the vector $(-1, 1, \ldots, 1)^\top$.  
+\end{claim}
+
+\begin{proof}
+Let $E_l$ denote the span of $\vec{x}'_l$. By definition, any vector $\vec{v} \in E_l$ can be written as a linear combination of vectors $\vec{x}_l'(s)$ over $s \in S$, i.e.,
+\begin{equation}
+    \vec{v} = \sum_{s \in \mathcal{S}} \beta(s) 
+    \left(
+    \begin{array}{c} 
+        x^*_l(s) \\
+        x^{c_1}_l(s) \\
+        \vdots \\
+        x^{c_\alpha}_l(s)
+    \end{array}
+    \right)
+\end{equation}
+for some mapping $\beta: \mathcal{S} \to \mathbb{R}$. Defining $\beta^c \equiv \sum_{s \in \mathcal{S}} \beta(s) x_l^c(s)$ for all $c \in \mathcal{A'}$, we get
+\begin{equation}
+    \vec{v} = \left( 
+    \begin{array}{c} 
+        \beta^* \\
+        \beta^{c_1} \\
+        \vdots \\
+        \beta^{c_\alpha}
+    \end{array}
+    \right).
+\end{equation}
+The $\alpha+1$ values $\set{\beta^c}_{c \in \mathcal{A}}$ are arbitrary except for one constraint arising from the fact that $x_l^*(s) = \sum_{c \in \mathcal{A}} x_l^c(s)$ for all $s \in \mathcal{S}$: 
+\begin{eqnarray}
+    \sum_{c \in \mathcal{A}} \beta^c &=& \sum_{c \in \mathcal{A}} \sum_{s \in \mathcal{S}} \beta(s) x_l^c(s) \\
+    &=& \sum_{s \in \mathcal{S}} \beta(s) \sum_{c \in \mathcal{A}}  x_l^c(s) \\
+    &=& \sum_{s \in \mathcal{S}} \beta(s) x_l^*(s) \\
+    &=& \beta^*.
+\end{eqnarray}
+We therefore see that $E_l$ has dimension $\alpha$ and comprises the vectors stated in Claim \ref{claim:E_l_and_G_l}. 
+
+Now let $\vec{g} = (-1, 1, \ldots, 1)^\top$. Taking the dot product of $\vec{g}$ with $\vec{x}'_l$ gives
+\begin{equation}
+    \vec{g}^\top \vec{x'}(s) = - x_l^*(s) + \sum_{c \in \mathcal{A}} x_l^c(s)  = 0~~\textrm{for all}~~s \in \mathcal{S},
+\end{equation} 
+This shows that $\vec{g} \in G_l$ and, in light of the fact that $\dim G_l = \dim V - \dim E_l = 1$, proves that $G_l$ is spanned by $\vec{g}$.   
+\end{proof}
+
+% All-order embedding
+\begin{definition}
+The all-order embedding $\vec{x}_\mathrm{all}:\mathcal{S} \to V_\mathrm{all}$ ($V_\mathrm{all} = \mathbb{R}^M$ where $M = (\alpha+1)^L$) is defined by the tensor product
+\begin{equation}
+    \vec{x}_\mathrm{all}(s) = \bigotimes_{l=1}^L \vec{x}'_l(s) ~~\textrm{for all}~~s \in \mathcal{S}.
+\end{equation} 
+We use $E_\mathrm{all}$ to denote the embedding space of $\vec{x}_\mathrm{all}$, and $G_\mathrm{all}$ to denote the freedom space of $\vec{x}_\mathrm{all}$. 
+\end{definition}
+
+% E_all
+\begin{claim} \label{claim:S_all}
+     The embedding space of $\vec{x}_\mathrm{all}$ is given by 
+     \begin{equation}
+        E_\mathrm{all}= \bigotimes_{l=1}^L E_l.       
+     \end{equation}
+\end{claim}
+
+\begin{proof}
+For each $c \in \mathcal{A}$, define $\alpha$ distinct $(\alpha+1)$-dimensional vectors $\vec{e}_c$, one for each $c \in \mathcal{A}$ and with elements indexed by $c' \in \mathcal{A'}$ given by
+\begin{equation}
+    [\vec{e}_c]_{c'} = \left\{ \begin{array}{rl} 
+        1 & \textrm{if $c' = *$ or $c' = c$} \\
+        0 & \textrm{otherwise}
+     \end{array} \right.
+\end{equation}
+Note that, for any $s \in \mathcal{S}$, $\vec{e}_{s_l} = \vec{x}'_l(s)$. Next, for each position $l$, define the set of vectors $\mathcal{B}_l = \set{\vec{e}_c}_{c \in \mathcal{A}}$. From the proof of Claim \ref{claim:E_l_and_G_l}, $\mathcal{B}_l$ forms a linearly independent basis for $E_l$. By definition of the tensor product of vector spaces, a basis for the space $E \equiv \bigotimes_{l=1}^L E_l$ is given by
+\begin{eqnarray}
+    \mathcal{B} &\equiv & \set{\bigotimes_{l=1}^L \vec{v}_l: \vec{v}_1 \in \mathcal{B}_1, \ldots, \vec{v}_L \in \mathcal{B}_L} \\
+    &=& \set{\bigotimes_{l=1}^L \vec{e}_{c_l}: c_1, \ldots, c_L \in \mathcal{A}} \\
+    &=& \set{\bigotimes_{l=1}^L \vec{e}_{s_l}: s \in \mathcal{S}} \\
+    &=& \set{\bigotimes_{l=1}^L \vec{x}'_l(s): s \in \mathcal{S}} \\
+    &=& \set{\vec{x}_{\mathrm{all}}(s): s \in \mathcal{S}}.
+\end{eqnarray}
+$\mathcal{B}$ is therefore also a basis for $E_\mathrm{all}$. Since $E$ and $E_\mathrm{all}$ share the same basis, they are the same vector space. Note that we have learned, in the process, that all vectors $\vec{x}_{\mathrm{all}}(s)$, $s \in \mathcal{S}$, are linearly independent. 
+\end{proof}
+
+% Parametric gauge G
+\begin{claim} \label{claim:G_all}
+    % Freedom space
+    The freedom space of $\vec{x}_\mathrm{all}$ is given by 
+    \begin{equation}
+        G_\mathrm{all} = \bigoplus_{(R_1, \ldots, R_L) \in \mathcal{R}} \left[ \bigotimes_{l=1}^L R_l \right],
+    \end{equation}
+    where
+    \begin{equation}
+        \mathcal{R} = \set{(R_1, \ldots, R_L): \textrm{$R_l \in \set{E_l, G_l}$ for all $l$ and $R_l = G_l$ for at least one $l$}}.
+    \end{equation}
+\end{claim}
+\begin{proof}
+
+\begin{eqnarray}
+V_\mathrm{all} &=& \bigotimes_{l=1}^L \textrm{V}_l \\
+&=&  \bigotimes_{l=1}^L  \left[ E_l \oplus G_l \right] \\
+&=& \left[\bigotimes_{l=1}^L E_l\right] \oplus \left[\bigoplus_{\set{R_1, \ldots, R_L} \in \mathcal{R}} \bigotimes_{l=1}^L R_l \right] \\
+&=& E_\mathrm{all} \oplus W
+\end{eqnarray}
+where 
+\begin{eqnarray}
+    W &\equiv & \bigoplus_{\set{R_1, \ldots, R_L} \in \mathcal{R}} \bigotimes_{l=1}^L R_l, %\\
+    %\mathcal{R} &\equiv& \set{\set{R_1, \ldots, R_L}: \textrm{$R_l\in \set{E_l, G_l}$ for  all $l$, and $R_l = G_l$ for at least one $l$}}
+\end{eqnarray}
+This shows that $\dim W = \dim V_\mathrm{all} - \dim E_\mathrm{all} = \dim G_\mathrm{all}$. However, this does not yet show that $W = G_\mathrm{all}$.
+
+To see that $W = G_\mathrm{all}$, let $\set{\vec{u}^c_l}_{c \in \mathcal{A}'}$ be a basis for $V_{l}$. Each $\vec{u}^c_l$ has a unique decomposition $\vec{u}^c_l = \vec{\theta}_l^c + \vec{g}_l^c$ where $\vec{\theta}_l^c \in E_l$ and $\vec{g}_l^c \in G_l$. For every augmented sequence $s' \in \mathcal{S}'$, there is a corresponding vector in $V_\mathrm{all}$ given by $\vec{u}_{s'} = \bigotimes_{l=1}^L \vec{u}_l^{s_l}$. Moreover, the set $\set{\vec{u}_{s'}}_{s' \in \mathcal{S'}}$ is a basis for $V_\mathrm{all}$. The vector $\vec{u}_{s'}$ can be decomposed into a component in $E_\mathrm{all}$ and a component in $W$ via
+\begin{eqnarray}
+    \vec{u}_{s'} &=& \bigotimes_{l=1}^L \vec{u}_l^{s'_l} \\
+    &=& \bigotimes_{l=1}^L \left[ \vec{\theta}_l^{s'_l} + \vec{g}_l^{s'_l} \right] \\
+    &=& \bigotimes_{l=1}^L \vec{\theta}_l^{s'_l} + \sum_{(\vec{r}_1, \ldots, \vec{r}_L) \in \rho_{s'}} \bigotimes_{l=1}^L \vec{r}_l \\
+    &=&  \vec{\theta}_{s'} + \vec{r}_{s'} \
+\end{eqnarray}
+where
+\begin{eqnarray}
+ \vec{\theta}_{s'} &\equiv& \bigotimes_{l=1}^L \vec{\theta}_l^{s'_l}, \\
+ \vec{r}_{s'} &\equiv& \sum_{(\vec{r}_1, \ldots, \vec{r}_L) \in \rho_{s'}} \bigotimes_{l=1}^L \vec{r}_l, \\
+    \rho_{s'} &\equiv& \set{(\vec{r}_1, \ldots, \vec{r}_L): \vec{r}_l \in \set{\vec{\theta}_l^{s'_l},\vec{g}_l^{s'_l} }\textrm{~for all $l$, and~}\vec{r}_l = \vec{g}_l^{s'_l} \textrm{~for at least one $l$}}.
+\end{eqnarray}
+Observe that $r_{s'} \in W$ for every $s' \in \mathcal{S}'$. Moreover, since $\set{\vec{u}_{s'}}_{s' \in \mathcal{S}'}$ is a basis for $\vec{V}_\mathrm{all}$, $\set{\vec{r}_{s'}}_{s' \in \mathcal{S}'}$ is a basis for $W$. Finally, observe that for every $s \in \mathcal{S}$, the dot product of $\vec{x}_\mathrm{all}(s)$ with $\vec{r}_{s'}$ is zero, i.e.,
+\begin{eqnarray}
+    \left[\vec{x}_\mathrm{all}(s) \right]^\top \vec{r}_{s'} = \sum_{(\vec{r}_1, \ldots, \vec{r}_L) \in \rho_{s'}} \prod_{l=1}^L \left[\vec{x}'_l(s) \right]^\top \vec{r}_l = 0,
+\end{eqnarray}
+because $\vec{r}_l \in G_l$ for at least one $l$ in each product. Therefore, $\vec{r}_{s'} \in G_\mathrm{all}$ for every $s' \in \mathcal{S}'$. Since $\set{\vec{r}_{s'}}_{s' \in \mathcal{S}'}$ is a basis for $W$, we conclude that $W = G_\mathrm{all}$.
+
+\end{proof}
+
+% Parametric gauge Theta
+\begin{claim} \label{claim:product_Theta_P_Lambda}
+    For each position $l$, let $\Theta_l$ be a gauge space for $\vec{x}'_l$, let $P_l$ be projection matrix into $\Theta_l$ along $G_l$, and let $\Lambda_l$ be a metric that orthogonalizes $\Theta_l$ and $G_l$. Then $\Theta \equiv \bigotimes_l \Theta_l$ is a gauge space of $\vec{x}_\mathrm{all}$, $P \equiv \bigotimes_l P_l$ projects into $\Theta$ along $G_\mathrm{all}$, and $\Lambda \equiv \bigotimes_l \Lambda_l$ is a metric that orthogonalizes $\Theta$ and $G_\mathrm{all}$.
+\end{claim}
+\begin{proof}
+%To see that $\Theta \equiv \bigotimes_l \Theta_l$ is a gauge space of $\vec{x}_\mathrm{all}$, note that $\dim \Theta = \dim E_\mathrm{all}$ and that $\Theta$ has only a trivial intersection with $G_\mathrm{all}$. 
+
+% \Theta
+For each position $l=1,\ldots,L$, let $\vec{v}_l = \vec{\theta}_l + \vec{g}_l$ where $\vec{v}_l \in V_l$, $\vec{\theta}_l \in \Theta_l$, and $\vec{g}_l \in G_l$. Defining $\vec{v} = \bigotimes_{l=1}^L \vec{v}_l$, we get
+\begin{eqnarray}
+\vec{v} = \bigotimes_{l=1}^L \left[ \vec{\theta}_l + \vec{g}_l \right] = \vec{\theta} + \vec{g}
+\end{eqnarray}
+where $\vec{\theta} = \bigotimes_{l=1}^L \vec{\theta}_l$ lives in the space $\Theta \equiv \bigotimes_{l=1}^L \Theta_l$, and 
+\begin{eqnarray}
+    \vec{g} &=& \sum_{(\vec{r}_1, \ldots, \vec{r}_L) \in \rho} \bigotimes_{l=1}^L \vec{r}_l, \\
+    \rho &\equiv & \set{(\vec{r}_1, \ldots, \vec{r}_L): \vec{r}_l \in \set{\vec{\theta}_l,\vec{g}_l}\textrm{~for all $l$, and~}\vec{r}_l = \vec{g}_l \textrm{~for at least one $l$}},
+\end{eqnarray}
+lives in the space
+    \begin{equation}
+        G \equiv \bigoplus_{(R_1, \ldots, R_L) \in \mathcal{R}} \left[ \bigotimes_{l=1}^L R_l \right],
+    \end{equation}
+    where
+    \begin{equation}
+        \mathcal{R} = \set{(R_1, \ldots, R_L): \textrm{$R_l \in \set{\Theta_l, G_l}$ for all $l$ and $R_l = G_l$ for at least one $l$}}.
+    \end{equation}
+By arguments similar to those in Claim \ref{claim:G_all}, it is readily seen that $\vec{x}_\mathrm{all}(s)^\top \vec{g} = \vec{0}$ for every $s \in \mathcal{S}$. Moreover, by arguments similar to those in Claim \ref{claim:G_all}, it is readily seen that this construction is able to yield a basis of vectors $\vec{g}$ for $G$, proving that that $G = G_\mathrm{all}$ is the freedom space of $\vec{x}_\mathrm{all}$. Therefore, for every vector of the form $\vec{v} = \bigotimes_{l=1}^L \vec{v}_l$, there is a unique decomposition $\vec{v} = \vec{\theta} + \vec{g}$, where $\vec{\theta} \in \Theta$ and $\vec{g} \in G_\mathrm{all}$. Because a basis of such vectors $\vec{v}$ can be found for $V$, we see that any vector $\vec{v} \in V$ can be uniquely decomposed as $\vec{v} = \vec{\theta} + \vec{g}$, where $\vec{\theta} \in \Theta$ and $\vec{g} = G_\mathrm{all}$. This proves that $\Theta$ is a gauge space of $\vec{x}_\mathrm{all}$. 
+
+Defining $P \equiv \bigotimes_{l=1}^L P_l$ and applying this to $\vec{v}$, we find that
+\begin{eqnarray}
+    P \vec{v} = \bigotimes_{l=1}^L P_l \vec{v}_l
+    =  \bigotimes_{l=1}^L \vec{\theta}_l
+    = \vec{\theta}
+\end{eqnarray}
+is in $\Theta$, which implies that $\vec{v} - P \vec{v} = \vec{g}$ is in $G_\mathrm{all}$. Since a basis of vectors $\vec{v}$ for $V$ can be found that decompose in this way, all vectors in $V$ decompose in this manner. This proves that $P$ projects into $\Theta$ along $G_\mathrm{all}$ 
+
+Now define $\Lambda \equiv \bigotimes_{l=1}^L \Lambda_l$. It is readily seen that $\Lambda$ is symmetric and positive definite from the fact that every $\Lambda_l$ is symmetric and positive definite.  Moreover,
+\begin{eqnarray}
+\Lambda &=& \bigotimes_{l=1}^L (P_l^\top \Lambda_l P_l + Q_l^\top \Lambda_l Q_l) \label{eq:step0} \\
+        &=& \bigotimes_{l=1}^L P_l^\top \Lambda_l P_l  + \sum_{(R_1, \ldots, R_L) \in \mathcal{R}} \bigotimes_{l=1}^L R_l^\top \Lambda_l R_l  \\
+        &=& \left[ \bigotimes_{l=1}^L P_l \right]^\top \left[\bigotimes_{l=1}^L \Lambda_l \right] \left[ \bigotimes_{l=1}^L P_l \right] + \sum_{(R_1, \ldots, R_L) \in \mathcal{R}} \left[ \bigotimes_{l=1}^L R_l \right]^\top \left[\bigotimes_{l=1}^L \Lambda_l \right] \left[ \bigotimes_{l=1}^L R_l \right] \label{eq:step1} \\
+        &=& \left[ \bigotimes_{l=1}^L P_l \right]^\top \left[\bigotimes_{l=1}^L \Lambda_l \right] \left[ \bigotimes_{l=1}^L P_l \right] +  \left[ \sum_{(R_1, \ldots, R_L) \in \mathcal{R}} \bigotimes_{l=1}^L R_l \right]^\top \left[\bigotimes_{l=1}^L \Lambda_l \right] \left[ \sum_{(R_1, \ldots, R_L) \in \mathcal{R}} \bigotimes_{l=1}^L R_l \right] \label{eq:step2} \\
+        &=& P^\top \Lambda P + Q^\top \Lambda Q. \label{eq:step3}
+\end{eqnarray}
+where $Q = I_M - P$ and the set $\mathcal{R}$ of ordered operator sets is defined to be
+\begin{equation}
+    \mathcal{R} \equiv \set{ (R_1, \ldots, R_L): \textrm{$R_i = P_i$ or $R_i = Q_i$ for all $i=1,\ldots,L$, with $R_i = Q_i$ for at least one $i$}}.
+\end{equation}
+In \eq{eq:step0}, we used the fact that $\Lambda_l$ satisfies
+\begin{equation}
+    \Lambda_l = P_l^\top \Lambda_l P_l^\top + Q_l^\top \Lambda_l Q_l, \label{eq:Lambda_l_satisfies}
+\end{equation}
+where $Q_l \equiv I_{(\alpha+1)} - P_l$ (see Claim \ref{claim:appendix}). 
+In going from \eq{eq:step1} to \eq{eq:step2}, we used the fact that, if two ordered sets of operators $(R_1, \ldots, R_L)$ and $(R'_1, \ldots, R'_L)$ in $\mathcal{R}$ are different, then
+\begin{equation}
+    \left[ \bigotimes_{l=1}^L R_l \right]^\top \left[\bigotimes_{l=1}^L \Lambda_l \right] \left[ \bigotimes_{l=1}^L R'_l \right] =\bigotimes_{l=1}^L R_l^\top \Lambda R'_l = 0 
+\end{equation}
+since there will be an $l$ such that $R_l^\top \Lambda_l R'_l$ is either $P_l^\top \Lambda_l Q_l = 0$ or $Q_l \Lambda_l P_l = 0$. In going from \eq{eq:step2} to \eq{eq:step3}, we used the fact that
+\begin{eqnarray}
+    \sum_{(R_1, \ldots, R_L) \in \mathcal{R}} \bigotimes_{l=1}^L R_l &=& \bigotimes_{i=1}^L (P_l + Q_l) - \bigotimes_{i=1}^L P_l 
+    = I_M - P 
+    = Q.
+\end{eqnarray}
+The fact that $P$ projects into $\Theta$ along $G_\mathrm{all}$, together with the result $\Lambda = P^\top \Lambda P + Q^\top \Lambda Q$ in \eq{eq:step3} proves (by Claim \ref{claim:appendix}) that $\Lambda$ orthogonalizes $\Theta$ and $G_\mathrm{all}$.  
+
+\end{proof}
+
+
+%%%
+%%% Parametric family of gauges
+%%%
+\section{Parametric family of gauges}
+
+% Positive probability distribution
+\begin{definition}
+    A probability distribution $p$ on $\mathcal{S}$ is positive iff $p(s) > 0$ for all $s \in \mathcal{S}$.
+\end{definition}
+
+% Factorizable probability distribution
+\begin{definition}
+    A factorizable probability distribution $p$ on $\mathcal{S}$ is one that can be written $p(s) = \prod_{l=1}^L p_l^{s_l}$ for all $s \in \mathcal{S}$, where $p_l$ is a probability distribution over the $\alpha$ possible characters at position $l$, i.e., $p(s) = p_l^{s_l}$.
+\end{definition}
+
+% Augmented sequence
+\begin{definition}
+An augmented sequence $s'$ is a sequence built from the augmented alphabet $\mathcal{A}' = \set{*, c_1, \ldots, c_\alpha}$, where $c_1, \ldots, c_\alpha$ are the characters in $\mathcal{A}$ and $*$ is a wild-card character  that is interpreted as matching any character in $\mathcal{A}$. The set of all augmented sequences is denoted $\mathcal{S'}$. Note that every augmented sequence $s'$ is can be interpreted as a subset of $\mathcal{S}$ that comprises sequences matching the pattern defined by $s'$. For this reason we will sometimes use expressions like $s \in s'$ and $s' \subseteq t'$ (for $s \in \mathcal{S}$ and $s',t' \in \mathcal{S}$).
+\end{definition}
+
+To aid in our discussion of the all-order interaction model, we define an augmented alphabet $\mathcal{A}' = \set{*, c_1, \ldots, c_\alpha}$, where $c_1, \ldots, c_\alpha$ are the characters in $\mathcal{A}$ and $*$ is a wild-card character that is interpreted as matching any character in $\mathcal{A}$. Let $\mathcal{S}'$ denote the set of sequences of length $L$ comprising characters from  $\mathcal{A}'$. For each augmented sequence $s' \in \mathcal{S}'$, we define the sequence feature $x_{s'}(s)$ to be 1 if a sequence $s$ matches the pattern described by $s'$ and to be 0 otherwise. In this way, each augmented sequence $s'$ serves as a regular expression against which bona fide sequences are compared.  
+
+% Position-specific parametric gauge
+\begin{definition}
+Given a non-negative real number $\lambda$, a factorizable probability distribution $p$ on $\mathcal{S}$, and a sequence position $l$, the position-specific parametric gauge $\Theta_l^{\lambda,p}$ is defined as
+\begin{equation}
+    \Theta_l^{\lambda,p} \equiv V_\lambda \oplus V_\perp^{p_l},
+\end{equation}    
+where $V_\lambda \equiv \mathrm{span}\ \{(\lambda, 1, \cdots, 1)^\top\}$ and $V_\perp^{p_l} \equiv \set{(0, v_{c_1}, \ldots, v_{c_\alpha})^\top: \sum_{c \in \mathcal{A}} p_l^{c} v_c = 0}$.
+\end{definition}
+
+% Position-specific parametric gauge freedom space
+\begin{claim} \label{claim:formula_for_P_l}
+The matrix $P_l^{\lambda,p}$ that projects $V_l$ along $G_l$ and onto $\Theta_l^{\lambda,p}$ is an $(\alpha+1) \times (\alpha+1)$  matrix given by
+\begin{equation}
+    P_l^{\lambda,p} =    
+    \left( 
+    \begin{array}{cccc} 
+        \eta & p_l^{c_1} \eta & \cdots & p_l^{c_\alpha} \eta \\
+        1 - \eta & 1-p_l^{c_1} \eta & \cdots &  - p_l^{c_\alpha} \eta \\
+        \vdots & \vdots & \ddots & \vdots \\
+        1 - \eta & - p_l^{c_1} \eta & \cdots & 1 - p_l^{c_\alpha} \eta 
+    \end{array} 
+    \right), \label{eq:P_l_matrix}
+\end{equation}  
+where $\eta \equiv \lambda / (1 + \lambda)$. 
+\end{claim}
+\begin{proof}
+
+Any $(\alpha+1)$-dimensional vector $\vec{v} \in V_l$ can be decomposed as 
+\begin{equation}
+    \vec{v} = \vec{\theta} + \vec{g},   
+\end{equation}
+where $\vec{\theta} \in \Theta^{\lambda,p}_l$ and $\vec{g} \in G_l$. From the definitions of $\Theta^{\lambda,p}_l$ and $G$, $\vec{\theta}$ and $\vec{g}$ must have the forms
+\begin{equation}
+    \vec{\theta} = c_\lambda \vec{v}_\lambda + \vec{\theta}_\perp~~\textrm{and}~~\vec{g} = c_{-1} \vec{e}_{-1},
+\end{equation}
+where 
+\begin{equation}
+    \vec{e}_\lambda = \left( \begin{array}{c}
+        \lambda \\ 
+        1 \\ 
+        \vdots \\ 
+        1 \end{array} 
+    \right),~~~
+    \vec{e}_{-1} = \left( 
+    \begin{array}{c}
+        -1 \\ 
+        1  \\ 
+        \vdots \\ 
+        1 
+    \end{array} \right),~~~
+     \vec{\theta}_\perp = \left( 
+    \begin{array}{c} 
+        0 \\ 
+        \theta_l^{c_1} \\ 
+        \vdots \\ 
+        \theta_l^{c_\alpha}  
+    \end{array} \right),
+\end{equation}
+and where $c_{\lambda}$ and $c_{-1}$ are real numbers that depend on $\vec{v}$. The projection matrix $Q_l^{\lambda,p} \equiv I - P_l^{\lambda,p}$ projects $V_l$ into $G_l$ along $\Theta_l^{\lambda,p}$, and so is related to the scalar $c_{-1}$ via
+\begin{equation}
+    Q_l^{\lambda,p} \vec{v} = c_{-1} \vec{e}_{-1}.
+\end{equation}
+We now compute $c_{-1}$ as a function of $\vec{v}$. First we define the metric
+\begin{equation}
+    \Lambda \equiv \left( 
+\begin{array}{cccc} 
+    1 & 0 & \cdots & 0 \\
+    0 & \alpha p_l^{c_1} & \cdots & 0 \\
+    \vdots & \vdots & \ddots & \vdots \\
+    0 & 0 & \cdots & \alpha p_l^{c_\alpha} 
+\end{array} \right),
+\end{equation}
+and compute
+\begin{eqnarray}
+    \vec{e}_\lambda^\top \Lambda \vec{e}_\lambda &=& \lambda^2 + \sum_{i=1}^\alpha \alpha p_l^{c_i} = \alpha + \lambda^2, \\
+    \vec{e}_{-1}^\top \Lambda \vec{e}_\lambda &=& -\lambda + \sum_{i=1}^\alpha \alpha p_l^{c_i} = \alpha - \lambda, \\
+    \vec{e}_{-1}^\top \Lambda \vec{e}_{-1} &=& 1 + \sum_{i=1}^\alpha \alpha p_l^{c_i} = \alpha + 1, \\
+    \vec{e}_{\lambda}^\top \Lambda \vec{\theta}_\perp &=& 0 + \sum_{i=1}^\alpha \alpha p_l^{c_i} \theta_l^{c_i} = 0, \\
+    \vec{e}_{-1}^\top \Lambda \vec{\theta}_\perp &=& 0 + \sum_c \sum_{i=1}^\alpha \alpha p_l^{c_i} \theta_l^{c_i} = 0. 
+\end{eqnarray}
+Next we solve for $c_{-1}$ via
+\begin{eqnarray}
+    \vec{e}_\lambda^\top \Lambda \vec{v} &=& c_{\lambda} (\vec{e}_\lambda^\top \Lambda \vec{e}_\lambda) + c_{-1} (\vec{e}_{\lambda}^\top \Lambda \vec{e}_{-1}) + (\vec{e}_{\lambda}^\top \Lambda \vec{\theta}_\perp) \\
+    &=& c_\lambda (\alpha + \lambda^2) + c_{-1} (\alpha - \lambda). \\ 
+    \vec{e}_{-1}^\top \Lambda \vec{v} &=& c_{\lambda} (\vec{e}_{-1}^\top \Lambda \vec{e}_\lambda) + c_{-1} (\vec{e}_{-1}^\top \Lambda \vec{e}_{-1}) + (\vec{e}_{-1}^\top \Lambda \vec{\theta}_\perp) \\
+    &=& c_\lambda (\alpha - \lambda) + c_{-1} (\alpha + 1). \\
+    \Rightarrow (\alpha - \lambda) \vec{e}_\lambda^\top \Lambda \vec{v} - (\alpha + \lambda^2) \vec{e}_{-1}^\top \Lambda \vec{v} &=& c_{-1}\left[(\alpha - \lambda)^2 - (\alpha+1)(\alpha+\lambda^2) \right] \\
+    &=& c_{-1} \left[-2 \alpha \lambda - \alpha(1 + \lambda^2)  \right] \\
+    &=& - \alpha (1 + 2\lambda + \lambda^2) c_{-1} \\
+    &=&  - \alpha (1 + \lambda)^1 c_{-1} \\
+    \Rightarrow c_{-1} &=& - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} \vec{e}_\lambda^\top \Lambda \vec{v} + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} \vec{e}_{-1}^\top \Lambda \vec{v}.
+\end{eqnarray}
+This shows that $Q_l^{\lambda,p}$ is given by
+\begin{equation}
+    Q_l^{\lambda,p} = - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} \vec{e}_{-1} \vec{e}_\lambda^\top \Lambda  + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} \vec{e}_{-1}\vec{e}_{-1}^\top \Lambda.
+\end{equation}
+Next we compute the matrix elements $[Q_l^{\lambda,p}]_{ij}$ for all $i,j \in \set{0, 1, \ldots, \alpha}$. %Specifically, we $[Q_l^{\lambda,p}]_{cc'}$ for different $c, c' \in \mathcal{A}'$; to ease notation, we index coordinates by characters in $c, c' \in \mathcal{A}$ rather than $i, j \in \set{1, \ldots, \alpha}$. 
+Setting $i =0$, $j = 0$ gives
+\begin{eqnarray}
+    [Q_l^{\lambda,p}]_{00} &=& - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} (-\lambda)  + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} (1) \\
+    &=& \frac{(\alpha-\lambda)\lambda + (\alpha + \lambda^2)}{\alpha(1+\lambda)^2} \\
+    &=& \frac{\alpha(1 + \lambda)}{\alpha(1+\lambda)^2} \\
+    &=& \frac{1}{1+\lambda} \\
+    &=& 1 - \eta.
+\end{eqnarray}
+Setting $i=0$, $j>0$ gives
+\begin{eqnarray}
+    [Q_l^{\lambda,p}]_{0j} &=& - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} (- \alpha p_l^{c_j})  + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} (- \alpha p_l^{c_j}) \\
+    &=& \frac{\alpha (\alpha - \lambda) - \alpha (\alpha + \lambda^2)}{\alpha (1+\lambda)^2} p_l^{c_j} \\
+    &=& - \frac{\lambda( 1 + \lambda)}{(1+\lambda)^2} p_l^{c_j} \\
+    &=& - \frac{\lambda}{1 + \lambda} p_l^{c_j} \\
+    &=& - \eta p_l^{c_j}.
+\end{eqnarray}
+Setting $i>0$, $j=0$ gives
+\begin{eqnarray}
+    [Q_l^{\lambda,p}]_{i0} &=& - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} (\lambda)  + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} (-1) \\
+    &=& \frac{-\lambda(\alpha - \lambda) - (\alpha + \lambda^2)}{\alpha(1+\lambda)^2} \\
+    &=& - \frac{\alpha( 1 + \lambda)}{\alpha(1+\lambda)^2}  \\
+    &=& - \frac{1}{1 + \lambda} \\
+    &=& \eta - 1.    
+\end{eqnarray}
+Setting $i>0$, $j>0$ gives
+\begin{eqnarray}
+    [Q_l^{\lambda,p}]_{ij} &=& - \frac{(\alpha - \lambda)}{\alpha(1+\lambda)^2} (\alpha p_l^{c_j})  + \frac{(\alpha + \lambda^2)}{\alpha(1+\lambda)^2} (\alpha p_l^{c_j}) \\
+    &=& \frac{-(\alpha - \lambda) + (\alpha + \lambda^2)}{(1+\lambda)^2} p_l^{c_j} \\
+    &=& \frac{\lambda(1 + \lambda)}{(1+\lambda)^2} p_l^{c_j} \\
+    &=& \frac{\lambda}{1 + \lambda} p_l^{c_j} \\
+    &=& \eta p_l^{c_j}.   
+\end{eqnarray}
+We therefore obtain
+\begin{equation}
+ Q_l^{\lambda,p} =  
+    \left( 
+    \begin{array}{cccc} 
+        1 - \eta & -p_l^{c_1} \eta & \cdots & -p_l^{c_\alpha} \eta \\
+        \eta - 1 & p_l^{c_1} \eta & \cdots &  p_l^{c_\alpha} \eta \\
+        \vdots & \vdots & \ddots & \vdots \\
+        \eta - 1 & p_l^{c_1} \eta & \cdots & p_l^{c_\alpha} \eta 
+    \end{array} \right).
+\end{equation}  
+Finally, plugging this result into $P_l^{\lambda,p} = I - Q_l^{\lambda,p}$ gives
+\begin{equation}
+    P_l^{\lambda,p} =  \left( 
+    \begin{array}{cccc} 
+        \eta & p_l^{c_1} \eta & \cdots & p_l^{c_\alpha} \eta \\
+        1-\eta & 1-p_l^{c_1} \eta & \cdots &  -p_l^{c_\alpha} \eta \\
+        \vdots & \vdots & \ddots & \vdots \\
+        1-\eta & -p_l^{c_1} \eta & \cdots & 1-p_l^{c_\alpha} \eta 
+    \end{array} \right),
+\end{equation}
+which proves the claim. 
+\end{proof}
+
+
+% Claim: Theta^{\lambda,p} is a valid gauge space
+\begin{claim}
+$\Theta^{\lambda,p} \equiv \bigotimes_l \Theta^{\lambda,p}_l$ is a valid gauge space for the embedding $\vec{x}_\mathrm{all}$.
+\end{claim}
+
+% Proof
+\begin{proof}
+This follows from Claim \ref{claim:product_Theta_P_Lambda} and the fact that $\Theta^{\lambda,p}_l$ is a valid gauge space for $\vec{x}_l$.
+\end{proof}
+
+% Claim: P^{\lambda,p} is the projection matrix 
+\begin{claim}
+The matrix $P^{\lambda,p}$ that projects $V$ along $G_\mathrm{all}$ and into $\Theta^{\lambda,p}$ is an $M \times M$ matrix with elements
+\begin{eqnarray}
+    P^{\lambda,p}_{s' t'} 
+        =\!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l \in \mathcal{A} \\ t'_l \in \mathcal{A}  } }\!\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \eta \right)\!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\  s'_l = * \\ t'_l\in \mathcal{A} } }\!\!\! \left(p^{t'_l}_l \eta \right) \!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l\in \mathcal{A} \\ t'_l = * } }\!\!\! \left(1 - \eta \right) \!
+        \times \!\!\!
+        \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l = * \\ t'_l = *} } \!\! \eta.
+    \label{eq:projection_matrix_elements}
+\end{eqnarray}
+\end{claim}
+
+%Proof
+\begin{proof}
+By Claim \ref{claim:product_Theta_P_Lambda},  $\Theta^{\lambda,p} \equiv \bigotimes_l \Theta^{\lambda,p}_l$ imples that $P^{\lambda,p} \equiv \bigotimes_l P^{\lambda,p}_l$. \eq{eq:projection_matrix_elements} follows from expressing the elements of $P^{\lambda,p}_l$ in \eq{eq:P_l_matrix} as
+\begin{equation}
+	[P^{\lambda,p}]_{cc'} = \left\{ 
+	\begin{array}{cl} 
+		\delta_{cc'} - p_l^{c'} \eta 	& \textrm{if}~c \in \mathcal{A}, c' \in \mathcal{A}, \\
+		p_l^{c'} \eta 					& \textrm{if}~c = *, c' \in \mathcal{A}, \\
+		1 - \eta 						& \textrm{if}~c \in \mathcal{A}, c'= *, \\
+		\eta 							& \textrm{if}~c = *, c' = *, \\
+	\end{array} \right. 
+\end{equation}
+then taking the product across positions $l$ using $c = s'_l$ and $c'=t'_l$. 
+\end{proof}
+
+% Claim: Formula for Lambda_l
+\begin{claim} \label{claim:formula_for_Lambda_l}
+If $\lambda$ and $p$ are positive, the $\alpha \times \alpha$ metric
+\begin{equation}
+    \Lambda^{\lambda,p}_l \equiv 
+    \left( 
+    \begin{array}{cccc} 
+        1 & 0 &\cdots & 0 \\
+        0 & \lambda p^{c_1}_l & \cdots &  0  \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & \lambda p^{c_\alpha}_l  
+    \end{array} \right)
+\end{equation}
+orthogonalizes $\Theta_l^{\lambda,p}$ and $G_l$. 
+%is the unique metric (up to a positive scalar multiple) that orthogonalizes $\Theta_l^{\lambda,p}$ and $G_l$. 
+\end{claim}
+%%% Proof
+\begin{proof}
+Assume that $\Lambda_l^{\lambda,p}$ is diagonal, and thus has the form
+\begin{equation}
+    \Lambda_l^{\lambda,p} =
+    \left( 
+    \begin{array}{cccc} 
+        d_0 & 0 &\cdots & 0 \\
+        0 & d_1 & \cdots &  0  \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & d_\alpha  
+    \end{array} \right),
+\end{equation}
+for some set of scalars $d_0, \ldots, d_\alpha$. The requirement that $\Lambda_l^{\lambda,p}$ be a metric (and thus positive definite) implies that all $d_0, \ldots, d_\alpha$ must be positive. We now solve for $d_0, \ldots, d_\alpha$ using the matrix equation (Claim \ref{claim:appendix}):
+\begin{eqnarray}
+    \Lambda_l^{\lambda,p} = \left( P_l^{\lambda,p}\right)^\top \Lambda_l^{\lambda,p} \left(P_l^{\lambda,p}\right) + \left( Q_l^{\lambda,p}\right)^\top \Lambda_l^{\lambda,p} \left(Q_l^{\lambda,p}\right), \\
+    \Rightarrow
+    d_i \delta_{ij} = \sum_{k=0}^\alpha d_k [P_l^{\lambda,p}]_{ki} [P_l^{\lambda,p}]_{kj} +  \sum_{k=0}^\alpha d_k [Q_l^{\lambda,p}]_{ki} [Q_l^{\lambda,p}]_{kj}, \label{eq:matrix_eq_for_d_i} 
+\end{eqnarray}
+where $Q_l^{\lambda,p} \equiv I - P_l^{\lambda,p}$. We now solve \eq{eq:matrix_eq_for_d_i} for different choices of $i$ and $j$ using the matrix elements of $P_l^{\lambda,p}$ and $Q_l^{\lambda,p}$ computed in the proof of Claim \ref{claim:formula_for_P_l}. For $i = j = 0$, we get
+\begin{eqnarray}
+    d_0 &=& \left[ d_0 [P_l^{\lambda,p}]^2_{00} + \sum_{k=1}^\alpha d_k [P_l^{\lambda,p}]^2_{k0} \right] + \left[ d_0 [Q_l^{\lambda,p}]^2_{00} + \sum_{k=1}^\alpha d_k [Q_l^{\lambda,p}]^2_{k0} \right] \\
+    &=& \left[ d_0 \eta^2 + \sum_{k=1}^\alpha d_k (1-\eta)^2 \right] + \left[ d_0 (1-\eta)^2 + \sum_{k=1}^\alpha d_k (\eta-1)^2 \right] \\
+    &=& [d_0 \eta^2 + a (1-\eta)^2] + [d_0 (1-\eta)^2 + a (\eta-1)^2] \\
+    &=& d_0 [2 \eta^2 - 2 \eta + 1] + 2 a(1-\eta)^2, \\
+     \Rightarrow 2 a (2 - \eta)^2 &=& 2 d_0 \eta(1 - \eta), \\ 
+     \Rightarrow a &=& d_0 \frac{\eta}{1 - \eta} \\
+    &=& d_0 \lambda, \label{eq:using_lambda_in_terms_of_eta}
+ \end{eqnarray}
+ where in \eq{eq:using_lambda_in_terms_of_eta} we have used $\lambda = \eta/(1-\eta)$. For $i = 0$, $j > 0$, we get 
+\begin{eqnarray}
+    0 &=& \left[ d_0 [P_l^{\lambda,p}]_{00}[P_l^{\lambda,p}]_{0j} + \sum_{k=1}^\alpha d_k [P_l^{\lambda,p}]_{k0}[P_l^{\lambda,p}]_{kj} \right] + \left[ d_0 [Q_l^{\lambda,p}]_{00} [Q_l^{\lambda,p}]_{0j} + \sum_{k=1}^\alpha d_k [Q_l^{\lambda,p}]_{k0} [Q_l^{\lambda,p}]_{kj}\right] \\
+    &=& \left[ d_0 p_j \eta^2 + \sum_{k=1}^\alpha d_k (1-\eta)(\delta_{jk} - p_j \eta) \right] + \left[ - d_0 p_j \eta (1-\eta)  + \sum_{k=1}^\alpha d_k (\eta-1) (p_j \eta) \right] \\
+    &=& 2 d_0 p_j \eta^2 - d_0 p_j \eta - 2 a p_j \eta (1 - \eta) + d_j(1-\eta) \\
+    &=& 2(d_0 + a) p_j \eta^2 - (2a + d_0)p_j \eta + d_j(1 - \eta) \\
+    &=& 2d_0 (1 + \lambda) \frac{\lambda}{1 + \lambda} p_j (\eta - 1) + d_0 p_j \eta + d_j(1 - \eta), \\
+    \Rightarrow d_j &=& 2 d_0 p_j \lambda + d_0 p_j \frac{\eta}{\eta-1} \\
+    &=& 2 d_0 p_j \lambda - d_0 p_j \lambda \\
+    &=& d_0 p_j \lambda. 
+\end{eqnarray}
+The resulting equation, 
+\begin{equation}
+    d_i = d_0 p_i \lambda,~~\textrm{for all}~~i=1,\ldots,\alpha, \label{eq:equation_for_d_j}
+\end{equation}
+determines all elements of $\Lambda_l^{\lambda,p}$ up to a multiplicative factor $d_0$. However, we must still verify that \eq{eq:equation_for_d_j} is consistent with the constraints placed on the other elements of $\Lambda_l^{\lambda,p}$ by \eq{eq:matrix_eq_for_d_i}. For $i>0$, $j=0$, we get the same result as for $i = 0$, $j > 0$, because \eq{eq:matrix_eq_for_d_i} is symmetric. For $i>0$, $j>0$, $i=j$, we get
+\begin{eqnarray}
+    d_i &=& \left[ d_0 [P_l^{\lambda,p}]^2_{0i} + \sum_{k=1}^\alpha d_k [P_l^{\lambda,p}]^2_{ki} \right] + \left[ d_0 [Q_l^{\lambda,p}]^2_{0i} + \sum_{k=1}^\alpha d_k [Q_l^{\lambda,p}]^2_{ki}\right] \\
+     &=& \left[ d_0 p_i^2 \eta^2 + \sum_{k=1}^\alpha d_k (\delta_{ki} - p_i\eta )^2 \right] + \left[ d_0 p_i^2 \eta^2 + \sum_{k=1}^\alpha d_k p_i^2 \eta^2 \right] \\
+     &=& \left[ d_0 p_i^2 \eta^2 + d_i - 2 d_i p_i \eta + a p_i^2 \eta^2 \right] + \left[ d_0 p_i^2 \eta^2 + a p_i^2 \eta^2 \right] \\
+     &=& d_i + 2 [ (d_0+a) p_i^2 \eta^2 - d_i p_i \eta], \\
+     \Rightarrow d_i &=& (d_0 + a) p_i \eta \\
+     &=& d_0 (1+\lambda)\frac{\lambda}{1+\lambda} p_i \\
+     &=& d_0 p_i \lambda,
+\end{eqnarray}
+which is consistent with \eq{eq:equation_for_d_j}. For $i > 0$, $j > 0$, $i \neq j$, we get
+\begin{eqnarray}
+    0 &=& \left[ d_0 [P_l^{\lambda,p}]_{0i}[P_l^{\lambda,p}]_{0j} + \sum_{k=1}^\alpha d_k [P_l^{\lambda,p}]_{ki}[P_l^{\lambda,p}]_{kj} \right] \nonumber \\
+    & & + \left[ d_0 [Q_l^{\lambda,p}]_{0i}[Q_l^{\lambda,p}]_{0j} + \sum_{k=1}^\alpha d_k [Q_l^{\lambda,p}]_{ki} [Q_l^{\lambda,p}]_{kj}\right] \\
+    &=& \left[ d_0 p_i p_j \eta^2 + \sum_{k=1}^\alpha d_k (\delta_{ki} - p_i \eta)(\delta_{kj} - p_j\eta ) \right] + \left[ d_0 p_i p_j + \sum_{k=1}^\alpha d_k p_i p_j \eta^2 \right] \\
+    &=& 2 d_0 p_i p_j \eta^2 + 2 a p_i p_j \eta^2 - d_i p_j \eta - p_i d_j \eta \\
+    &=& 2(d_0 + a) p_i p_j \eta^2 - d_i p_j \eta - p_i d_j \eta, \\
+    \Rightarrow d_i p_j + p_i d_j &=& 2 d_0 (1 + \lambda) \frac{\lambda}{1 + \lambda} \\
+    &=& 2 d_0 \lambda,
+\end{eqnarray}
+which is also consistent with \eq{eq:equation_for_d_j}. We therefore see that \eq{eq:equation_for_d_j} is indeed consistent with \eq{eq:matrix_eq_for_d_i}. Thus we find that 
+\begin{equation}
+    \Lambda_l^{\lambda,p} =
+    d_0 \left( 
+    \begin{array}{cccc} 
+        1 & 0 &\cdots & 0 \\
+        0 & \lambda p_1 & \cdots &  0  \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0 & 0 & \cdots & \lambda p_\alpha  
+    \end{array} \right), \label{eq:def_of_Lambda_l}
+\end{equation}
+orthogonalizes $\Theta_l^{\lambda,p}$ and $G_l$, and is determined up to an unknown positive scalar $d_0$. This proves the claim.
+\end{proof}
+
+% Claim: Formula for \Lambda
+\begin{claim}
+If $\lambda$ and $p$ are positive, the $M \times M$ metric 
+%The metric $\Lambda^{\lambda,p}$ that has elements
+\begin{equation}
+	\Lambda_{s't'} \equiv p(s') \lambda^{o(s')} \delta_{s't'} \label{eq:Lambda_matrix_elements}
+\end{equation}
+orthogonalizes $\Theta^{\lambda,p}$ and $G_\mathrm{all}$.
+\end{claim}
+
+% Proof
+\begin{proof}
+By Claim \ref{claim:product_Theta_P_Lambda},  $\Theta^{\lambda,p} \equiv \bigotimes_l \Theta^{\lambda,p}_l$ implies that $\Lambda^{\lambda,p} \equiv \bigotimes_l \Lambda^{\lambda,p}_l$. \eq{eq:Lambda_matrix_elements} follows from expressing the elements of $\Lambda^{\lambda,p}_l$ in \eq{eq:def_of_Lambda_l} as
+\begin{equation}
+	[\Lambda_l^{\lambda,p}]_{cc'} = \delta_{cc'} p_l^{c} \times \left\{ 
+	\begin{array}{cl} 
+		1 & \textrm{if}~c=*, \\ 
+		\lambda & \textrm{if}~c \in \mathcal{A},
+	\end{array} \right.
+\end{equation}
+then taking the product across positions $l$ using $c = s'_l$ and $c'=t'_l$. 
+\end{proof}
+
+%
+%% Theta and P for parametric gauge
+%\begin{claim}
+%The vector space $\Theta^{\lambda, p} \equiv \bigotimes_{l} \Theta^{\lambda, p}_l$ (which is the parametric gauge defined by $\lambda$ and $p$) is a valid gauge space for $\vec{x}_\mathrm{all}$. Moreover, the matrix $P^{\lambda, p} \equiv \bigotimes_{l} P^{\lambda, p}_l$ is a projection matrix into $\Theta^{\lambda, p}$ along $G_\mathrm{all}$.
+%\end{claim}
+%\begin{proof}
+%This follows directly from Claim \ref{claim:product_Theta_P_Lambda}.  
+%\end{proof}
+%
+%% Lambda for parametric gauge
+%\begin{claim}
+%Assume that $\lambda$ is a positive scalar and $p$ is a positive distribution. Then $\Lambda^{\lambda,p} \equiv \bigotimes_{l} \Lambda^{\lambda, p}_l$ is a metric that orthogonalizes $\Theta^{\lambda, p}$ and $G_\mathrm{all}$.
+%\end{claim}
+%\begin{proof}
+%This follows directly from Claim \ref{claim:product_Theta_P_Lambda}.      
+%\end{proof}
+
+%%%
+%%% Trivial gauge
+%%%
+\section{Trivial gauge, Euclidean gauge, and equitable gauge}
+
+% Trivial gauge
+\begin{claim}
+The trivial gauge $\Theta^{0,p}$ is unaffected by the probability distribution $p$.    
+\end{claim}
+\begin{proof}
+Setting $\lambda = 0$ gives $\eta = 0$, and thus 
+\begin{eqnarray}
+    P^{0,p}_{s' t'} 
+        &=&\!\!\!
+            \prod_{\{l:s'_l \in \mathcal{A}  \textrm{ and } t'_l \in \mathcal{A}  \}}\!\!\! \delta_{s'_l t'_l}~~~~
+            %\times \!\!
+            %\prod_{\{l:s'_l \in \mathcal{A}  \textrm{ and } t'_l = * \}}\!\! 1~~~ \!
+            \times \!\!
+            \prod_{\{l:s'_l = * \}} \!\! 0  \\
+        &=& \prod_{\{l:s'_l \in \mathcal{A}  \textrm{ and } t'_l \in \mathcal{A}  \}}\!\!\! \delta_{s'_l t'_l}~~
+            \times~~  \left\{
+            \begin{array}{rl}
+                1 & \textrm{if $s' \in \mathcal{S}$} \\
+                0 & \textrm{otherwise} 
+            \end{array} \right. \\
+        &=& \prod_{\{l:t'_l \in \mathcal{A}  \}}\!\!\! \delta_{s'_l t'_l}~~
+            \times~~  \left\{
+            \begin{array}{rl}
+                1 & \textrm{if $s' \in \mathcal{S}$} \\
+                0 & \textrm{otherwise} 
+            \end{array} \right. \\
+      \Rightarrow P^{0,p}_{s' t'}  &=&  \left\{ 
+            \begin{array}{rl}
+                1 & \textrm{if $s' \in \mathcal{S}$ and $x_{t'}(s') = 1$} \\
+                0 & \textrm{otherwise} 
+            \end{array}
+\right. ,
+    \label{eq:projection_matrix}
+\end{eqnarray}
+which does not depend on $p$.
+\end{proof}
+
+% Claim: Euclidean gauge
+\begin{claim}
+The Euclidean gauge is equal to the embedding space, i.e., $\Theta_\mathrm{eucl}$ = $E_\mathrm{all}$. Moreover standard $L_2$ regularization yields parameters in $\Theta_\mathrm{eucl}$.
+\end{claim}
+
+% Proof
+\begin{proof}
+In the Euclidean gauge $p(s) = \alpha^{-L}$ for all $s \in \mathcal{S}$. Consequently, $p(s') = \alpha^{-o(s')}$ for all $s' \in \mathcal{S}'$. Because $\lambda = \alpha$ in this gauge as well, the metric $\Lambda$ is given by
+\begin{equation}
+	\Lambda_{s't'} = \delta_{s't'} p(s') \lambda^{o(s')}  = \delta_{s't'} \alpha^{-o(s')} \alpha^{o(s')} = \delta_{s't'}. 
+\end{equation}
+$\Lambda$ is therefore the Euclidean metric. Because $\Theta_\myeucl$ is $\Lambda$-orthogonal to $G_\mathrm{all}$, 
+\begin{equation}
+	\Theta_\myeucl = G_\mathrm{all}^\perp = E_\mathrm{all}.
+\end{equation}
+And because standard $L_2$ parameter regularization uses a penalty of $\sum_{s'} \theta_{s'}^2 = ||\vec{\theta}||^2$, which is the Euclidean norm of $\vec{\theta}$, inference using standard $L_2$ regularization yields parameters in the Euclidean gauge. This completes the proof.
+\end{proof}
+
+% Claim: Equitable gauge
+\begin{claim}
+In the equitable gauge, $||\vec{\theta}||^2_\Lambda = \sum_{s'} p(s') \theta_{s'}^2 = \sum_{s'} \braket{f_{s'}^2}_p$ where $f_{s'} \equiv \theta_{s'} x_{s'}$.
+\end{claim}
+
+% Proof
+\begin{proof}
+The equitable gauge is defined by $\lambda=1$. Setting $\lambda=1$ gives $\Lambda_{s't'} = \delta_{s't'}p(s')$, and so
+\begin{eqnarray}
+	||\theta||^2_\Lambda 
+            &=& \sum_{s',t'} \Lambda_{s't'} \theta_{s'} \theta_{t'}\\
+		&=& \sum_{s'} p(s') \theta_{s'}^2 \\
+		&=& \sum_{s'} \braket{x_{s'}}_p \theta_{s'}^2 \\
+		&=& \sum_{s'} \braket{x_{s'}^2}_p \theta_{s'}^2 \\
+		&=& \sum_{s'} \braket{\left(\theta_{s'} x_{s'}\right)^2}_p \\
+            &=& \sum_{s'} \braket{f_{s'}^2}_p
+\end{eqnarray}
+This completes the proof.
+\end{proof}
+
+% %%%%%% Placeholder for David
+% \todo{Placeholder for DMM to insert statements about the connection between the equitable gauge and variance-normalized features.}
+% %%%%%%
+
+%%%
+%%% Hierarchical gauges
+%%%
+\section{Hierarchical gauges}
+
+% Order
+\begin{definition}
+    The order $o(s')$ of an augmented sequence $s' \in \mathcal{S}'$ is defined to be the number of non-star characters in $s'$, i.e., the number of positions $l$ for which $s_l \in \mathcal{A}$.    
+\end{definition}
+
+% Definition: subset
+\begin{definition}
+    For any two augmented sequences $s', t' \in \mathcal{S}'$, we write $t' \subseteq s'$ if the sequences matched by $t'$ form a subset of those matched by $s'$. More formally, $t' \subseteq s'$ iff, for all positions $l$, $s'_l \in \mathcal{A} \Rightarrow t'_l = s'_l$. Note that $t' \subseteq s'$ implies that $o(t') \geq o(s')$. \label{def:augseq_subseteq}
+\end{definition}
+
+% Definition: succession
+\begin{definition}
+    For any two augmented sequences $s', t' \in \mathcal{S}'$, we write $t' \succeq s'$ iff, for all positions $l$, $s'_l \in \mathcal{A} \Rightarrow t'_l \in \mathcal{A}$, or equivalently, $t'_l = * \Rightarrow s'_l = *$. Note that $t' \succeq s'$ implies that $o(t') \geq o(s')$. Also note that $t' \subseteq s' \Rightarrow t' \succeq s'$, but that the reverse is not true, since $t' \succeq s'$ does not require that $t'_l = s'_l$ when $s'_l \in \mathcal{A}$. \label{def:partial_ordering}
+\end{definition}
+
+% Compare partial ordering and subsets
+For example, if $L = 8$ and $\mathcal{A} = \set{\mathrm{A,C,G,T}}$ is the set of DNA bases, then 
+\begin{eqnarray}
+	* * \mathrm{A} \mathrm{T} * * \mathrm{C}\,*~ &\succeq& ~* * * \mathrm{T} * * \mathrm{C}\,*, \\
+	* * \mathrm{A} \mathrm{T} * * \mathrm{C}\, *~ &\subseteq& ~* * * \mathrm{T} * * \mathrm{C}\,*,
+\end{eqnarray}
+whereas,
+\begin{eqnarray}
+	* * \mathrm{A} \mathrm{T} * * \mathrm{G}\,*~ &\succeq& ~* * * \mathrm{T} * * \mathrm{C}\,*, \\
+	* * \mathrm{A} \mathrm{T} * * \mathrm{G}\,*~ &\nsubseteq& ~* * * \mathrm{T} * * \mathrm{C}*.
+\end{eqnarray}
+
+% Definition: hierarchical model
+\begin{definition}
+A hierarchical model is a an all-order interaction model in which $\theta_{s'} = 0$ for all augmented sequences $s'$ in a set $\mathcal{Z}'\subseteq \mathcal{S}'$ (the ``zero set'' of the model) that has the following property: for every $s' \in \mathcal{Z}'$ and $t' \in \mathcal{S}'$, $t' \succeq s'$ implies that $t' \in \mathcal{Z}'$.    
+\end{definition}
+
+% Claim: Hierarchical models are preserved
+\begin{claim} \label{claim:generalized_zero_sum_gauges_preserve_hierarchical_models}
+Hierarchical gauges preserve the form of hierarchical models. Specifically, if $\vec{\theta}$ are the parameters of a hierarchical model having zero set $\mathcal{Z}'$, then $\vec{\theta}_\myfixed = P^{\infty,p} \vec{\theta}$ are also parameters of a hierarchical model with zero set $\mathcal{Z}'$. 
+\end{claim}
+
+% Proof
+\begin{proof}
+Setting $\lambda=\infty$ in Eq.\ 22 of the main text, we see that the elements of $P_{s't'}^{\infty,p}$ can written
+\begin{eqnarray}
+    P^{\infty,p}_{s' t'}\!\!\!\!
+    &=&\!\!\!\!
+    \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l \in \mathcal{A} \\ t'_l \in \mathcal{A} } }\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \right) 
+    \times \!\!
+    \prod_{\substack{l\ \textrm{s.t.}\ \\  s'_l = * \\ t'_l\in \mathcal{A} } }\!\! p^{t'_l}_l 
+    \times \!\!
+    \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l\in \mathcal{A} \\ t'_l = * } }\!\! 0, \label{eq:Pinf1} \\
+    &=& \!\!\!\!
+    \prod_{\substack{l\ \textrm{s.t.}\ \\ s'_l \in \mathcal{A} \\ t'_l \in \mathcal{A} } }\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \right) 
+    \times \!\!
+    \prod_{\substack{l\ \textrm{s.t.}\ \\  s'_l = * \\ t'_l\in \mathcal{A} } }\!\! p^{t'_l}_l 
+    \times 
+    \left\{ 
+    \begin{array}{rl} 
+        1 & \textrm{if } t' \succeq s' \\
+        0 & \textrm{otherwise}
+    \end{array} 
+    \right. \label{eq:Pinf2} \\
+    &=& \!\!\!\!
+    \prod_{\{l:s'_l \in \mathcal{A} \}}\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \right) 
+    \times \!\!
+    \prod_{\{l: s'_l = *\}}\!\! p^{t'_l}_l 
+    \times 
+    \left\{ 
+    \begin{array}{rl} 
+        1 & \textrm{if } t' \succeq s' \\
+        0 & \textrm{otherwise}
+    \end{array} 
+    \right. \label{eq:Pinf3} .
+\end{eqnarray}
+Here we used Def.\ \ref{def:partial_ordering} in going from Eq.\ \ref{eq:Pinf1} to Eq.\ \ref{eq:Pinf2}, and we used the fact that $t' \succeq s'$ implies that $s'_l \in \mathcal{A} \Rightarrow t'_l \in \mathcal{A}$, as well as the fact that $t'_l=* \Rightarrow p_l^{t'_l} = 1$, in going from Eq.\ \ref{eq:Pinf2} to Eq.\ \ref{eq:Pinf3}. Now assume $\vec{\theta}$ are the parameters of a hierarchical model with zero set $\mathcal{Z}'$, and choose any $s' \in \mathcal{Z}'$. Then in the hierarchical gauge $\Theta^{\infty,p}_{s' t'}$, 
+\begin{eqnarray}
+    \theta^\myfixed_{s'} &=& \sum_{t' \in \mathcal{S}'}  P^{\infty,p}_{s' t'} \theta_{t'}. \\
+    &=&\sum_{t' \succeq s'} \theta_{t'} 
+        \prod_{\{l: s'_l \in \mathcal{A}  \}}\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \right) 
+        \prod_{\{l: s'_l = * \}}\!\! p^{t'_l}_l \label{eq:used_below}\\
+        &=& 0 \label{eq:zero_sum_projection_matrix}
+\end{eqnarray}
+because $t' \succeq s'$ implies that $t' \in \mathcal{Z}'$ and thus that $\theta_{t'} = 0$ for all $t'$ in the sum. We conclude that $\theta^\myfixed_{s'} = 0$ for every $s' \in \mathcal{Z}'$, i.e., $\vec{\theta}_\myfixed$ are the parameters of a hierarchical model defined by zero set $\mathcal{Z}'$. 
+\end{proof}
+
+% Claim: Marginalization constraint
+\begin{claim} \label{claim:marginalization_constraint}
+Parameters $\vec{\theta}_\myfixed$ in the hierarchical gauge $\Theta^{\infty,p}$ satisfy the marginalization constraint
+\begin{equation}
+    \sum_{c_k} p_{l_k}^{c_k} \theta_{l_1\ldots l_K,\myfixed}^{c_1\ldots c_K} = 0
+\end{equation}
+for every $K=1,\ldots,L$, every subset of positions $\set{l_1,\ldots,l_K}$, and every choice of $k = 1, \ldots, K$.
+\end{claim}
+
+% Proof
+\begin{proof}
+From \eq{eq:used_below} in the proof of Claim \ref{claim:generalized_zero_sum_gauges_preserve_hierarchical_models}, parameters $\vec{\theta}$ in the hierarchical gauge $\Theta^{\infty,p}$ are given in terms of unfixed parameters $\vec{\theta}$ via 
+\begin{equation}
+    \theta_{s'}^\myfixed = \sum_{t' \in \mathcal{S}'}  P^{\infty,p}_{s' t'} \theta_{t'} =  \sum_{t' \succeq s'} \theta_{t'} 
+        \prod_{\{l: s'_l \in \mathcal{A}  \}}\!\! \left(\delta_{s'_l t'_l} - p^{t'_l}_l \right) 
+        \prod_{\{l: s'_l = * \}}\!\! p^{t'_l}_l. \label{eq:141}    
+\end{equation}
+Now choose any $K \in \set{1, \ldots, L}$, any set of positions $\sigma = \set{l_1,\ldots,l_K}$, and any index $k \in \set{1, \ldots, K}$. Define $u' \in \mathcal{S}'$ to be the augmented sequence for which $u'_{l_i} = c_i$ for all $i = 1, \ldots, K$, and that has $u'_l = *$ for all $l \notin \sigma$.  Further define $\mathcal{S}_{u',k} \subseteq \mathcal{S}'$ to bet the set of augmented sequences obtained by replacing the character at position $k$ in $u'$ with the $\alpha$ different characters in $\mathcal{A}$. To reduce the notational burden, we use $i$ as a synonym for $l_i$ when $i = 1, \ldots, K$, and use $i = K+1, \ldots, L$ to denote positions not in $\sigma$. We find that 
+\begin{eqnarray}
+    \sum_{c_k} p_{k}^{c_k} \theta_{1\ldots K,\myfixed}^{c_1\ldots c_K} &=& \sum_{\substack{s' \in \mathcal{S}_{u',k}}} p_k^{s'_k} \theta_{s'} \label{eq:142} \\
+    &=& \sum_{\substack{s' \in \mathcal{S}_{u',k}}} p_k^{s'_k} \sum_{t' \subseteq s'} \theta_{t'} 
+        \prod_{\substack{i=1}}^K\!\! \left(\delta_{s'_i t'_i} - p^{t'_i}_i \right) 
+        \prod_{i=K+1}^L p^{t'_i}_i \label{eq:143} \\
+    &=& \sum_{t' \subseteq u'} \sum_{\substack{s' \in \mathcal{S}_{u',k}}} \theta_{t'}  p_k^{s'_k}  
+        \prod_{\substack{i=1}}^K\!\! \left(\delta_{s'_i t'_i} - p^{t'_i}_i \right) 
+        \prod_{i=K+1}^L p^{t'_i}_i \label{eq:144} \\
+    &=& \sum_{t' \subseteq u'} \sum_{c \in \mathcal{A}} \theta_{t'} p_k^c (\delta_{c t'_k} - p_k^{t'_k})
+        \prod_{\substack{i=1 \\ i \neq k}}^K\!\! \left(\delta_{u'_i t'_i} - p^{t'_i}_i \right) 
+        \prod_{i=K+1}^L p^{t'_i}_i \label{eq:145} \\
+     &=& \sum_{t' \subseteq u'}  \theta_{t'} \left[ \sum_{c \in \mathcal{A}} p_k^c (\delta_{c t'_k} - p_k^{t'_k})\right]
+        \prod_{\substack{i=1 \\ i \neq k}}^K\!\! \left(\delta_{u'_i t'_i} - p^{t'_i}_i \right) 
+        \prod_{i=K+1}^L p^{t'_i}_i \label{eq:146} \\
+    &=& 0 \label{eq:147}.
+\end{eqnarray}
+In going from \eq{eq:142} to \eq{eq:143} we used \eq{eq:141}. In going from \eq{eq:143} to \eq{eq:144} we used the fact that $t'\subseteq s'$ and $t'\subseteq u'$ are the same condition on $t'$ when $s' \in \mathcal{S}_{u',k}$. In going from \eq{eq:144} to \eq{eq:145}, we eliminated $s'$ by separating the case $i=k$ out of the product over $i = 1, \ldots, K$, by replacing $s'_k \to c$, and by replacing $s'_i \to u'_i$ for all $i \neq k$. In going from \eq{eq:145} to \eq{eq:146}, we collected in brackets all quantities that depend on $c$. And in going from \eq{eq:146} to \eq{eq:147}, we use the fact that the term in brackets vanishes: 
+\begin{eqnarray}
+    \sum_{c \in \mathcal{A}} p_k^c \left( \delta_{c t'_k} - p_k^{t'_k} \right) 
+    = \left( \sum_{c \in \mathcal{A}} p_k^c \delta_{c t'_k} \right) - \left(  \sum_{c \in \mathcal{A}} p_k^c \right) p_k^{t'_k}
+    = p_k^{t'_k} -  p_k^{t'_k} 
+    = 0. 
+\end{eqnarray}
+This proves the claim.
+\end{proof}
+
+% Definition: A-positions and *-positions.
+\begin{definition}
+The $\mathcal{A}$-positions of an augmented sequence $s'$ are the positions $l$ such that $s'_l \in \mathcal{A}$. Similarly, the $*$-positions of $s'$ are the positions $l$ such that $s'_l = *$. 
+\end{definition}
+
+% Definition: augmented sequence orbit.
+\begin{definition} An augmented sequence orbit $\sigma$ is a set comprising all augmented sequences that have a specified set of $\mathcal{A}$-positions (or equivalently, a specified set of $*$-positions). The order of the orbit, $o(\sigma)$, is defined to be the order of all $s' \in \sigma$. The term ``orbit'' comes from the fact that such sets are formed from the orbit of $s'$ under the group of position-specific character permutations; see ref.\ \cite{Posfai:2024bb}.
+\end{definition}
+
+%%% Here is a section option for the defintion
+% % Definition: augmented sequence orbit.
+% \begin{definition} The orbit $\sigma$ of an augmented sequence $s'$ is defined to be the set of all augmented sequences that have the same $\mathcal{A}$-positions and $*$-positions as $s'$. The order of the orbit, $o(\sigma)$, is defined to be the order of $s'$ (or equivalently, the order of any other augmented sequence in $\sigma$). The term ``orbit'' comes from the fact that such sets are formed from the orbit of $s'$ under the group of position-specific character permutations; see ref.\ \cite{Posfai:2024bb}.
+% \end{definition}
+
+\newcommand{\mychars}[3]{ { {#1}'_{{#2}_1} \cdots {#1}'_{{#2}_{#3}} } }
+\newcommand{\myposs}[2]{ { {#1}_1 \cdots {#1}_{#2} } }
+\newcommand{\mysum}[3]{\sum_\mychars{#1}{#2}{#3}}
+\newcommand{\myps}[3]{ p^{{#1}'_{{#2}_1}}_{{#2}_1} \cdots  p^{{#1}'_{{#2}_{#3}}}_{{#2}_{#3}}}
+\newcommand{\mydeltas}[4]{ \delta_{{#1}'_{{#3}_1} {#2}'_{{#3}_1 }} \cdots \delta_{{#1}'_{{#3}_{#4}} {#2}'_{{#3}_{#4}}} } 
+
+% Claim: Hierarchical gauge, conditional mean
+\begin{claim}
+Let $f(s) = \sum_{t'} \theta_{t'} x_{t'}(s)$ be an activity landscape and $p$ be a positive probability distribution. Define the expectation value of $f$ with respect to $p$ conditioned on $s' \in \mathcal{S'}$ to be $\braket{f|s'}_p = \frac{1}{p(s')} \sum_{s \in s'} p(s) f(s)$. Then when $\vec{\theta}$ is in the hierarchical gauge,
+\begin{equation}
+\braket{f|s'}_p = \sum_{t' \supseteq s'} \theta_{t'}.
+\end{equation}
+This claim is readily extended to non-positive probability distributions $p$ by defining $\braket{f|s'}_p = \lim_{\epsilon \to 0^+} \braket{f|s'}_{p_\epsilon}$, where $p_\epsilon$ is a regularized version of $p$ given by
+\begin{equation}
+p_\epsilon(s) = \prod_l \left[ (1-\epsilon) p_l^{s_l} + \frac{\epsilon}{\alpha} \right], 
+\end{equation}
+with $p_l$ being the position-specific factors of $p$.
+\end{claim}
+
+% Proof
+\begin{proof}
+Assume that $p$ is positive, and that $\vec{\theta}$ is in the hierarchical gauge. Then,
+\begin{eqnarray}
+\braket{f|s'}_p &=& \frac{1}{p(s')} \sum_{s \in s'} p(s) \sum_{t'} \theta_{t'} x_{t'}(s) \\
+	&=& \frac{1}{p(s')} \sum_{t'} \theta_{t'} \sum_{s \in s'} p(s)  x_{t'}(s) \\
+	&=& \frac{1}{p(s')} \sum_{t'} \theta_{t'} \sum_{s \in s' \cap t'} p(s) \\
+	&=& \frac{1}{p(s')} \sum_{t'} p(s' \cap t') \theta_{t'} \\
+	&=& \frac{1}{p(s')} \sum_\tau \sum_{t' \in \tau} p(s' \cap t') \theta_{t'}.
+\end{eqnarray}
+where $\sum_\tau$ denotes a sum over all augmented sequence orbits $\tau$. Now let $l_1, \ldots, l_K, m_1, \ldots, m_J$ denote the $\mathcal{A}$-positions of $s'$, let  $l_1, \ldots, l_K, n_1, \ldots, n_I$ denote the $\mathcal{A}$-positions of $\tau$, and assume $l_1, \ldots, l_K, m_1, \ldots, m_J, n_1, \ldots, n_I$ are distinct. Then for each orbit $\tau$,
+% Macros to ease notation
+\begin{eqnarray}
+\sum_{t' \in \tau} p(s' \cap t') \theta_{t'} 
+	&=& \mysum{t}{l}{K} \mysum{t}{n}{I} \myps{s}{l}{K} \myps{s}{m}{J} \myps{t}{n}{I} \mydeltas{s}{t}{l}{K} \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} } \\
+	&=&  \myps{s}{l}{K} \myps{s}{m}{J}  \mysum{t}{l}{K} \mydeltas{s}{t}{l}{K} \mysum{t}{n}{I} \myps{t}{n}{I} \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} }. 
+\end{eqnarray}
+Noting that
+\begin{equation}
+	\mydeltas{s}{t}{l}{K} = \left\{ 
+	\begin{array}{l} 
+		1~~\textrm{if $s'_l = t'_l$ for all $l = l_1, \ldots, l_K$}, \\
+		0~~\textrm{otherwise},
+	\end{array} \right.
+\end{equation}
+and that by Claim \ref{claim:marginalization_constraint},
+\begin{equation}
+	\mysum{t}{n}{I} \myps{t}{n}{I} \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} } = \left\{ 
+	\begin{array}{cl} 
+		\theta^{ \mychars{t}{l}{K}}_{\myposs{l}{K} } & \textrm{if $I=0$}, \\
+		0 & \textrm{otherwise},
+	\end{array} \right.
+\end{equation}
+we see that,
+\begin{eqnarray}
+	\sum_{t' \in \tau} p(s' \cap t') \theta_{t'} &=&  \myps{s}{l}{K} \myps{s}{m}{J} \mysum{t}{l}{K} \theta^{ \mychars{t}{l}{K} }_{\myposs{l}{K}} \times \left\{ 
+		\begin{array}{l}
+		\textrm{$1$ if $t'_l \in \mathcal{A} \Rightarrow s'_l = t'_l$, for all $l = l_1, \ldots, l_K$,} \\
+		\textrm{$0$ otherwise}.
+		\end{array} 
+	\right. \\
+	&=& p(s') \sum_{t' \in \tau}  \theta_{t'} \left\{ 
+			\begin{array}{l}
+			\textrm{1 if $s' \subseteq t'$}, \\
+			\textrm{0 otherwise}. 
+			\end{array} 
+		\right.
+\end{eqnarray}
+Consequently,
+\begin{eqnarray}
+	\braket{f|s'}_p &=& \frac{1}{p(s')} \sum_{\tau} p(s') \sum_{t' \in \tau} \theta_{t'} \left\{ 
+			\begin{array}{l}
+			\textrm{1 if $s' \subseteq t'$}, \\
+			\textrm{0 otherwise},
+			\end{array} 
+		\right. \\ 
+		&=&  \sum_{t'} \theta_{t'} \left\{ 
+			\begin{array}{l}
+			\textrm{1 if $s' \subseteq t'$}, \\
+			\textrm{0 otherwise}, 
+			\end{array} 
+		\right. \\
+		&=& \sum_{t' \supseteq s'} \theta_{t'}.
+\end{eqnarray}
+This completes the proof for the case where $p$ is positive. The proof for non-positive $p$ follows from  the definition and the continuity of projection matrix elements $P_{s't'}^{\infty,p}$ (\eq{eq:Pinf1}) with respect to $p$ and the definition $\braket{f|s'}_p = \lim_{\epsilon \to 0^+} \braket{f|s'}_{p_\epsilon}$.
+\end{proof}
+% DMM: Not going to add it right now in the interest of time, but this would be a good place to add a note explaining how conditioning on s' is the same as taking draws from the original distribution p and making mutations to the characters specified by the non-star positions in s'.
+
+
+
+
+% Definition: orbital component. 
+\begin{definition}
+The orbital component of an activity landscape $f = \sum_{s'} \theta_{s'} x_{s'}$ corresponding to an augmented sequence orbit $\sigma$ is defined to be $f_\sigma(s) = \sum_{s' \in \sigma} \theta_{s'} x_{s'}(s)$. 
+\end{definition}
+
+% Claim: orbital component marginals
+\begin{claim} \label{claim:orbital_marginal_components}
+Given an activity landscape $f$, and augmented sequence orbits $\sigma$ and $\tau$,
+\begin{equation}
+	\braket{f_\sigma}_p = \left\{ 
+	\begin{array}{cl}
+		\theta_0 & \textrm{if $o(\sigma) = 0$}, \\
+		0 & \textrm{otherwise},
+	\end{array} 
+	\right. \label{eq:first_order_orbital_marginals}
+\end{equation} 
+and $\braket{f_\sigma f_\tau}_p = \delta_{\sigma \tau} \braket{f_\sigma^2}_p$ where
+\begin{equation}
+	\braket{f_\sigma^2}_p = \sum_{s' \in \sigma} p(s') \theta^2_{s'}.
+\end{equation}
+\end{claim}
+
+% Proof
+\begin{proof}
+\eq{eq:first_order_orbital_marginals} follows directly from Claim \ref{claim:marginalization_constraint}:
+\begin{equation}
+	\braket{f_\sigma}_p = \sum_{s' \in \sigma} p(s') \theta_{s'} \left\{ 
+	\begin{array}{cl}
+		\theta_0 & \textrm{if $o(\sigma) = 0$}, \\
+		0 & \textrm{otherwise},
+	\end{array} 
+	\right.
+\end{equation}
+Let $l_1, \ldots, l_K, m_1, \ldots, m_J$ denote the $\mathcal{A}$-positions of $\sigma$, let $l_1, \ldots, l_K, n_1, \ldots, n_I$ denote the $\mathcal{A}$-positions of $\tau$, and assume $l_1, \ldots, l_K, m_1, \ldots, m_J, n_1, \ldots, n_I$ are distinct. Then,
+\begin{eqnarray}
+\braket{f_\sigma f_\tau}_p 
+	&=& \sum_u p(u) \left[ \sum_{s' \in \sigma} \theta_{s'} x_{s'}(u) \right] \left[ \sum_{t' \in \tau} \theta_{t'} x_{t'}(u) \right] \\
+	&=& \sum_{s' \in \sigma} \sum_{t' \in \tau} \theta_{s'} \theta_{t'} \sum_u p(u) x_{s' \cap t'}(u) \\
+	&=& \sum_{s' \in \sigma} \sum_{t' \in \tau} p(s' \cap t') \theta_{s'} \theta_{t'} \\
+	&=& \mysum{s}{l}{K} \mysum{s}{m}{J} \mysum{t}{l}{K} \mysum{t}{n}{I} \myps{s}{l}{K} \myps{s}{m}{J} \myps{t}{n}{I} \times\\
+	&&  \mydeltas{s}{t}{l}{K} \theta^{ \mychars{s}{l}{K} \mychars{s}{m}{J} }_{\myposs{l}{K} \myposs{m}{J} } \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} } \\
+	&=& \mysum{s}{l}{K}  \mysum{t}{l}{K} \myps{s}{l}{K} \mydeltas{s}{t}{l}{K} \times \label{eq:inner_product_summand}\\
+	& & \left[ \mysum{s}{m}{J} \myps{s}{m}{J} \theta^{ \mychars{s}{l}{K} \mychars{s}{m}{J} }_{\myposs{l}{K} \myposs{m}{J} } \right] \times \left[ \mysum{t}{n}{I} \myps{t}{n}{I} \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} } \right].
+\end{eqnarray}
+Because
+\begin{equation}
+	\mysum{s}{m}{J} \myps{s}{m}{J} \theta^{ \mychars{s}{l}{K} \mychars{s}{m}{J} }_{\myposs{l}{K} \myposs{m}{J} } = \left\{ 
+	\begin{array}{cl} 
+		\theta^{ \mychars{s}{l}{K}}_{\myposs{s}{K} } & \textrm{if $J=0$}, \\
+		0 & \textrm{otherwise},
+	\end{array} \right.
+\end{equation}
+and
+\begin{equation}
+	\mysum{t}{n}{I} \myps{t}{n}{I} \theta^{ \mychars{t}{l}{K} \mychars{t}{n}{I} }_{\myposs{l}{K} \myposs{n}{I} } = \left\{ 
+	\begin{array}{cl} 
+		\theta^{ \mychars{t}{l}{K}}_{\myposs{l}{K} } & \textrm{if $I=0$}, \\
+		0 & \textrm{otherwise},
+	\end{array} \right.
+\end{equation}
+we see that the summand in \eq{eq:inner_product_summand} vanishes unless $J=0$ and $I=0$. This is equivalent to the requirement that $\sigma = \tau$. Therefore,
+\begin{eqnarray}
+\braket{f_\sigma f_\tau}_p 
+	&=& \delta_{\sigma \tau} \mysum{s}{l}{K}  \mysum{t}{l}{K} \myps{s}{l}{K} \mydeltas{s}{t}{l}{K} \theta^{\mychars{s}{l}{K}}_{\myposs{s}{K}} \theta^{ \mychars{t}{l}{K}}_{\myposs{l}{K} } \\
+	&=& \delta_{\sigma \tau} \sum_{s' \in \sigma} \sum_{t' \in \tau} p(s') \delta_{s't'} \theta_{s'} \theta_{t'} \\
+	&=& \delta_{\sigma \tau} \sum_{s' \in \sigma} p(s') \theta^2_{s'} \\
+	&=& \delta_{\sigma \tau} \braket{f^2_\sigma}_p
+\end{eqnarray}
+where
+\begin{equation}
+\braket{f^2_\sigma}_p = \sum_{s' \in \sigma} p(s') \theta^2_{s'}.
+\end{equation}
+\end{proof}
+
+% Definition: orbital component. 
+\begin{definition}
+Given $k \in \set{0, 1, \ldots, L}$, the $k$'the order component of an activity landscape $f = \sum_{s'} \theta_{s'} x_{s'}$ is defined to be 
+\begin{equation}
+	f_k(s) = \sum_{s':o(s')=k} \theta_{s'} x_{s'}(s).
+\end{equation} 
+\end{definition}
+
+% Claim: Hierarchical gauge, variance decomposition
+\begin{claim}
+Given an activity landscape $f = \sum_{s'} \theta_{s'} x_{s'}$, and parameters $\vec{\theta}$ expressed in the hierarchical gauge, 
+\begin{equation}
+	\var_p[f] = \sum_{k=0}^L \var_p[f_k],
+	~~~~\textrm{where}~~~~
+	\var_p[f_k] = \left\{ \begin{array}{lr}
+	\sum_{s':o(s')=k} p(s') \theta^2_{s'} & \textrm{if}~~k \ge 1, \\
+	0 & \textrm{if}~~k=0.
+\end{array} \right.
+\end{equation}
+\end{claim}
+
+% Proof
+\begin{proof}
+First we decompose each $f_k$ into a sum of $f_\sigma$ over augmented sequence orbits $\sigma$ of order $k$:
+\begin{equation}
+	f_k = \sum_{\sigma: o(\sigma)=k} f_\sigma .
+\end{equation}
+next, by Claim \ref{claim:orbital_marginal_components},
+\begin{equation}
+	\braket{f_k}_p = \sum_{\sigma: o(\sigma)=k} \braket{f_\sigma}_p,
+\end{equation}
+and
+\begin{eqnarray}
+\braket{f^2_k}_p 
+	&=& \braket{ \sum_{\sigma: o(\sigma)=k} f_\sigma \sum_{\tau: o(\tau)=k} f_\tau }_p \\
+	&=& \sum_{\sigma: o(\sigma)=k} \sum_{\tau: o(\tau)=k} \braket{f_\sigma f_\tau }_p \\
+	&=& \sum_{\sigma: o(\sigma)=k} \sum_{\tau: o(\tau)=k} \delta_{\sigma \tau} \braket{f^2_\sigma} \\
+	&=& \sum_{\sigma: o(\sigma)=k} \braket{f^2_\sigma} \\
+	&=& \sum_{\sigma: o(\sigma)=k} \sum_{s' \in \sigma} p(s') \theta^2_{s'} \\
+	&=& \sum_{s': o(s')=k} p(s') \theta^2_{s'}.
+\end{eqnarray}
+Consequently
+\begin{eqnarray}
+\var_p[f_k]
+	&=& \braket{f^2_k}_p - \braket{f_k}^2_p \\
+	&=& \sum_{s': o(s')=k} p(s') \theta^2_{s'} - \delta_{k0} \theta_0^2	\\
+	&=& \left\{ 
+		\begin{array}{cl}
+			\sum_{s': o(s')=k} p(s') \theta^2_{s'} & \textrm{if}~~k \ge 1, \\
+			0 & \textrm{if}~~k=0.
+		\end{array} \right.
+\end{eqnarray}
+Finally,
+\begin{eqnarray}
+\var_p[f] 
+	&=& \braket{f^2}_p - \braket{f}^2_p \\
+	&=& \braket{\sum_\sigma f_\sigma \sum_\tau f_\tau}_p - \braket{\sum_\sigma f_\sigma }^2_p \\
+	&=& \sum_\sigma \sum_\tau \braket{f_\sigma f_\tau} - \sum_\sigma \braket{f_\sigma}^2_p \\
+	&=& \sum_\sigma \left[ \braket{f^2_\sigma}_p  - \braket{f_\sigma}^2 \right] \\
+	&=& \sum_{k=0}^L \sum_{\sigma:o(\sigma)=k} \left[ \braket{f^2_\sigma}_p  - \braket{f_\sigma}^2 \right] \\
+	&=& \sum_{k=0}^L \var_p[f_k].
+\end{eqnarray}
+This completes the proof.
+\end{proof}
+
+
+%%%
+%%% Hierarchical gauges of an empirical landscape for protein GB1
+%%%
+
+%\section{Hierarchical gauges of an empirical landscape for protein GB1}
+%\begin{figure*}
+%\begin{center}
+%  \includegraphics{fig_1_S1_pairwisemodel}
+%  \caption{Performance of the pairwise-interaction model for protein GB1. Axes reflect $\log_2$ enrichment ratios. Each dot represents a randomly chosen variant GB1 protein assayed by \cite{Wu:2016kp}. For clarity, only 5,000 of the $\sim$160,000 assayed GB1 variants are shown. While the fit is reasonably good $R^2 = 0.81$, the deviation from measurements is substantially greater than that expected by experimental uncertainty \todo{quantify this somehow}. Nevertheless, the pairwise-interaction model serves well to illuminate the utility of different gauge-fixing strategies }
+%\end{center}
+%\end{figure*}
+
+
+\paragraph*{Gauge-fixing formula for the all-order interaction model}
+Using the formula for $P^{\infty,p}$ in \eq{eq:Pinf1} to compute 
+\begin{equation}
+	\vec{\theta}_\myfixed = P^{\infty,p} \vec{\theta}
+\end{equation}
+for an all-order interaction model in which only the zero-order, first-order, and second-order parameters are nonzero, one finds that
+\begin{eqnarray}
+\theta_{0,\myfixed} &=& \theta_0 + \sum_l \sum_c p_l^c \theta_l^c + \sum_l \sum_{l'>l} \sum_{c,c'} p_l^c p_{l'}^{c'} \theta_{ll'}^{cc'},  \\
+\theta^{c}_{l,\myfixed} &=& \sum_{c'} (\delta_{c c'} - p_l^{c'})\theta_l^c + \sum_{l'<l} \sum_{c',c''} (\delta_{c c'} - p_l^{c'}) p_{l'}^{c''} \theta_{ll'}^{c c'} + \sum_{l'>l} \sum_{c',c''} (\delta_{c c'} - p_l^{c'}) p_{l'}^{c''} \theta_{l'l}^{c' c},  \\ 
+\theta^{cc'}_{ll',\myfixed} &=& \sum_{c'',c'''} (\delta_{c c''} - p_l^{c''})(\delta_{c' c'''} - p_{l'}^{c'''}) \theta_{l l'}^{c'' c'''},\\
+\theta^{c_1\ldots c_K}_{l_1 \ldots l_K,\myfixed}\!\!\!\!\!&=&0~~~\textrm{for all}~~~K = 3, \ldots, L.
+\end{eqnarray}
+Ignoring the formula for parameters of order three or greater, one thus obtains the gauge-fixing formulae for the parameters of the pairwise-interaction model. These are the formulas used for the computations in Fig.\ 4 and Fig.\ 5 of the main text. The specific choices for $p$ used in these figures are given below.
+
+\paragraph*{Region-specific distributions.} In Fig.\ 4D, the probability distributions $p(s) = \prod_{l=1}^4 p_l^{s_l}$ for the four different regions (global, region 1, region 2, region 3) were defined as follows. 
+\begin{itemize}
+    \item Uniform: For $l \in \{1,2,3,4\}$, $p_l^c = \frac{1}{20}$.
+    \item Region 1:  For $l \in \{1,2,4\}$, $p_l^c = \frac{1}{20}$; for $l=3$, $p_l^c = \delta_{c\textrm{G}}$.
+    \item Region 2:  For $l \in \{1,2\}$, $p_l^c = \frac{1}{20}$; for $l=3$, $p_l^c = \frac{1}{2} \delta_{c\textrm{L}} + \frac{1}{2} \delta_{c\textrm{F}}$; for $l=4$, $p_l^c = \delta_{c\textrm{G}}$. 
+    \item Region 3:  For $l \in \{1,2\}$, $p_l^c = \frac{1}{20}$; for $l=3$, $p_l^c = \frac{1}{2} \delta_{c\textrm{C}} + \frac{1}{2} \delta_{c\textrm{A}}$; for $l=4$, $p_l^c = \delta_{c\textrm{A}}$.  
+\end{itemize}
+Here $l = 1, 2, 3, 4$ are used to denote protein positions $39, 40, 41, 54$, respectively, and $c$ indexes all $\alpha = 20$ possible amino acids in $\mathcal{A}$. 
+
+
+%%%
+%%% Appendix
+%%%
+
+\section{Appendix}
+
+% Claim: Appendix
+\begin{claim} \label{claim:appendix}
+    Let $V_1$ and $V_2$ be two subspaces of a vector space $V$ such that any vector in $V$ can be uniquely decomposed into the sum of a vector in $V_1$ and a vector in $V_2$. Let $P_1$ be the projection into $V_1$ along $V_2$, and $P_2$ be the projection into $V_2$ along $V_1$. Let $\Lambda$ be a symmetric positive definite matrix acting on $V$. Then the following three statements are equivalent. 
+    \begin{enumerate}
+    \item $V_1$ and $V_2$ are $\Lambda$-orthogonal, i.e., $\vec{v}_1^\top \Lambda \vec{v}_2 = 0$ for all $\vec{v}_1 \in V_1$ and $\vec{v}_2 \in V_2$. 
+    \item For any fixed $\vec{v_1} \in V_1$, $\mathrm{argmin}_{\,\vec{v}_2 \in V_2} (\vec{v}_1 + \vec{v}_2)^\top \Lambda (\vec{v}_1 + \vec{v}_2) = \vec{0}$. 
+    \item $\Lambda = P_1^\top \Lambda P_1 + P_2^\top \Lambda P_2$.
+    \end{enumerate} \label{claim:linear_gauges}
+\end{claim}
+
+% Proof: appendix
+\begin{proof}
+We prove equivalence of the three statements (denoted $1$, $2$, and $3$) as follows.
+\begin{itemize}
+    \item $1 \Rightarrow 2$: Assume that $1$ is true. Then for all $\vec{v}_1 \in V_1$ and $\vec{v}_2 \in V_2$, $(\vec{v}_1 + \vec{v}_2)^\top \Lambda (\vec{v}_1 + \vec{v}_2) = \vec{v}_1^\top \Lambda \vec{v}_1 +  \vec{v}_2^\top \Lambda \vec{v}_2 \geq \vec{v}_1^\top \Lambda \vec{v}_1$. Because equality obtains only when $\vec{v}_2 = \vec{0}$, $\vec{0}$ is the unique $\vec{v}_2 \in V$ that minimizes $(\vec{v}_1 + \vec{v}_2)^\top \Lambda (\vec{v}_1 + \vec{v}_2)$. This proves $2$, thereby establishing that $1 \Rightarrow 2$. 
+    \item $2 \Rightarrow 1$: Assume that $1$ is not true, i.e., there exists $\vec{v}_1 \in V_1$ and $\vec{v}_2 \in V_2$ such that $\vec{v}_1^\top \Lambda \vec{v}_2 \neq 0$. Then $\frac{d}{d\epsilon} (\vec{v}_1 + \epsilon \vec{v}_2)^\top \Lambda (\vec{v}_1 + \epsilon \vec{v}_2) = 2 \vec{v}_1^\top \Lambda \vec{v}_2 + 2 \epsilon \vec{v}_2^\top \Lambda \vec{v}_2 $ is nonzero at $\epsilon = 0$. This contradicts $2$, thereby establishing that $\neg 1 \Rightarrow \neg 2 $ and hence $2 \Rightarrow 1$.
+    \item $1 \Rightarrow 3$: Assume that $1$ is true, and choose any $\vec{v}, \vec{w} \in V$. Then $\vec{v}^\top \Lambda \vec{w} = (P_1 \vec{v} + P_2 \vec{v})^\top \Lambda (P_1 \vec{w} + P_2 \vec{w}) = (P_1 \vec{v})^\top \Lambda (P_1 \vec{w}) + (P_2 \vec{v})^\top \Lambda (P_2 \vec{w}) = \vec{v}^\top \left[P_1^\top \Lambda P_1 + P_2^\top \Lambda P_2 \right] \vec{w}$. This proves $3$, thereby establishing that $1 \Rightarrow 3$. 
+    \item $3 \Rightarrow 1$: Assume that $3$ is true. Then given any $\vec{v}_1 \in V_1$ and $\vec{v}_2 \in V_2$, $\vec{v_1}^\top \Lambda \vec{v}_2 = (P_1 \vec{v_1})^\top \Lambda (P_1 \vec{v}_2) + (P_2 \vec{v_1})^\top \Lambda (P_2 \vec{v}_2) = 0$ since $P_1 \vec{v}_2 = P_2 \vec{v_1} = \vec{0}$. This proves $1$, thereby establishing that $3 \Rightarrow 1$. 
+\end{itemize}
+\end{proof}
+
+%\bibliographystyle{plain} % We choose the "plain" reference style
+%\bibliography{S1_Text.bib}
+
+\begin{thebibliography}{10}
+
+\bibitem{Posfai:2024bb} Posfai A, McCandlish DM, Kinney JB. Symmetry, gauge freedoms, and the interpretability of sequence-function relationships. bioRxiv [Preprint] 2024; doi: 10.1101/2024.05.12.593774. % Still a preprint
+
+\end{thebibliography}
+
+\end{document}
+
