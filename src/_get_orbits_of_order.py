@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from typing import List, Tuple
 from itertools import combinations
-from src.sort_orbits import sort_orbits
-def get_orbits_of_order(
+from src._sort_orbits import _sort_orbits
+def _get_orbits_of_order(
     seq_length: int,
     order: int
 ) -> List[Tuple[int, ...]]:
@@ -22,10 +22,10 @@ def get_orbits_of_order(
                               distinct positions (0-indexed)
     
     Examples:
-        >>> get_orbits_of_order(3, 1)
+        >>> _get_orbits_of_order(3, 1)
         [(0,), (1,), (2,)]
         
-        >>> get_orbits_of_order(4, 2)
+        >>> _get_orbits_of_order(4, 2)
         [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
     """
     # Validate inputs
@@ -38,4 +38,4 @@ def get_orbits_of_order(
     # Generate all combinations of 'order' positions from range(seq_length)
     orbits = list(combinations(range(seq_length), order))
     
-    return sort_orbits(orbits)
+    return _sort_orbits(orbits)

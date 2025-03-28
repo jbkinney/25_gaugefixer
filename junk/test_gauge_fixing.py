@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from src.gauge_fixing import gauge_fix_sequences
+from junk.gauge_fixing import gauge_fix_sequences
 
 def test_gauge_fix_sequences():
     """Test the gauge_fix_sequences function with example data using augmented sequences."""

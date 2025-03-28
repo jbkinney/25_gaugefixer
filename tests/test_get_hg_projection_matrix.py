@@ -4,16 +4,16 @@ import numpy as np
 from scipy import sparse
 
 from src.get_hg_projection_matrix import get_hg_projection_matrix
-from src.get_augseqs_upto_order import get_augseqs_upto_order
+from src.get_features_upto_order import get_features_upto_order
 def test_get_hg_projection_matrix_df():
     """Test DataFrame output format."""
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    augseqs = get_augseqs_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
     
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
         bg_df=pi_df, 
@@ -23,20 +23,20 @@ def test_get_hg_projection_matrix_df():
     # Check output type
     assert isinstance(P, pd.DataFrame)
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
     # Check index and columns
-    assert list(P.index) == augseqs
-    assert list(P.columns) == augseqs
+    assert list(P.index) == features
+    assert list(P.columns) == features
 
 def test_get_hg_projection_matrix_sparse():
     """Test sparse matrix output format."""
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    augseqs = get_augseqs_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
     
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
         bg_df=pi_df, 
@@ -46,18 +46,18 @@ def test_get_hg_projection_matrix_sparse():
     # Check output type
     assert isinstance(P, sparse.csr_matrix)
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
 
 def test_get_hg_projection_matrix_invalid_output():
     """Test invalid output type."""
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    augseqs = get_augseqs_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
     
     with pytest.raises(ValueError, match="Invalid output type"):
         get_hg_projection_matrix(
-            augseqs=augseqs, 
+            features=features, 
             alphabet=alphabet, 
             bg_type='custom', 
             bg_df=pi_df, 
@@ -69,10 +69,10 @@ def test_get_hg_projection_matrix_single_position():
     L = 1
     alphabet = ['A', 'B']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    augseqs = ['A', 'B', '*']
+    features = ['A', 'B', '*']
     
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
         bg_df=pi_df, 
@@ -91,10 +91,10 @@ def test_get_hg_projection_matrix_custom_wildcard():
     L = 2
     alphabet = ['A', 'B']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    augseqs = ['??','A?', 'B?', '?A', '?B']
+    features = ['??','A?', 'B?', '?A', '?B']
     
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
         bg_df=pi_df, 
@@ -103,7 +103,7 @@ def test_get_hg_projection_matrix_custom_wildcard():
     )
     
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
     # Check that wildcard positions are handled correctly
     assert np.isclose(P.loc['??', '??'], 1.0)  # eta = 1 
 
@@ -111,18 +111,18 @@ def test_get_hg_projection_matrix_uniform_bg():
     """Test with uniform background distribution."""
     L = 2
     alphabet = ['A', 'C']
-    augseqs = ['A*', 'C*', '*A', '*C', '**']
+    features = ['A*', 'C*', '*A', '*C', '**']
     
     # Use uniform background type
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='uniform',
         out_type='df'
     )
     
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
     
     # For uniform background, pi_t = 1/len(alphabet) = 0.5 for each character
     # For the sequence '**', all suborbit sequences should map to it with value=1
@@ -139,12 +139,12 @@ def test_get_hg_projection_matrix_wildtype_bg():
     """Test with wildtype background distribution."""
     L = 2
     alphabet = ['A', 'C']
-    augseqs = ['A*', 'C*', '*A', '*C', '**']
+    features = ['A*', 'C*', '*A', '*C', '**']
     wt_seq = 'AC'  # Define wildtype sequence
     
     # Use wildtype background type
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='wildtype',
         wt_seq=wt_seq,
@@ -152,7 +152,7 @@ def test_get_hg_projection_matrix_wildtype_bg():
     )
     
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
     
     # For wildtype background, pi_t = 1 if t == wt, otherwise 0
     # For the sequence '**', all suborbit sequences should map to it with value=1
@@ -171,7 +171,7 @@ def test_get_hg_projection_matrix_custom_bg():
     """Test with custom background distribution."""
     L = 2
     alphabet = ['A', 'C']
-    augseqs = ['A*', 'C*', '*A', '*C', '**']
+    features = ['A*', 'C*', '*A', '*C', '**']
     
     # Create custom background distribution
     bg_df = pd.DataFrame(index=range(L), columns=alphabet)
@@ -184,7 +184,7 @@ def test_get_hg_projection_matrix_custom_bg():
     
     # Use custom background type
     P = get_hg_projection_matrix(
-        augseqs=augseqs, 
+        features=features, 
         alphabet=alphabet, 
         bg_type='custom',
         bg_df=bg_df,
@@ -192,7 +192,7 @@ def test_get_hg_projection_matrix_custom_bg():
     )
     
     # Check dimensions
-    assert P.shape == (len(augseqs), len(augseqs))
+    assert P.shape == (len(features), len(features))
     
     # For custom background, pi_t is defined in bg_df
     # For the sequence '**', all suborbit sequences should map to it with value=1
@@ -211,14 +211,14 @@ def test_invalid_bg_type_combinations():
     """Test invalid combinations of background type parameters."""
     L = 2
     alphabet = ['A', 'C']
-    augseqs = ['A*', 'C*', '*A', '*C', '**']
+    features = ['A*', 'C*', '*A', '*C', '**']
     wt_seq = 'AC'
     bg_df = pd.DataFrame(index=range(L), columns=alphabet, data=0.5)
     
     # Test: wildtype bg_type without wt_seq
     with pytest.raises(ValueError, match="wt_seq must be provided if bg_type is 'wildtype'"):
         get_hg_projection_matrix(
-            augseqs=augseqs, 
+            features=features, 
             alphabet=alphabet, 
             bg_type='wildtype',
             out_type='df'
@@ -227,7 +227,7 @@ def test_invalid_bg_type_combinations():
     # Test: custom bg_type without bg_df
     with pytest.raises(ValueError, match="bg_df must be provided if bg_type is 'custom'"):
         get_hg_projection_matrix(
-            augseqs=augseqs, 
+            features=features, 
             alphabet=alphabet, 
             bg_type='custom',
             out_type='df'
@@ -236,7 +236,7 @@ def test_invalid_bg_type_combinations():
     # Test: uniform bg_type with wt_seq
     with pytest.raises(ValueError, match="wt_seq is not used and must be None if bg_type is not 'wildtype'"):
         get_hg_projection_matrix(
-            augseqs=augseqs, 
+            features=features, 
             alphabet=alphabet, 
             bg_type='uniform',
             wt_seq=wt_seq,
@@ -246,7 +246,7 @@ def test_invalid_bg_type_combinations():
     # Test: uniform bg_type with bg_df
     with pytest.raises(ValueError, match="bg_df is not used and must be None if bg_type is not 'custom'"):
         get_hg_projection_matrix(
-            augseqs=augseqs, 
+            features=features, 
             alphabet=alphabet, 
             bg_type='uniform',
             bg_df=bg_df,

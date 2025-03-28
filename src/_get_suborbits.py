@@ -1,7 +1,8 @@
 from typing import List, Tuple
 from itertools import combinations
-from src.sort_orbits import sort_orbits
-def get_suborbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
+from src._sort_orbits import _sort_orbits
+
+def _get_suborbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
     """
     Get all possible subsets of positions from a list of orbits.
     
@@ -15,7 +16,7 @@ def get_suborbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
         List[Tuple[int, ...]]: Sorted list of all unique suborbits
         
     Examples:
-        >>> get_suborbits([(0,1,2), (1,2,3)])
+        >>> _get_suborbits([(0,1,2), (1,2,3)])
         [(), (0,), (0,1), (0,1,2), (0,2), (1,), (1,2), (1,2,3), (1,3), (2,), (2,3), (3,)]
     """
     # Sort each orbit
@@ -35,4 +36,4 @@ def get_suborbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
             suborbits.update(combinations(orbit, size))
             
     # Convert to sorted list and return
-    return sort_orbits(list(suborbits)) 
+    return _sort_orbits(list(suborbits)) 

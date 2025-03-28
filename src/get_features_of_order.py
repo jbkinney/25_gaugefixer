@@ -3,22 +3,22 @@ import pandas as pd
 from typing import List
 from itertools import chain
 
-from src.get_orbits_of_order import get_orbits_of_order
-from src.get_augseqs_in_orbit import get_augseqs_in_orbit
+from src._get_orbits_of_order import _get_orbits_of_order
+from src._get_features_in_orbit import _get_features_in_orbit
 
-def get_augseqs_of_order(
+def get_features_of_order(
     seq_length: int,
     order: int,
     alphabet: List[str],
     wildcard_char: str = '*'
 ) -> List[str]:
     """
-    Generate all augmented sequences of a given order.
+    Generate all features of a given order.
     
-    This function generates all augmented sequences where exactly 'order' positions
+    This function generates all features where exactly 'order' positions
     have characters from the alphabet, and all other positions have wildcards.
     It first finds all possible combinations of 'order' positions, then generates
-    all possible augmented sequences for each combination.
+    all possible features for each combination.
     
     Args:
         seq_length (int): The total length of the sequence
@@ -27,10 +27,10 @@ def get_augseqs_of_order(
         wildcard_char (str): Character to use as the wildcard (default: '*')
         
     Returns:
-        List[str]: List of all augmented sequences of the given order
+        List[str]: List of all features of the given order
     
     Examples:
-        >>> get_augseqs_of_order(3, 1, ['A', 'B'])
+        >>> get_features_of_order(3, 1, ['A', 'B'])
         ['A**', 'B**', '*A*', '*B*', '**A', '**B']
     """
     # Validate inputs
@@ -43,16 +43,13 @@ def get_augseqs_of_order(
     if not alphabet:
         raise ValueError("Alphabet must not be empty")
     
-    if wildcard_char in alphabet:
-        raise ValueError(f"Alphabet should not include the wildcard character '{wildcard_char}'")
-    
     # Get all combinations of 'order' positions
-    orbits = get_orbits_of_order(seq_length, order)
+    orbits = _get_orbits_of_order(seq_length, order)
     
-    # Generate augmented sequences for each orbit and concatenate them using chain.from_iterable
-    all_augseqs = list(
+    # Generate features for each orbit and concatenate them using chain.from_iterable
+    all_features = list(
         chain.from_iterable(
-            get_augseqs_in_orbit(
+            _get_features_in_orbit(
                 alphabet, 
                 positions, 
                 seq_length, 
@@ -62,4 +59,4 @@ def get_augseqs_of_order(
         )
     )
     
-    return all_augseqs 
+    return all_features 

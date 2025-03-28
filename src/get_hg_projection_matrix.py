@@ -3,10 +3,10 @@ import pandas as pd
 from scipy import sparse
 from typing import List, Union, Tuple
 
-from src.get_suborbit_augseqs import get_suborbit_augseqs
+from src._get_suborbit_features import _get_suborbit_features
 
 def get_hg_projection_matrix(
-    augseqs: List[str],
+    features: List[str],
     alphabet: List[str],
     bg_type: str = 'uniform',
     wt_seq: str | None = None,
@@ -21,7 +21,7 @@ def get_hg_projection_matrix(
     The matrix projects any parameter vector into a specific gauge space.
     
     Args:
-        augseqs (List[str]): List of augmented sequences
+        features (List[str]): List of features
         alphabet (List[str]): List of characters in the alphabet (not including wildcard)
         bg_type (str): Background model type - either 'uniform' or 'wildtype', or 'custom'
         wt_seq (str): Wildtype sequence; only used if bg_type is 'wildtype'
@@ -41,14 +41,14 @@ def get_hg_projection_matrix(
     nonzero_entries = []
     alpha = len(alphabet)
     alpha_inv = 1.0/alpha
-    L = len(augseqs[0])
+    L = len(features[0])
     
     # Check wt_seq if bg_type is 'wildtype'
     if bg_type == 'wildtype':
         if wt_seq is None:
             raise ValueError("wt_seq must be provided if bg_type is 'wildtype'")
         if len(wt_seq) != L:
-            raise ValueError("wt_seq must be the same length as the augmented sequences")
+            raise ValueError("wt_seq must be the same length as the features")
     else:
         if wt_seq is not None:
             raise ValueError("wt_seq is not used and must be None if bg_type is not 'wildtype'")
@@ -59,22 +59,22 @@ def get_hg_projection_matrix(
         if bg_df is None:
             raise ValueError("bg_df must be provided if bg_type is 'custom'")
         if bg_df.shape != (L, alpha):
-            raise ValueError("bg_df must have the same shape as the augmented sequences")
+            raise ValueError("bg_df must have the same shape as the features")
     else:
         if bg_df is not None:
             raise ValueError("bg_df is not used and must be None if bg_type is not 'custom'")
     
-    # Create a lookup dictionary relating augmented sequences to their indices
-    augseqs_to_index = {seq: idx for idx, seq in enumerate(augseqs)}
+    # Create a lookup dictionary relating features to their indices
+    features_to_index = {seq: idx for idx, seq in enumerate(features)}
     
     # For each column
-    for tp, tp_idx in augseqs_to_index.items():
+    for tp, tp_idx in features_to_index.items():
         # Compute rows with nonzero elements
-        sp_s = get_suborbit_augseqs(augseq=tp, alphabet=alphabet, wildcard_char=wildcard_char)
+        sp_s = _get_suborbit_features(feature=tp, alphabet=alphabet, wildcard_char=wildcard_char)
             
         # Compute nonzero elements
         for sp in sp_s:
-            sp_idx = augseqs_to_index[sp]
+            sp_idx = features_to_index[sp]
             value = 1.0
             for i, (s, t, wt) in enumerate(zip(sp, tp, wt_seq)):
                 if bg_type == 'uniform':
@@ -90,14 +90,14 @@ def get_hg_projection_matrix(
         
     # If not sparse, return DataFrame
     if out_type == 'df':
-        df = pd.DataFrame(index=augseqs, columns=augseqs, data=0.0)
+        df = pd.DataFrame(index=features, columns=features, data=0.0)
         for (sp_idx, tp_idx, value) in nonzero_entries:
             df.iloc[sp_idx, tp_idx] = value
         return df
     # If sparse, return sparse matrix
     elif out_type in ['sparse', 'array']:
         rows, cols, values = zip(*nonzero_entries)
-        N = len(augseqs)
+        N = len(features)
         sparse_matrix = sparse.csr_matrix((values, (rows, cols)), shape=(N, N))
         if out_type == 'sparse':
             return sparse_matrix

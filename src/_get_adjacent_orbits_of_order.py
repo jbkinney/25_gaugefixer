@@ -1,10 +1,10 @@
 import numpy as np
 from typing import List, Tuple
 from itertools import combinations
-from src.get_orbits_of_order import get_orbits_of_order
-from src.sort_orbits import sort_orbits
+from src._get_orbits_of_order import _get_orbits_of_order
+from src._sort_orbits import _sort_orbits
 
-def get_adjacent_orbits_of_order(
+def _get_adjacent_orbits_of_order(
     seq_length: int,
     order: int
 ) -> List[Tuple[int, ...]]:
@@ -24,7 +24,7 @@ def get_adjacent_orbits_of_order(
                               with max-min <= order
     
     Examples:
-        >>> get_adjacent_orbits_of_order(5, 3)
+        >>> _get_adjacent_orbits_of_order(5, 3)
         [(0, 1, 2), (1, 2, 3), (2, 3, 4)]
     """
     # Validate inputs

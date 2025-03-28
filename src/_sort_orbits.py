@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-def sort_orbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
+def _sort_orbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
     """
     Sort orbits first by length, then by their contents.
     
@@ -11,7 +11,7 @@ def sort_orbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
         List[Tuple[int, ...]]: Sorted list of orbits
         
     Examples:
-        >>> sort_orbits([(1,2), (0,), (1,2,3), (0,1)])
+        >>> _sort_orbits([(1,2), (0,), (1,2,3), (0,1)])
         [(0,), (1,), (0,1), (1,2), (1,2,3)]
     """
     return sorted(orbits, key=lambda x: (len(x), x)) 

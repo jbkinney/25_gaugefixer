@@ -2,19 +2,21 @@ import numpy as np
 import pandas as pd
 from typing import List
 from itertools import chain
+from src.sort_features import sort_features
 
-from src.get_augseqs_of_order import get_augseqs_of_order
 
-def get_augseqs_upto_order(
+from src.get_features_of_order import get_features_of_order
+
+def get_features_upto_order(
     seq_length: int,
     max_order: int,
     alphabet: List[str],
     wildcard_char: str = '*'
 ) -> List[str]:
     """
-    Generate all augmented sequences of orders from 0 up to and including max_order.
+    Generate all features of orders from 0 up to and including max_order.
     
-    This function generates all augmented sequences where at most 'max_order' positions
+    This function generates all features where at most 'max_order' positions
     have characters from the alphabet, and all other positions have wildcards.
     
     Args:
@@ -24,10 +26,10 @@ def get_augseqs_upto_order(
         wildcard_char (str): Character to use as the wildcard (default: '*')
         
     Returns:
-        List[str]: List of all augmented sequences of orders 0 to max_order
+        List[str]: List of all features of orders 0 to max_order
     
     Examples:
-        >>> get_augseqs_upto_order(2, 1, ['A', 'B'])
+        >>> get_features_upto_order(2, 1, ['A', 'B'])
         ['**', 'A*', 'B*', '*A', '*B']
     """
     # Validate inputs
@@ -37,12 +39,12 @@ def get_augseqs_upto_order(
     if max_order > seq_length:
         raise ValueError(f"Maximum order ({max_order}) cannot exceed sequence length ({seq_length})")
     
-    # Generate augmented sequences for each order from 0 to max_order and concatenate them
-    all_augseqs = list(
+    # Generate features for each order from 0 to max_order and concatenate them
+    all_features = list(
         chain.from_iterable(
-            get_augseqs_of_order(seq_length, order, alphabet, wildcard_char)
+            get_features_of_order(seq_length, order, alphabet, wildcard_char)
             for order in range(max_order + 1)
         )
     )
     
-    return all_augseqs 
+    return sort_features(all_features)
