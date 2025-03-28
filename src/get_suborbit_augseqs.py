@@ -1,15 +1,12 @@
-from typing import List
-from itertools import chain
-
 from src.get_augseqs_in_orbit import get_augseqs_in_orbit
 from src.get_suborbits import get_suborbits
 from itertools import product
 
 def get_suborbit_augseqs(
     augseq: str,
-    alphabet: List[str],
+    alphabet: list[str],
     wildcard_char: str = '*',
-) -> List[str]:
+) -> list[str]:
     """
     Given an augmented sequence, returns a list of augmented sequences in the corresponding suborbits.
     
@@ -29,12 +26,18 @@ def get_suborbit_augseqs(
         ['****', '*A**', '*C**', '*G**', '*T**']
     """
 
+    assert isinstance(augseq, str), 'augseq must be a str'
+    assert isinstance(alphabet, list), 'alphabet must be a list'
+    assert isinstance(wildcard_char, str), 'wildcard_char must be a str'
+    assert len(augseq)>0, 'augseq must have length > 0'
     assert len(alphabet)>0, 'Alphabet must not be empty'
+    assert len(wildcard_char)==1, 'wildcard_char must be of length 1'
     assert not wildcard_char in alphabet, 'Alphabet should not include the wildcard character'
     
     # Get all possible augmented sequences in all the suborbits
-    augalphabet = [wildcard_char] + alphabet
-    char_lists = [augalphabet if c != wildcard_char else [wildcard_char] for c in augseq]
+    augalphabet = (wildcard_char,) + tuple(alphabet)
+    wildcard_only = (wildcard_char,)
+    char_lists = [augalphabet if c != wildcard_char else wildcard_only for c in augseq]
     sp_s = [''.join(chars) for chars in product(*char_lists)]  
     
     return sp_s 
