@@ -1,62 +1,36 @@
-import numpy as np
-import pandas as pd
-from typing import List
-from itertools import chain
+from itertools import product
+from src.sort_features import sort_features
+from src.petti_feature import PettiFeature
+from typeguard import typechecked
 
-from src._get_orbits_of_order import _get_orbits_of_order
-from src._get_features_in_orbit import _get_features_in_orbit
-
+@typechecked
 def get_features_of_order(
     seq_length: int,
     order: int,
-    alphabet: List[str],
-    wildcard_char: str = '*'
-) -> List[str]:
-    """
-    Generate all features of a given order.
-    
-    This function generates all features where exactly 'order' positions
-    have characters from the alphabet, and all other positions have wildcards.
-    It first finds all possible combinations of 'order' positions, then generates
-    all possible features for each combination.
-    
-    Args:
-        seq_length (int): The total length of the sequence
-        order (int): The number of positions to vary with characters from the alphabet
-        alphabet (List[str]): List of characters in the alphabet (not including wildcard)
-        wildcard_char (str): Character to use as the wildcard (default: '*')
-        
-    Returns:
-        List[str]: List of all features of the given order
-    
-    Examples:
-        >>> get_features_of_order(3, 1, ['A', 'B'])
-        ['A**', 'B**', '*A*', '*B*', '**A', '**B']
-    """
+    alphabet: list[str],
+) -> list[PettiFeature]:
+
     # Validate inputs
-    if order < 0:
-        raise ValueError("Order must be non-negative")
+    assert isinstance(order, int), f"order must be an integer, not {type(order)}"
+    assert isinstance(seq_length, int), f"seq_length must be an integer, not {type(seq_length)}"
+    assert isinstance(alphabet, list), f"alphabet must be a list, not {type(alphabet)}"
+    assert len(alphabet) > 0, "alphabet must not be empty"
+    assert all(isinstance(a, str) for a in alphabet), "alphabet must contain only strings"
+    assert order >= 0, "order must be non-negative"
+    assert seq_length > 0, "seq_length must be positive"
+    assert order <= seq_length, f"order ({order}) must be less than or equal to seq_length ({seq_length})"
     
-    if order > seq_length:
-        raise ValueError(f"Order ({order}) cannot exceed sequence length ({seq_length})")
+    # Get all possible combinations of order
+    from itertools import combinations
+    position_combinations = list(combinations(range(seq_length), order))
     
-    if not alphabet:
-        raise ValueError("Alphabet must not be empty")
+    # Get all possible subsequences of order
+    possible_subsequences = [''.join(p) for p in product(alphabet, repeat=order)]
     
-    # Get all combinations of 'order' positions
-    orbits = _get_orbits_of_order(seq_length, order)
+    # Create all combinations of positions and subsequences
+    features = list(product(position_combinations, possible_subsequences))
+        
+    # Sort features
+    features = sort_features(features)
     
-    # Generate features for each orbit and concatenate them using chain.from_iterable
-    all_features = list(
-        chain.from_iterable(
-            _get_features_in_orbit(
-                alphabet, 
-                positions, 
-                seq_length, 
-                wildcard_char
-            ) 
-            for positions in orbits
-        )
-    )
-    
-    return all_features 
+    return features 

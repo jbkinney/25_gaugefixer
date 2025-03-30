@@ -1,5 +1,5 @@
 import pytest
-from src._sort_orbits import _sort_orbits
+from purgatory._sort_orbits import _sort_orbits
 
 def test_sort_orbits_basic():
     """Test basic sorting functionality."""

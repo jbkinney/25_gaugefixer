@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest
-from src._get_orbits_of_order import _get_orbits_of_order
+from purgatory._get_orbits_of_order import _get_orbits_of_order
 
 def test_get_orbits_of_order_order_1():
     """Test with order 1 from sequence length 3."""

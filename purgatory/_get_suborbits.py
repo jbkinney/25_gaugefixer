@@ -1,6 +1,6 @@
 from typing import List, Tuple
 from itertools import combinations
-from src._sort_orbits import _sort_orbits
+from purgatory._sort_orbits import _sort_orbits
 
 def _get_suborbits(orbits: List[Tuple[int, ...]]) -> List[Tuple[int, ...]]:
     """

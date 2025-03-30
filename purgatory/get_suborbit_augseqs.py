@@ -1,5 +1,5 @@
-from src._get_features_in_orbit import _get_features_in_orbit
-from src._get_suborbits import _get_suborbits
+from purgatory._get_features_in_orbit import _get_features_in_orbit
+from purgatory._get_suborbits import _get_suborbits
 from itertools import product
 
 def get_suborbit_augseqs(

@@ -2,88 +2,47 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from typing import List, Union, Tuple
-
+from src.petti_feature import PettiFeature
 from src._get_suborbit_features import _get_suborbit_features
 
 def get_hg_projection_matrix(
-    features: List[str],
-    alphabet: List[str],
-    bg_type: str = 'uniform',
-    wt_seq: str | None = None,
-    bg_df: pd.DataFrame | None = None,
-    wildcard_char: str = '*',
+    features: list[PettiFeature],
+    L: int,
+    alphabet: list[str],
+    bg_df: pd.DataFrame,
     out_type: str = 'df'
 ) -> Union[pd.DataFrame, sparse.csr_matrix]:
-    """
-    Generate the projection matrix for gauge fixing.
-    
-    This function computes the projection matrix P^λ,p for augmented sequences with '*' wildcards.
-    The matrix projects any parameter vector into a specific gauge space.
-    
-    Args:
-        features (List[str]): List of features
-        alphabet (List[str]): List of characters in the alphabet (not including wildcard)
-        bg_type (str): Background model type - either 'uniform' or 'wildtype', or 'custom'
-        wt_seq (str): Wildtype sequence; only used if bg_type is 'wildtype'
-        bg_df (pd.DataFrame): None or DataFrame of probabilities where:
-            - Rows (indices) are sequence positions (0-indexed)
-            - Columns are valid characters (excluding wildcard)
-            - Values are the probabilities p_l^c
-        wildcard_char (str): Character used as wildcard (default: '*')
-        out_type (str): Output type - either 'df' or 'sparse' or 'array'
-            - 'df': return a pandas DataFrame
-            - 'sparse': return a sparse matrix
-            - 'array': return a numpy array
-        
-    Returns:
-        Union[pd.DataFrame, sparse.csr_matrix, np.ndarray]: The projection matrix in the requested format
-    """
+
     nonzero_entries = []
     alpha = len(alphabet)
-    alpha_inv = 1.0/alpha
-    L = len(features[0])
-    
-    # Check wt_seq if bg_type is 'wildtype'
-    if bg_type == 'wildtype':
-        if wt_seq is None:
-            raise ValueError("wt_seq must be provided if bg_type is 'wildtype'")
-        if len(wt_seq) != L:
-            raise ValueError("wt_seq must be the same length as the features")
-    else:
-        if wt_seq is not None:
-            raise ValueError("wt_seq is not used and must be None if bg_type is not 'wildtype'")
-        wt_seq = '*' * L  # just so can be unpacked in the loop
-
-    # Check pi_df if bg_type is 'custom'
-    if bg_type == 'custom':
-        if bg_df is None:
-            raise ValueError("bg_df must be provided if bg_type is 'custom'")
-        if bg_df.shape != (L, alpha):
-            raise ValueError("bg_df must have the same shape as the features")
-    else:
-        if bg_df is not None:
-            raise ValueError("bg_df is not used and must be None if bg_type is not 'custom'")
     
     # Create a lookup dictionary relating features to their indices
-    features_to_index = {seq: idx for idx, seq in enumerate(features)}
+    features_to_index = {feature: idx for idx, feature in enumerate(features)}
     
     # For each column
-    for tp, tp_idx in features_to_index.items():
+    for tp_feature, tp_idx in features_to_index.items():
+        # Get the orbit and subsequence of tp
+        tp_orbit, tp_subseq = tp_feature
+        
         # Compute rows with nonzero elements
-        sp_s = _get_suborbit_features(feature=tp, alphabet=alphabet, wildcard_char=wildcard_char)
+        sp_features = _get_suborbit_features(feature=tp_feature, alphabet=alphabet)
             
         # Compute nonzero elements
-        for sp in sp_s:
-            sp_idx = features_to_index[sp]
+        for sp_feature in sp_features:
+            sp_idx = features_to_index[sp_feature]
             value = 1.0
-            for i, (s, t, wt) in enumerate(zip(sp, tp, wt_seq)):
-                if bg_type == 'uniform':
-                    pi_t = 1.0 if t == wildcard_char else alpha_inv
-                elif bg_type == 'wildtype':
-                    pi_t = 1.0 if t == wildcard_char else int(t == wt)
-                elif bg_type == 'custom':
-                    pi_t = 1.0 if t == wildcard_char else bg_df.at[i, t]
-                value *= pi_t if s == wildcard_char else float(s==t) - pi_t
+            
+            # Get the orbit and subsequence of sp
+            sp_orbit, sp_subseq = sp_feature
+            
+            # Compute the value of the projection matrix element
+            # TODO: This requires reworking. 
+            for i in range(L):
+                
+                tp_char = tp_subseq[tp_orbit.index(i)] if i in tp_orbit else '*'
+                sp_char = sp_subseq[sp_orbit.index(i)] if i in sp_orbit else '*'
+                pi_t = 1.0 if tp_char == '*' else bg_df.at[i, tp_char]
+                value *= pi_t if i not in sp_orbit else float(sp_char==tp_char) - pi_t
                     
             if value != 0.0:
                 nonzero_entries.append((sp_idx, tp_idx, value))
@@ -102,6 +61,6 @@ def get_hg_projection_matrix(
         if out_type == 'sparse':
             return sparse_matrix
         elif out_type == 'array':
-            return sparse_matrix.todense()
+            return sparse_matrix.toarray()
     else:
         raise ValueError(f"Invalid output type: {out_type}. Must be 'df' or 'sparse'") 

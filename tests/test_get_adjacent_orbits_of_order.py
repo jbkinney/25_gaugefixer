@@ -1,5 +1,5 @@
 import pytest
-from src._get_adjacent_orbits_of_order import _get_adjacent_orbits_of_order
+from purgatory._get_adjacent_orbits_of_order import _get_adjacent_orbits_of_order
 
 def test_get_adjacent_orbits_of_order_order_2():
     """Test with order 2, sequence length 5."""

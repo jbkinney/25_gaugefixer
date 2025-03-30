@@ -1,5 +1,5 @@
 import pytest
-from src._get_features_in_orbit import _get_features_in_orbit
+from purgatory._get_features_in_orbit import _get_features_in_orbit
 
 def test_get_features_in_orbit_single_position():
     """Test with a single position, binary alphabet."""

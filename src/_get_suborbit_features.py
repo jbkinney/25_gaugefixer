@@ -1,12 +1,12 @@
-from src._get_features_in_orbit import _get_features_in_orbit
-from src._get_suborbits import _get_suborbits
 from itertools import product
+from src.petti_feature import PettiFeature
+from typeguard import typechecked
 
+@typechecked
 def _get_suborbit_features(
-    feature: str,
+    feature: PettiFeature,
     alphabet: list[str],
-    wildcard_char: str = '*',
-) -> list[str]:
+) -> list[PettiFeature]:
     """
     Given a feature, returns a list of features in the corresponding suborbits.
     
@@ -25,20 +25,32 @@ def _get_suborbit_features(
         >>> get_suborbit_features('*A**', ['A', 'C', 'G', 'T'])
         ['****', '*A**', '*C**', '*G**', '*T**']
     """
-
-    assert isinstance(feature, str), 'feature must be a str'
-    assert isinstance(alphabet, list), 'alphabet must be a list'
-    assert isinstance(wildcard_char, str), 'wildcard_char must be a str'
-    assert len(feature)>0, 'feature must have length > 0'
-    assert len(alphabet)>0, 'Alphabet must not be empty'
-    assert len(wildcard_char)==1, 'wildcard_char must be of length 1'
-    assert not wildcard_char in alphabet, 'Alphabet should not include the wildcard character'
     
     # Get all possible features in all the suborbits
-    augalphabet = (wildcard_char,) + tuple(alphabet)
-    wildcard_only = (wildcard_char,)
-    char_lists = [augalphabet if c != wildcard_char else wildcard_only for c in feature]
-    sp_s = [''.join(chars) for chars in product(*char_lists)]  
+    orbits, subsequence = feature
     
-    return sp_s 
+    # Get all possible subsets of the orbit positions
+    suborbits = []
+    for r in range(len(orbits) + 1):
+        from itertools import combinations
+        suborbits.extend(combinations(orbits, r))
+        
+    # Initialize list to store all subfeatures
+    out_features = []
+    
+    # For each suborbit, generate all possible subsequences of that length
+    for suborbit in suborbits:
+        # Get length of current suborbit
+        suborbit_len = len(suborbit)
+        
+        # Generate all possible subsequences of that length using alphabet
+        possible_subsequences = [''.join(p) for p in product(alphabet, repeat=suborbit_len)]
+        
+        # Create features by pairing suborbit with each subsequence
+        suborbit_features = [(suborbit, subseq) for subseq in possible_subsequences]
+        
+        # Add these features to our list
+        out_features.extend(suborbit_features)
+    
+    return out_features 
 

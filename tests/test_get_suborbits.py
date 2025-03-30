@@ -1,5 +1,5 @@
 import pytest
-from src._get_suborbits import _get_suborbits
+from purgatory._get_suborbits import _get_suborbits
 
 def test_get_suborbits_single_orbit():
     """Test with a single orbit."""

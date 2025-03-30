@@ -1,5 +1,5 @@
 import pytest
-from src.get_adjacent_features_of_order import get_adjacent_features_of_order
+from purgatory.get_adjacent_features_of_order import get_adjacent_features_of_order
 
 def test_get_adjacent_features_of_order_example():
     """Test the example from the docstring."""

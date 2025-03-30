@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import List, Tuple
 from itertools import combinations
-from src._sort_orbits import _sort_orbits
+from purgatory._sort_orbits import _sort_orbits
 def _get_orbits_of_order(
     seq_length: int,
     order: int

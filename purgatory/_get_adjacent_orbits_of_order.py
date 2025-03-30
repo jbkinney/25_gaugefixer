@@ -1,8 +1,8 @@
 import numpy as np
 from typing import List, Tuple
 from itertools import combinations
-from src._get_orbits_of_order import _get_orbits_of_order
-from src._sort_orbits import _sort_orbits
+from purgatory._get_orbits_of_order import _get_orbits_of_order
+from purgatory._sort_orbits import _sort_orbits
 
 def _get_adjacent_orbits_of_order(
     seq_length: int,
