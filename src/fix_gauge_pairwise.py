@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 import numbers
 
+from src.pairwise_theta_series_to_dict import pairwise_theta_series_to_dict
+from src.pairwise_theta_dict_to_series import pairwise_theta_dict_to_series
+
 def fix_gauge_pairwise_theta_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
 
     # Extract variables from dict
@@ -10,7 +13,6 @@ def fix_gauge_pairwise_theta_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
     theta_0 = theta_dict['theta_0']
     theta_lc = theta_dict['theta_lc']
     theta_lclc = theta_dict['theta_lclc']
-    wildcard = theta_dict['wildcard']
     
     # Useful alias
     _ = np.newaxis
@@ -52,7 +54,19 @@ def fix_gauge_pairwise_theta_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
         'theta_0': fixed_theta_0,
         'theta_lc': fixed_theta_lc,
         'theta_lclc': fixed_theta_lclc,
-        'wildcard': wildcard,
     }
 
     return fixed_theta_dict
+
+
+def fix_gauge_pairwise_theta_series(theta_series: pd.Series, p_lc: np.ndarray, alphabet: str, L: int) -> pd.Series:
+    # Convert series to dict
+    theta_dict = pairwise_theta_series_to_dict(theta_series, alphabet=alphabet, L=L)
+
+    # Fix gauge
+    theta_fixed_dict = fix_gauge_pairwise_theta_dict(theta_dict, p_lc=p_lc)
+
+    # Convert back to series
+    theta_fixed_series = pairwise_theta_dict_to_series(theta_fixed_dict)
+
+    return theta_fixed_series
