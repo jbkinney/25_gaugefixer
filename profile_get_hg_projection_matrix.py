@@ -2,7 +2,7 @@
 import cProfile
 import pstats
 from src.get_hg_projection_matrix import get_hg_projection_matrix
-from purgatory.seq_embedder import SeqEmbedder
+from src.seq_embedder import SeqEmbedder
 from src import get_alphabet, get_pairwise_model_features
 
 # Import other required functions

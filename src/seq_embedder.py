@@ -12,7 +12,7 @@ class SeqEmbedder:
         features (list): List of features containing wildcards.
         patterns (list): List of compiled regex patterns derived from features.
     """
-    def __init__(self, features, wildcard_char='*'):
+    def __init__(self, features, L):
         """
         Initialize the SeqEmbedder with features.
         
@@ -20,8 +20,9 @@ class SeqEmbedder:
             features (list): List of features containing wildcards.
             wildcard_char (str, optional): Character used as wildcard. Defaults to '*'.
         """
+        self.L = L
         self.features = features
-        self.patterns = [re.compile(sp.replace(wildcard_char,'.')) for sp in features]
+        self.patterns = [re.compile(''.join([subseq[orbit.index(i)] if i in orbit else '.' for i in range(L)])) for orbit, subseq in features]
         
     def embed(self, seq):
         """
