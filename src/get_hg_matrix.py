@@ -4,14 +4,16 @@ from scipy import sparse
 from typing import List, Union, Tuple
 from src.petti_feature import PettiFeature
 from src._get_suborbit_features import _get_suborbit_features
+from typeguard import typechecked
 
-def get_hg_projection_matrix(
+@typechecked
+def get_hg_matrix(
     features: list[PettiFeature],
     L: int,
     alphabet: list[str],
     bg_df: pd.DataFrame,
     out_type: str = 'df'
-) -> Union[pd.DataFrame, sparse.csr_matrix]:
+) -> Union[pd.DataFrame, sparse.csr_matrix, np.ndarray]:
 
     nonzero_entries = []
     alpha = len(alphabet)

@@ -1,11 +1,8 @@
 import numpy as np
-import pandas as pd
-import numbers
+from typeguard import typechecked
 
-from src.pairwise_theta_series_to_dict import pairwise_theta_series_to_dict
-from src.pairwise_theta_dict_to_series import pairwise_theta_dict_to_series
-
-def fix_gauge_pairwise_theta_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
+@typechecked
+def fix_hg_pairwise_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
 
     # Extract variables from dict
     L = theta_dict['L']
@@ -59,14 +56,4 @@ def fix_gauge_pairwise_theta_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
     return fixed_theta_dict
 
 
-def fix_gauge_pairwise_theta_series(theta_series: pd.Series, p_lc: np.ndarray, alphabet: str, L: int) -> pd.Series:
-    # Convert series to dict
-    theta_dict = pairwise_theta_series_to_dict(theta_series, alphabet=alphabet, L=L)
 
-    # Fix gauge
-    theta_fixed_dict = fix_gauge_pairwise_theta_dict(theta_dict, p_lc=p_lc)
-
-    # Convert back to series
-    theta_fixed_series = pairwise_theta_dict_to_series(theta_fixed_dict)
-
-    return theta_fixed_series

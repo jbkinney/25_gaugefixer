@@ -3,16 +3,16 @@ import pandas as pd
 import numpy as np
 from scipy import sparse
 
-from src.get_hg_projection_matrix import get_hg_projection_matrix
+from src.get_hg_matrix import get_hg_matrix
 from src.get_features_upto_order import get_features_upto_order
 def test_get_hg_projection_matrix_df():
     """Test DataFrame output format."""
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, L=3, max_order=1)
     
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
@@ -33,9 +33,9 @@ def test_get_hg_projection_matrix_sparse():
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, L=3, max_order=1)
     
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
@@ -53,10 +53,10 @@ def test_get_hg_projection_matrix_invalid_output():
     L = 3
     alphabet = ['A', 'C', 'G', 'T']
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
-    features = get_features_upto_order(alphabet=alphabet, seq_length=3, max_order=1)
+    features = get_features_upto_order(alphabet=alphabet, L=3, max_order=1)
     
     with pytest.raises(ValueError, match="Invalid output type"):
-        get_hg_projection_matrix(
+        get_hg_matrix(
             features=features, 
             alphabet=alphabet, 
             bg_type='custom', 
@@ -71,7 +71,7 @@ def test_get_hg_projection_matrix_single_position():
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
     features = ['A', 'B', '*']
     
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
@@ -93,7 +93,7 @@ def test_get_hg_projection_matrix_custom_wildcard():
     pi_df = pd.DataFrame(index=range(L), columns=alphabet, data=1/len(alphabet))
     features = ['??','A?', 'B?', '?A', '?B']
     
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='custom', 
@@ -114,7 +114,7 @@ def test_get_hg_projection_matrix_uniform_bg():
     features = ['A*', 'C*', '*A', '*C', '**']
     
     # Use uniform background type
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='uniform',
@@ -143,7 +143,7 @@ def test_get_hg_projection_matrix_wildtype_bg():
     wt_seq = 'AC'  # Define wildtype sequence
     
     # Use wildtype background type
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='wildtype',
@@ -183,7 +183,7 @@ def test_get_hg_projection_matrix_custom_bg():
     bg_df.loc[1, 'C'] = 0.6
     
     # Use custom background type
-    P = get_hg_projection_matrix(
+    P = get_hg_matrix(
         features=features, 
         alphabet=alphabet, 
         bg_type='custom',
@@ -217,7 +217,7 @@ def test_invalid_bg_type_combinations():
     
     # Test: wildtype bg_type without wt_seq
     with pytest.raises(ValueError, match="wt_seq must be provided if bg_type is 'wildtype'"):
-        get_hg_projection_matrix(
+        get_hg_matrix(
             features=features, 
             alphabet=alphabet, 
             bg_type='wildtype',
@@ -226,7 +226,7 @@ def test_invalid_bg_type_combinations():
     
     # Test: custom bg_type without bg_df
     with pytest.raises(ValueError, match="bg_df must be provided if bg_type is 'custom'"):
-        get_hg_projection_matrix(
+        get_hg_matrix(
             features=features, 
             alphabet=alphabet, 
             bg_type='custom',
@@ -235,7 +235,7 @@ def test_invalid_bg_type_combinations():
     
     # Test: uniform bg_type with wt_seq
     with pytest.raises(ValueError, match="wt_seq is not used and must be None if bg_type is not 'wildtype'"):
-        get_hg_projection_matrix(
+        get_hg_matrix(
             features=features, 
             alphabet=alphabet, 
             bg_type='uniform',
@@ -245,7 +245,7 @@ def test_invalid_bg_type_combinations():
     
     # Test: uniform bg_type with bg_df
     with pytest.raises(ValueError, match="bg_df is not used and must be None if bg_type is not 'custom'"):
-        get_hg_projection_matrix(
+        get_hg_matrix(
             features=features, 
             alphabet=alphabet, 
             bg_type='uniform',

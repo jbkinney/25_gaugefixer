@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap, TwoSlopeNorm
-import matplotlib.patches as mpatches
+from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
+from typeguard import typechecked
 
-def visualize_matrix(matrix, zero_threshold=1e-10, show_grid=True, figsize=(12, 8)):
+@typechecked
+def visualize_matrix(matrix: np.ndarray, zero_threshold: float = 1e-10, show_grid: bool = True, figsize: tuple[int, int] = (12, 8)):
     """
     Visualize a matrix with a continuous colormap and colorbar.
     Zero values are colored white, with diverging colors for positive and negative values.

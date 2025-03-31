@@ -22,7 +22,7 @@ def get_adjacent_features_upto_order(
     # If order = 1, return additive features
     if order >= 1:
         augalphabet = ['*'] + alphabet
-        subfeatures = get_features_of_order(seq_length=order, 
+        subfeatures = get_features_of_order(L=order, 
                                             order=order, 
                                             alphabet=augalphabet)
         

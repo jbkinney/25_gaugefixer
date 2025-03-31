@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+from typeguard import typechecked
 
-def pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[str], L:int):
+@typechecked
+def switch_pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[str], L:int) -> dict:
     features = theta_series.index
     alpha = len(alphabet)
     
@@ -39,34 +41,3 @@ def pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[str], L:
                 
     # Store as dict
     return dict(theta_0=theta_0, theta_lc=theta_lc, theta_lclc=theta_lclc, L=L, alpha=alpha, alphabet=alphabet)
-
-
-# def pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[str], L:int):
-#     features = theta_series.index
-#     alpha = len(alphabet)
-
-#     # Goal: transform features to theat_0, theta_lc, theta_lclc. 
-#     theta_0 = np.float64(0)
-#     theta_lc = np.zeros((L,alpha), dtype=np.float64)
-#     theta_lclc = np.zeros((L,alpha,L,alpha),  dtype=np.float64)
-
-#     feature = ((), '')  
-#     assert feature in features
-#     theta_0 = theta_series[feature]
-
-#     for i in range(L):
-#         for j, c in enumerate(alphabet):
-#             feature = ((i,), c)
-#             assert feature in features
-#             theta_lc[i,j] = theta_series[feature]
-    
-#     for i1 in range(L):
-#         for i2 in range(i1+1,L):
-#             for j1, c1 in enumerate(alphabet):
-#                 for j2, c2 in enumerate(alphabet):
-#                     feature = ((i1,i2), c1+c2)
-#                     assert feature in features
-#                     theta_lclc[i1,j1,i2,j2] = theta_series[feature]
-                
-#     # Store as dict
-#     return dict(theta_0=theta_0, theta_lc=theta_lc, theta_lclc=theta_lclc, L=L, alpha=alpha, alphabet=alphabet)

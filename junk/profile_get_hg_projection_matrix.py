@@ -1,9 +1,9 @@
 # benchmark.py
 import cProfile
 import pstats
-from src.get_hg_projection_matrix import get_hg_projection_matrix
+from src.get_hg_matrix import get_hg_matrix
 from src.seq_embedder import SeqEmbedder
-from src import get_alphabet, get_pairwise_model_features
+from src import get_alphabet, get_pairwise_features
 
 # Import other required functions
 
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     num_to_show = 10
     wt_seq = 'QYKLI LNGKT LKGET TTGAV DAATA EKVFK QYAND NGVDG EWTYD DATKT FTVTE'.replace(' ', '')[:L]
     assert len(wt_seq) == L, f'{len(wt_seq)=} != {L=}'
-    features = get_pairwise_model_features(L=L, alphabet=alphabet)
+    features = get_pairwise_features(L=L, alphabet=alphabet)
     N = len(features)
     print(f'{L=}\n{N=:,}\n{alphabet=}')
     print(f'all:\n{features[:num_to_show]=}\n{features[-num_to_show:]=}\n')
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     for bg_type, kwargs in bg_type_kwargs.items():
         print(f"\nProfiling with {bg_type} background:")
         with cProfile.Profile() as profiler:
-            P_df = get_hg_projection_matrix(**kwargs)
+            P_df = get_hg_matrix(**kwargs)
             
         stats = pstats.Stats(profiler)
         stats.strip_dirs().sort_stats('cumulative').print_stats(10)

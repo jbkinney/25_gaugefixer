@@ -35,7 +35,7 @@ def get_adjacent_features_of_order(
     if order == 0:
         return [wildcard_char*seq_length]
     
-    subfeatures = get_features_of_order(seq_length=order, order=order, alphabet=alphabet)
+    subfeatures = get_features_of_order(L=order, order=order, alphabet=alphabet)
     features = []
     for i in range(seq_length-order+1):
         for subfeature in subfeatures:

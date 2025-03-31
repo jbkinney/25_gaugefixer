@@ -1,5 +1,4 @@
 from src.get_features_upto_order import get_features_upto_order
-from purgatory.get_adjacent_features_upto_order import get_adjacent_features_upto_order
 
 import numpy as np
 _alphabet_dict = {
@@ -9,10 +8,10 @@ _alphabet_dict = {
                 'G', 'H', 'I', 'K', 'L',
                 'M', 'N', 'P', 'Q', 'R',
                 'S', 'T', 'V', 'W', 'Y'],
-    'protein~': ['A', 'C', 'D', 'E', 'F',
+    'protein*': ['A', 'C', 'D', 'E', 'F',
                  'G', 'H', 'I', 'K', 'L',
                  'M', 'N', 'P', 'Q', 'R',
-                 'S', 'T', 'V', 'W', 'Y', '~']
+                 'S', 'T', 'V', 'W', 'Y', '*']
 }
 
 def get_alphabet(alphabet_type: str) -> list[str]:
@@ -28,31 +27,31 @@ def get_alphabet(alphabet_type: str) -> list[str]:
         raise ValueError(f"Invalid alphabet type: {alphabet_type}")
     return _alphabet_dict[alphabet_type]
 
-def get_additive_model_features(
+def get_additive_features(
     L: int,
     alphabet: list[str]):
-    return get_features_upto_order(seq_length=L, 
+    return get_features_upto_order(L=L, 
                                    max_order=1, 
                                    alphabet=alphabet)
     
-def get_pairwise_model_features(
+def get_pairwise_features(
     L: int,
     alphabet: list[str]):
-    return get_features_upto_order(seq_length=L, 
+    return get_features_upto_order(L=L, 
                                    max_order=2, 
                                    alphabet=alphabet)
     
-def get_all_order_model_features(
+def get_all_order_features(
     L: int,
     alphabet: list[str]):
-    return get_features_upto_order(seq_length=L, 
+    return get_features_upto_order(L=L, 
                                    max_order=L, 
                                    alphabet=alphabet)
 
-def get_K_order_model_features(
+def get_K_order_features(
     L: int,
     K: int,
     alphabet: list[str]):
-    return get_features_upto_order(seq_length=L, 
+    return get_features_upto_order(L=L, 
                                    max_order=K, 
                                    alphabet=alphabet)
