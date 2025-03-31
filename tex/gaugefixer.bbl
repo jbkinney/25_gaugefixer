@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{ref1}
+A.~Author1 and B.~Author2.
+\newblock Gauge fixing in sequence-function relationships: Paper 1.
+\newblock {\em Journal of Computational Biology}, 1(1):1--10, 2023.
+
+\bibitem{ref2}
+B.~Author2 and A.~Author1.
+\newblock Gauge fixing in sequence-function relationships: Paper 2.
+\newblock {\em Bioinformatics}, 2(2):100--110, 2023.
+
+\bibitem{mave-nn}
+Ammar Tareen and Justin~B. Kinney.
+\newblock Mave-nn: learning genotype-phenotype maps from multiplex assays of variant effect.
+\newblock {\em Nature Methods}, 18(11):1278--1286, 2021.
+
+\end{thebibliography}

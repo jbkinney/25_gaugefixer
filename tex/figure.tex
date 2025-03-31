@@ -1,0 +1,22 @@
+% This is a figure template that can be included in the main document
+% You can replace this with actual figure code or use \includegraphics
+
+\begin{figure}[t]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Feature} & \textbf{Parameter Value} \\
+        \midrule
+        ([],`') & 1.0 \\
+        ([1],`A') & 0.5 \\
+        ([1],`C') & -0.3 \\
+        ([1],`G') & 0.2 \\
+        ([1],`T') & -0.4 \\
+        ([2],`A') & 0.1 \\
+        ([1,2],`AC') & 0.7 \\
+        ([1,2],`GT') & -0.5 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Example of how features are represented in GaugeFixer. Each feature is represented by a tuple containing a list of positions and a subsequence, and each parameter value corresponds to the weight for that feature. The first row represents the constant (order-0) term.}
+    \label{fig:features}
+\end{figure}
