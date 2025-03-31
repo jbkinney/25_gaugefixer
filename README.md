@@ -28,7 +28,28 @@ from src.get_features_upto_order import get_features_upto_order
 features = get_features_upto_order(L=3, max_order=2, alphabet=['A', 'B'])
 ```
 
-See `docs/features.md` for more details on feature generation.
+### Sequence Embedding
+
+The package includes functionality to embed sequences into feature vectors:
+
+```python
+from src.seq_embedder import SeqEmbedder
+from src.get_features_upto_order import get_features_upto_order
+
+# Generate features
+features = get_features_upto_order(L=3, max_order=2, alphabet=['A', 'C', 'G', 'T'])
+
+# Create embedder
+embedder = SeqEmbedder(features, L=3)
+
+# For better performance with large feature sets, you can disable validation
+# embedder = SeqEmbedder(features, L=3, check_features=False)
+
+# Embed a sequence into a binary feature vector
+embedding = embedder.embed('ACG')
+```
+
+See `docs/features.md` for more details on feature generation and sequence embedding.
 
 ## Testing
 
@@ -42,11 +63,11 @@ conda activate working
 pytest
 
 # Run specific test file
-pytest tests/test_get_features_upto_order.py
+pytest tests/test_seq_embedder.py
 ```
 
 ## Documentation
 
 Documentation is available in the `docs/` directory:
 
-- `docs/features.md`: Documentation on feature generation functions
+- `docs/features.md`: Documentation on feature generation and sequence embedding functions

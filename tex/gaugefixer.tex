@@ -1,0 +1,43 @@
+GaugeFixer: Removing uncontstrained degrees of freedom in sequence-function relationships
+[authors]
+
+Sequence-function relationships describe the mapping between biological sequences (DNA, RNA, protein, etc.) and biological function.
+Linear models sequence-function relationships are defined by a set of weights that multiply corresponding sequence features. 
+For example, pairwise models use sequence features that describe zeroth-order, first-order, and second-order interactions between characters at different positions. 
+Many commonly used linear models of sequence-function relationships are over-parameterized, i.e., they have more parameters than they technically need. 
+Thus, there are directions in parameter space that do not affect model predictions. These directions are called gauge freedoms. 
+For example, a pairwise model for sequences of length $L$ built from $\alpha$ characters will have XXX gauge freedoms. 
+Gauge freedoms present a tehnical obstacle for researchers who want to interpret the quantitative parameters in their models. 
+This is because, as long as gauge freedoms are present, each individual parameter can potentially take on an infinite range of values. 
+Interpreting the parameters of models that have gauge freedoms thus requires removing gauge freedoms by introducing additional constraints on parameter values. 
+The introduction of such constraints is called ``fixing the gauge''.
+
+Two recent works of ours investigated the problem of gauge fixing for a variety of generalized one-hot models [refs].
+In particular, we introduced a family of gauge-fixing strategies called the $\lambda-\pi$ gauges. These gauges unify the most commonly used gauges in the literature, and provide explicit prescriptions for fixing the gauge of a wide variety of models. However, computational methods that efficiently implement this family of gauges have yet to be described. In particular. While some methods inspired by that work have been incorporated into MAVE-NN [cite], and the code provided with [cite] does implement some gauge fixing strateigies, there is still a need for a lightweight and fast software pacakge that can efficiently implement the full range of $\lambda-pi$ gauges. This is particularly true since the parameter vectors of these models can readily become very large. 
+
+The $\lambda-pi$ gauges include many commonly used gauges, such as the ``zero-sum'' gauge, the ``wild-type'' gauge, and others. 
+
+Here we introduce GaugeFixer, a lightweight Python package that implementes the $\lambda-\pi$ family gauges described in [Anna's first paper]. The tools in this package allow a user to take any generalized one-hot model and fix the unconstrained degrees of freedom therein. Special methods are provided for certain commonly used models, as well as certain commonly used gauges (such as the ``hierarchical'' gauges, which include both the zero-sum gauge and the wild-type gauge.)
+
+% Describe generalized one-hot models
+\section{generalized one-hot models}
+Linear models are based on sequence embeddings. The most commonly used embedding is the one-hot embedding. Here, each feature is an indicator function for the presence of a specific character at a specific position. Generalized one-hot models are linear models whose embedding is created from direct sums of Kronecker products of one-hot embeddings. Generalized one-hot models include additive models (with 0'th and 1st order feautres), pairwise models (with 0'th, 1st, and 2nd order features), neighbor models (with 0th order features, 1st order features, and 2nd order features only between neighboring positions), and higher-order models including all-order interaction models. 
+
+In GaugeFixer, each feature is represented by a subset of positions and a corresponding subsequence that must occur at those positions. A parameter vector is represented by pandas series object in which these features are the indices and the corresponding parameters are the values. An example is shown in Fig. XX. 
+
+% Describe the lambda-pi gauges
+\section{$\lambda-\pi$ gauges}
+The general $\lambda-\pi$ gauges are defined only for all-order interaction models. However, a subset of these gauges called the ``hierarchical gauges'', corresponding to $\lambda = \infty$, can be applied to a much larger class of models (all submodels of the all-order interaction model) called the ``hierarchical models''. Hierarchical models include additive models, pairwise models, nearest-neighbor models, K-order models, K-adjacent models, as well as the all-order model itself. 
+
+To project model parameters into a $\lambda-\pi$ gauge, one calles the method `fix'. The $\lambda$ parameter controls how much of the variance in model features is present in lower-order features vs. higher-order features. The $\pi$ parameter defines a factorizable probability distribution over sequence space. 
+
+$\lambda = 0$ corresponds to the ``trivial gauge''. In this gauge, only parameters of order $L$ are nonzero; the parameters of the sequence-function relationship therefore are essentially a catalogue of sequence activities. 
+
+$\lambda = 1$, $\pi = uniform$ corresponds to the ``euclidean gauge''. This is the gauge into which parameters fall if they are inferred using standard L2 regression. 
+
+$\lambda = \alpha$, $\pi = uniform$ corresponds to the ``equitable gauge'' [describe this]
+
+$\lambda = \infty$ correpsonds to the ``hierarchial gauges''. Setting $\pi = uniform$ here yields the zero-sum gauge, in which model features summed over all characters at any one of the feature positions is zero. Setting $\pi$ to be an indicator function on a specific sequence yields the ``wild-type'' gauge. Here, parameters that correspond to features of order 1 and higher that appear in the wild-type sequence are zero, and the rest of the parameters describe mutations away from the wild-type sequence. 
+
+
+
