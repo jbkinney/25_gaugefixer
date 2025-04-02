@@ -1,4 +1,5 @@
-from src.features.get_features_upto_order import get_features_upto_order
+# Main package init file 
+from gaugefixer.features.get_features_upto_order import get_features_upto_order
 
 import numpy as np
 _alphabet_dict = {
@@ -25,4 +26,4 @@ def get_alphabet(alphabet_type: str) -> list[str]:
     """
     if alphabet_type not in _alphabet_dict:
         raise ValueError(f"Invalid alphabet type: {alphabet_type}")
-    return _alphabet_dict[alphabet_type]
+    return _alphabet_dict[alphabet_type] 
