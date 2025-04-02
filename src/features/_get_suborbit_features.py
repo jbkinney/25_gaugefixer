@@ -1,5 +1,5 @@
 from itertools import product
-from src.petti_feature import PettiFeature
+from src.features.petti_feature import PettiFeature
 from typeguard import typechecked
 
 @typechecked

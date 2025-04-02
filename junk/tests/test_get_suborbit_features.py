@@ -1,5 +1,5 @@
 import pytest
-from src._get_suborbit_features import _get_suborbit_features
+from src.features._get_suborbit_features import _get_suborbit_features
 
 def test_get_suborbit_features_single_position():
     """Test with a single position, DNA alphabet."""

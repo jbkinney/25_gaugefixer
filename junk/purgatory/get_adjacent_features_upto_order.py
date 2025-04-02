@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Tuple
-from src.get_features_of_order import get_features_of_order
-from src.sort_features import sort_features
+from src.features.get_features_of_order import get_features_of_order
+from src.features.sort_features import sort_features
 
 def get_adjacent_features_upto_order(
     seq_length: int,

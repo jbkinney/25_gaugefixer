@@ -3,8 +3,8 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pytest
-from src.get_features_upto_order import get_features_upto_order
-from src.get_features_of_order import get_features_of_order
+from src.features.get_features_upto_order import get_features_upto_order
+from src.features.get_features_of_order import get_features_of_order
 
 def test_get_features_upto_order_order_1_len_2():
     """Test up to order 1, sequence length 2, binary alphabet."""

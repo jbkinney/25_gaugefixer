@@ -2,7 +2,7 @@ import numpy as np
 from typeguard import typechecked
 
 @typechecked
-def fix_hg_additive_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
+def _fix_additive_dict(theta_dict: dict, p_lc: np.ndarray) -> dict:
 
     # Extract variables from dict
     L = theta_dict['L']

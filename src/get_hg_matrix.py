@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 from typing import List, Union, Tuple
-from src.petti_feature import PettiFeature
-from src._get_suborbit_features import _get_suborbit_features
+from src.features.petti_feature import PettiFeature
+from src.features._get_suborbit_features import _get_suborbit_features
 from typeguard import typechecked
 
 @typechecked

@@ -1,7 +1,7 @@
 from itertools import chain
-from src.get_features_of_order import get_features_of_order
-from src.sort_features import sort_features
-from src.petti_feature import PettiFeature
+from src.features.get_features_of_order import get_features_of_order
+from src.features.sort_features import sort_features
+from src.features.petti_feature import PettiFeature
 from typeguard import typechecked
 
 @typechecked

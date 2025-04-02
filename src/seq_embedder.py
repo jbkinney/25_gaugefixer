@@ -1,7 +1,7 @@
 import re
 import numpy as np
 from typeguard import typechecked
-from src.petti_feature import PettiFeature
+from src.features.petti_feature import PettiFeature
 
 class SeqEmbedder:
     """

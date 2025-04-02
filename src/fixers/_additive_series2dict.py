@@ -3,7 +3,7 @@ import pandas as pd
 from typeguard import typechecked
 
 @typechecked
-def switch_additive_series2dict(theta_series:pd.Series, alphabet:list[str], L:int) -> dict:
+def _additive_series2dict(theta_series:pd.Series, alphabet:list[str], L:int) -> dict:
     features = theta_series.index
     alpha = len(alphabet)
     
@@ -20,15 +20,15 @@ def switch_additive_series2dict(theta_series:pd.Series, alphabet:list[str], L:in
     # Set 0th order parameter
     feature = ((), '')  
     assert feature in features
-    theta_series[feature] = np.float64(theta_0)
+    ix = features_to_ix_dict[feature]
+    theta_0 = theta_series.values[ix]
 
     # Set 1st order parameters
     for i in range(L):
-        feature0 = ((i,), c0)
-        assert feature0 in features
-        ix = features_to_ix_dict[feature0]
+        feature = ((i,), c0)
+        assert feature in features
+        ix = features_to_ix_dict[feature]
         theta_lc[i,:] = theta_series.values[ix:ix+alpha]
-            
                 
     # Store as dict
     return dict(theta_0=theta_0, theta_lc=theta_lc, L=L, alpha=alpha, alphabet=alphabet)

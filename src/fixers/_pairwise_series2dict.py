@@ -3,7 +3,7 @@ import pandas as pd
 from typeguard import typechecked
 
 @typechecked
-def switch_pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[str], L:int) -> dict:
+def _pairwise_series2dict(theta_series:pd.Series, alphabet:list[str], L:int) -> dict:
     features = theta_series.index
     alpha = len(alphabet)
     
@@ -21,13 +21,14 @@ def switch_pairwise_theta_series_to_dict(theta_series:pd.Series, alphabet:list[s
     # Set 0th order parameter
     feature = ((), '')  
     assert feature in features
-    theta_series[feature] = np.float64(theta_0)
+    ix = features_to_ix_dict[feature]
+    theta_0 = theta_series.values[ix]
 
     # Set 1st order parameters
     for i in range(L):
-        feature0 = ((i,), c0)
-        assert feature0 in features
-        ix = features_to_ix_dict[feature0]
+        feature = ((i,), c0)
+        assert feature in features
+        ix = features_to_ix_dict[feature]
         theta_lc[i,:] = theta_series.values[ix:ix+alpha]
 
     # Set 2nd order parameters

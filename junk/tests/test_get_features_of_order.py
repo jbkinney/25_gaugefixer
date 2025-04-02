@@ -1,5 +1,5 @@
 import pytest
-from src.get_features_of_order import get_features_of_order
+from src.features.get_features_of_order import get_features_of_order
 
 def test_get_features_of_order_order_1_len_2():
     """Test order 1, sequence length 2, binary alphabet."""

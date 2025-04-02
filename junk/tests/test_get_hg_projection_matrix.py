@@ -4,7 +4,7 @@ import numpy as np
 from scipy import sparse
 
 from src.get_hg_matrix import get_hg_matrix
-from src.get_features_upto_order import get_features_upto_order
+from src.features.get_features_upto_order import get_features_upto_order
 def test_get_hg_projection_matrix_df():
     """Test DataFrame output format."""
     L = 3

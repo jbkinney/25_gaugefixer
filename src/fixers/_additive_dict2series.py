@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-from src import get_additive_features
+from src.features import get_additive_features
 from typeguard import typechecked
 
 @typechecked
-def switch_additive_dict2series(theta_dict: dict) -> pd.Series:
+def _additive_dict2series(theta_dict: dict) -> pd.Series:
     L = theta_dict['L']
     alphabet = theta_dict['alphabet']
     alpha = len(alphabet)

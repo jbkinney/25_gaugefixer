@@ -1,5 +1,5 @@
 from typeguard import typechecked
-from src.petti_feature import PettiFeature
+from src.features.petti_feature import PettiFeature
 
 @typechecked
 def sort_features(features: list[PettiFeature]) -> list[PettiFeature]:

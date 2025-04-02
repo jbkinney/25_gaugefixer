@@ -1,7 +1,7 @@
 import numpy as np
 from typing import List, Tuple
 from itertools import chain
-from src.get_features_of_order import get_features_of_order
+from src.features.get_features_of_order import get_features_of_order
 def get_adjacent_features_of_order(
     seq_length: int,
     order: int,

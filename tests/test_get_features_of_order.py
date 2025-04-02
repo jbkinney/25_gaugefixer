@@ -1,6 +1,6 @@
 import pytest
-from src.get_features_of_order import get_features_of_order
-from src.petti_feature import PettiFeature
+from src.features.get_features_of_order import get_features_of_order
+from src.features.petti_feature import PettiFeature
 
 def test_get_features_of_order_basic():
     """Test basic functionality with simple inputs."""
