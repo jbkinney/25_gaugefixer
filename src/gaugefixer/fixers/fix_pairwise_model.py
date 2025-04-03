@@ -83,11 +83,11 @@ def fix_pairwise_model(
         case (np.ndarray(), list()): 
             assert set(features)==set(sorted_features)
             assert len(theta)==len(features)
-            theta_series = pd.DataFrame(data=theta, index=features)
+            theta_series = pd.Series(data=theta, index=features)
             
         case (np.ndarray(), None):
             assert len(theta)==len(sorted_features)
-            theta_series = pd.DataFrame(data=theta, index=sorted_features)
+            theta_series = pd.Series(data=theta, index=sorted_features)
         
         case _:
             assert False, f'Invalid combination of inputs {theta=}, {features=}'

@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 import re
-from src.seq_embedder import SeqEmbedder
-from src.features.get_features_upto_order import get_features_upto_order
+from gaugefixer.sequence.seq_embedder import SeqEmbedder
+from gaugefixer.features.get_features_upto_order import get_features_upto_order
 from typeguard import TypeCheckError
 
 def test_seq_embedder_init():

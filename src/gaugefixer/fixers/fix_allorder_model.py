@@ -9,6 +9,7 @@ from typeguard import typechecked
 # Local imports
 from gaugefixer.fixers._kron_matvec import _kron_matvec
 from gaugefixer.features.petti_feature import PettiFeature
+from gaugefixer.features import get_allorder_features
 
 @typechecked
 def fix_allorder_model(
@@ -103,11 +104,12 @@ def fix_allorder_model(
         case (np.ndarray(), list()): 
             assert set(features)==set(features_in_kron_order)
             assert len(theta)==len(features)
-            theta_series = pd.DataFrame(data=theta, index=features)
+            theta_series = pd.Series(data=theta, index=features)
             
         case (np.ndarray(), None):
             assert len(theta)==len(features_in_kron_order)
-            theta_series = pd.DataFrame(data=theta, index=features_in_kron_order)
+            features = get_allorder_features(L, alphabet) # Assume by default 
+            theta_series = pd.Series(data=theta, index=features)
         
         case _:
             assert False, f'Invalid combination of inputs {theta=}, {features=}'

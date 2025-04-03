@@ -1,7 +1,7 @@
 import pytest
-from src.features.get_features_upto_order import get_features_upto_order
-from src.features.get_features_of_order import get_features_of_order
-from src.features.petti_feature import PettiFeature
+from gaugefixer.features.get_features_upto_order import get_features_upto_order
+from gaugefixer.features.get_features_of_order import get_features_of_order
+from gaugefixer.features.petti_feature import PettiFeature
 
 def test_get_features_upto_order_basic():
     """Test basic functionality with simple inputs."""
@@ -44,7 +44,7 @@ def test_get_features_upto_order_composition():
     order_2 = get_features_of_order(L=L, order=2, alphabet=alphabet)
     
     # Combine and sort as in the function
-    from src.features.sort_features import sort_features
+    from gaugefixer.features.sort_features import sort_features
     combined = sort_features(order_0 + order_1 + order_2)
     
     assert features_upto_2 == combined

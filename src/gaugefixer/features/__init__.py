@@ -4,7 +4,9 @@ from .get_features_of_order import get_features_of_order
 from .get_features_upto_order import get_features_upto_order
 from .sort_features import sort_features
 from .petti_feature import PettiFeature
+from typeguard import typechecked
 
+@typechecked
 def get_additive_features(
     L: int,
     alphabet: list[str]):
@@ -12,6 +14,7 @@ def get_additive_features(
                                    max_order=1, 
                                    alphabet=alphabet)
     
+@typechecked
 def get_pairwise_features(
     L: int,
     alphabet: list[str]):
@@ -19,6 +22,7 @@ def get_pairwise_features(
                                    max_order=2, 
                                    alphabet=alphabet)
     
+@typechecked
 def get_allorder_features(
     L: int,
     alphabet: list[str]):
@@ -26,6 +30,7 @@ def get_allorder_features(
                                    max_order=L, 
                                    alphabet=alphabet)
 
+@typechecked
 def get_Korder_features(
     L: int,
     K: int,

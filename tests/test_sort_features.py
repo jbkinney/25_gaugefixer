@@ -1,6 +1,6 @@
 import pytest
-from src.features.sort_features import sort_features
-from src.features.petti_feature import PettiFeature
+from gaugefixer.features.sort_features import sort_features
+from gaugefixer.features.petti_feature import PettiFeature
 
 class TestSortFeatures:
     def test_empty_list(self):
