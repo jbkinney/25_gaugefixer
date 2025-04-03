@@ -4,7 +4,7 @@ from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
 from typeguard import typechecked
 
 @typechecked
-def visualize_matrix(matrix: np.ndarray, zero_threshold: float = 1e-10, show_grid: bool = True, figsize: tuple[int, int] = (12, 8)):
+def visualize_matrix(matrix: np.ndarray, zero_threshold: float = 1e-10, show_grid: bool = False, figsize: tuple[int, int] = (12, 8)):
     """
     Visualize a matrix with a continuous colormap and colorbar.
     Zero values are colored white, with diverging colors for positive and negative values.
@@ -13,8 +13,8 @@ def visualize_matrix(matrix: np.ndarray, zero_threshold: float = 1e-10, show_gri
     Args:
         matrix: numpy array of values to visualize
         zero_threshold: values with absolute value below this threshold are treated as zero
-        show_grid: whether to show the grid lines without tick marks (default: True)
-        figsize: tuple of (width, height) for the figure size (default: (12, 8))
+        show_grid: whether to show the grid lines without tick marks 
+        figsize: tuple of (width, height) for the figure size
     """
     # Create a copy of the matrix where small values are set to exactly zero
     matrix_clean = np.copy(matrix)

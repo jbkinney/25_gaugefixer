@@ -1,6 +1,6 @@
 from random import choices
 import numpy as np
-from gaugefixer.seq_embedder import SeqEmbedder
+from gaugefixer.sequence.seq_embedder import SeqEmbedder
 import pandas as pd
 def verify_identical_evaluation(
     theta1: pd.Series,

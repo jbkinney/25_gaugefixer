@@ -1,6 +1,9 @@
 # Features package init file 
 
-from gaugefixer.features.get_features_upto_order import get_features_upto_order
+from .get_features_of_order import get_features_of_order
+from .get_features_upto_order import get_features_upto_order
+from .sort_features import sort_features
+from .petti_feature import PettiFeature
 
 def get_additive_features(
     L: int,

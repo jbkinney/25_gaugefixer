@@ -7,7 +7,7 @@ from gaugefixer.features._get_suborbit_features import _get_suborbit_features
 from typeguard import typechecked
 
 @typechecked
-def get_hg_matrix(
+def get_hierarchical_matrix(
     features: list[PettiFeature],
     L: int,
     alphabet: list[str],

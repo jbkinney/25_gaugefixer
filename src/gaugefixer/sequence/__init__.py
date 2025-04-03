@@ -1,7 +1,8 @@
-# Main package init file 
-from gaugefixer.features.get_features_upto_order import get_features_upto_order
-
 import numpy as np
+import random
+from .evaluate_model_on_seqs import evaluate_model_on_seqs
+from .seq_embedder import SeqEmbedder
+
 _alphabet_dict = {
     'dna': ['A', 'C', 'G', 'T'],
     'rna': ['A', 'C', 'G', 'U'],
@@ -27,3 +28,9 @@ def get_alphabet(alphabet_type: str) -> list[str]:
     if alphabet_type not in _alphabet_dict:
         raise ValueError(f"Invalid alphabet type: {alphabet_type}")
     return _alphabet_dict[alphabet_type] 
+
+def randseq(L, alphabet):
+    return ''.join([random.choice(alphabet) for _ in range(L)])
+
+def randseqs(num_seqs, L, alphabet):
+    return [randseq(L, alphabet) for _ in range(num_seqs)]

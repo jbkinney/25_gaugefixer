@@ -5,7 +5,7 @@ from scipy import sparse
 import itertools
 from gaugefixer.features.sort_features import sort_features
 
-def get_lambdapi_matrix(
+def get_allorder_matrix(
     lam: float,
     pi_lc: np.array,  
     L: int, 

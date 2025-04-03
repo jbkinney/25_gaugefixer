@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from gaugefixer.seq_embedder import SeqEmbedder
+from gaugefixer.sequence.seq_embedder import SeqEmbedder
 
 def evaluate_model_on_seqs(theta: pd.Series,
                             seqs: list[str],
