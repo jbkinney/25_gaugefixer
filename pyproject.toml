@@ -1,20 +1,17 @@
-[build-system]
-requires = ["setuptools>=64.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "gaugefixer"
+name = "gaugefixer-manuscript"
 version = "0.1.0"
-description = "Gauge fixing tools"
-readme = "README.md"
-requires-python = ">=3.9"
-license = {file = "LICENSE"}
+description = "Environment for reproducing the analyses in manuscript/code/"
+requires-python = ">=3.10,<3.13"
 dependencies = [
-    "numpy",
-    "pandas",
-    "typeguard",
+    "gaugefixer>=0.1.0",
+    "logomaker>=0.8",
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "scipy>=1.11",
+    "seaborn>=0.13",
 ]
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-packages = ["gaugefixer"] 
+[tool.uv]
+package = false
